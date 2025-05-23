@@ -29,7 +29,7 @@
 
         <div>
             <a class="text-sm text-green-600 dark:text-green-500 hover:underline"
-                href="{{ route('password-assistance') }}">Forget
+                href="{{ route('password.password-assistance') }}">Forget
                 password?</a>
         </div>
         <div>
@@ -45,7 +45,7 @@
         </div>
         <div class="flex justify-center">
             <a class="text-sm text-green-600 dark:text-green-500 hover:underline"
-                href="{{ route('password-assistance') }}">Don’t have
+                href="{{ route('password.password-assistance') }}">Don’t have
                 password? Request one</a>
         </div>
     </form>

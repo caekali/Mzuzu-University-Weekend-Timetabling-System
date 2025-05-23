@@ -1,1 +1,1 @@
-<div>admin</div>
+<div>{{auth()->user()}}</div>

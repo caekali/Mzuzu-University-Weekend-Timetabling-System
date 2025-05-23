@@ -24,7 +24,7 @@ class LoginController extends Controller
 
         // Success: redirect
         $loginRequest->session()->regenerate();
-        return authenticated();
+        return $this->authenticated();
     }
 
     public function logout(Request $request)
@@ -32,10 +32,9 @@ class LoginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
     }
 
-    public function authenticated()
+    private function authenticated()
     {
         $user = Auth::user();
 
@@ -44,16 +43,16 @@ class LoginController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        // if ($user->hasRole('HOD')) {
-        //     return redirect()->route('hod.dashboard');
-        // }
+        if ($user->hasRole('HOD')) {
+            return redirect()->route('hod.dashboard');
+        }
 
-        // if ($user->hasRole('Lecturer')) {
-        //     return redirect()->route('lecturer.dashboard');
-        // }
+        if ($user->hasRole('Lecturer')) {
+            return redirect()->route('lecturer.dashboard');
+        }
 
-        // if ($user->hasRole('Student')) {
-        //     return redirect()->route('student.dashboard');
-        // }
+        if ($user->hasRole('Student')) {
+            return redirect()->route('student.dashboard');
+        }
     }
 }

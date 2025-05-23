@@ -1,4 +1,4 @@
-<x-layouts.dashboard>
+<x-layouts.app>
 <div class="flex flex-col h-screen bg-gray-100">
     <!-- Sidebar -->
     <aside class="w-64 bg-white shadow-lg">
@@ -73,4 +73,4 @@
         </div>
     </main>
 </div>
-</x-layouts.dashboard>
+</x-layouts.app>
