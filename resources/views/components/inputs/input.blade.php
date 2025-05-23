@@ -1,3 +1,11 @@
+@props([
+    'label' => '',
+    'name',
+    'id' => $name,
+    'type',
+    'placeholder' => '',
+    'required' => false,
+])
 <div>
     <label for="{{ $id }}" class="block text-sm font-medium text-gray-700">
         {{ $label }}

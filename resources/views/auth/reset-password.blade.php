@@ -1,7 +1,4 @@
-<x-layouts.guest>
-    <x-slot:subheader>
-        Reset Password
-    </x-slot:subheader>
+<x-layouts.guest subheader="Reset Password">
     <form class="space-y-4">
         <x-form.input label="Email" name="email" type="email" id="name" placeholder="mail@my.mzuni.ac.mw"
             required />
