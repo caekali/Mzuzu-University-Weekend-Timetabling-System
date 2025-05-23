@@ -17,3 +17,15 @@ Route::get("/account-setup", function () {
 Route::get("/student-dashboard", function () {
     return view('students.student-dashboard');
 })->name("student-dashboard");
+
+Route::get('/student-dashboard', function () {
+    return view('students.student-dashboard');
+})->name('my schedule');
+
+Route::get('/student-dashboard', function () {
+    return view('students.student-dashboard');
+})->name('dashboard');
+
+Route::get('/student-dashboard/profile', function () {
+    return view('students.profile');
+})->name('profile');
