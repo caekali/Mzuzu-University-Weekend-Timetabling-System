@@ -3,35 +3,29 @@
         Dashboard
     </x-slot:subheader>
 
-    <div class="flex">
+    <div class="flex flex-col md:flex-row">
         {{-- Sidebar --}}
-        <aside class="w-1/4 bg-white shadow-md">
+        <aside class="w-full md:w-1/4 bg-white shadow-md md:h-screen">
             <div class="p-4">
                 <h1 class="text-lg font-bold">Mzuzu University Weekend Timetabling System</h1>
             </div>
             <nav class="mt-4">
                 <ul class="space-y-2">
                     <li>
-                        <a href="#" class="flex items-center p-4 text-green-600 bg-green-100 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18v18H3V3z"/>
-                            </svg>
+                        <a href="#" class="flex items-center p-4 hover:bg-green-600 rounded-lg">
+                            <i class="fas fa-th mr-2"></i>
                             Dashboard
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center p-4 hover:bg-gray-200 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18v18H3V3z"/>
-                            </svg>
+                        <a href="#" class="flex items-center p-4 hover:bg-green-600 rounded-lg">
+                            <i class="fas fa-calendar-alt mr-2"></i>
                             My Schedule
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center p-4 hover:bg-gray-200 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18v18H3V3z"/>
-                            </svg>
+                        <a href="#" class="flex items-center p-4 hover:bg-green-600 rounded-lg">
+                            <i class="fas fa-user mr-2"></i>
                             Profile
                         </a>
                     </li>
@@ -40,7 +34,7 @@
         </aside>
 
         {{-- Main Content --}}
-        <main class="flex-1 p-8">
+        <main class="flex-1 p-4 md:p-8">
             <header class="flex justify-between items-center">
                 <h2 class="text-2xl font-bold">Good Morning</h2>
                 <div class="flex items-center">
@@ -60,5 +54,3 @@
         </main>
     </div>
 </x-layouts.guest>
-
-
