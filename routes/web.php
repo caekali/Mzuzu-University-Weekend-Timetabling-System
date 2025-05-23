@@ -13,3 +13,7 @@ Route::get("/password-assistance", function () {
 Route::get("/account-setup", function () {
     return view('students.account-setup');
 })->name("account-setup");
+
+Route::get("/student-dashboard", function () {
+    return view('students.student-dashboard');
+})->name("student-dashboard");
