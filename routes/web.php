@@ -9,3 +9,7 @@ Route::get('/', function () {
 Route::get("/password-assistance", function () {
     return view('auth.password-assistance');
 })->name("password-assistance");
+
+Route::get("/account-setup", function () {
+    return view('students.account-setup');
+})->name("account-setup");
