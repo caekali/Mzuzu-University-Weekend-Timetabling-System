@@ -23,43 +23,38 @@ Route::prefix('password')->group(function () {
 });
 
 
-
 Route::prefix("admin")->middleware(['auth', 'role:Admin'])->group(function () {
-    Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-});
+ Route::get('dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');});
 
 Route::prefix("lecturer")->middleware(['auth', 'role:Lecturer'])->group(function () {
-    Route::get('dashboard', [AdminDashboardController::class, 'index'])
-        ->name('lecturer.dashboard');
+    Route::get('dashboard', function () {
+        return view('lecturer.dashboard');
+    })->name('lecturer.dashboard');
 });
 
 Route::prefix("hod")->middleware(['auth', 'role:HOD'])->group(function () {
-    Route::get('dashboard', [AdminDashboardController::class, 'index'])
-        ->name('hod.dashboard');
+    Route::get('dashboard', function () {
+        return view('hod.dashboard');
+    })->name('hod.dashboard');
 });
 
 Route::prefix("student")->middleware(['auth', 'role:Student'])->group(function () {
-    Route::get('dashboard', [AdminDashboardController::class, 'index'])
-        ->name('student.dashboard');
+
     Route::get("account-setup", function () {
         return view('student.account-setup');
     })->name("student.account-setup");
+
+    Route::get('dashboard', function () {
+        return view('student.dashboard');
+    })->name('student.dashboard');
+
+    Route::get('schedules', function () {
+        return view('student.schedules');
+    })->name('student.schedules');
+
+    Route::get('profile', function () {
+        return view('student.profile');
+    })->name('student.profile');
 });
-
-
-//
-Route::get("/student-dashboard", function () {
-    return view('student.student-dashboard');
-})->name("student-dashboard");
-
-Route::get('/student-dashboard', function () {
-    return view('student.student-dashboard');
-})->name('my schedule');
-
-Route::get('/student-dashboard', function () {
-    return view('student.student-dashboard');
-})->name('dashboard');
-
-Route::get('/student-dashboard/profile', function () {
-    return view('student.profile');
-})->name('profile');

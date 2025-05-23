@@ -11,7 +11,11 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
-        return view("auth.login");
+        if (!Auth::check()) {
+            return view("auth.login");
+        }
+
+       return $this->authenticated();
     }
 
     public function login(LoginRequest $loginRequest)
