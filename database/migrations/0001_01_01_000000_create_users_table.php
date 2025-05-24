@@ -16,9 +16,13 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email')->unique();
+            $table->string('password');
+
+            // activation
             $table->string('activation_token')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->enum('status', ['pending', 'active', 'suspended'])->default('pending');
+
             $table->rememberToken();
             $table->timestamps();
         });
