@@ -16,21 +16,21 @@
             <nav class="mt-6 px-4">
                 <ul class="space-y-3">
                     <li>
-                        <a href="{{ route('dashboard') }}"
+                        <a href="{{ route('student.dashboard') }}"
                             class="flex items-center p-3 rounded-lg {{ request('view') === null ? 'bg-green-600 text-white' : 'hover:bg-green-600 hover:text-white' }}">
                             <i class="fas fa-th mr-2"></i> Dashboard
                         </a>
                     </li>
 
                     <li>
-                        <a href="{{ route('dashboard', ['view' => 'schedule']) }}"
+                        <a href="{{ route('student.dashboard', ['view' => 'schedule']) }}"
                             class="flex items-center p-3 rounded-lg {{ request('view') === 'schedule' ? 'bg-green-600 text-white' : 'hover:bg-green-600 hover:text-white' }}">
                             <i class="fas fa-calendar-alt mr-2"></i> My Schedule
                         </a>
                     </li>
 
                     <li>
-                        <a href="{{ route('dashboard', ['view' => 'profile']) }}"
+                        <a href="{{ route('student.dashboard', ['view' => 'profile']) }}"
                             class="flex items-center p-3 rounded-lg {{ request('view') === 'profile' ? 'bg-green-600 text-white' : 'hover:bg-green-600 hover:text-white' }}">
                             <i class="fas fa-user mr-2"></i> Profile
                         </a>
@@ -151,7 +151,7 @@
                     <div class="bg-white p-6 rounded-lg shadow-md">
                         <h3 class="text-lg font-semibold">Next Class</h3>
                         <p class="text-gray-600 mt-2">No more classes scheduled for today</p>
-                        <a href="{{ route('dashboard', ['view' => 'schedule']) }}"
+                        <a href="{{ route('student.dashboard', ['view' => 'schedule']) }}"
                             class="mt-4 inline-block text-green-600 underline">
                             Go to Full Schedule →
                         </a>

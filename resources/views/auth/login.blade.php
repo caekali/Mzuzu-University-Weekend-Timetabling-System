@@ -29,7 +29,7 @@
 
         <div>
             <a class="text-sm text-green-600 dark:text-green-500 hover:underline"
-                href="{{ route('password.password-assistance') }}">Forget
+                href="{{ route('password.forget-password') }}">Forget
                 password?</a>
         </div>
         <div>
@@ -43,10 +43,10 @@
                 @endif
             </button>
         </div>
-        <div class="flex justify-center">
-            <a class="text-sm text-green-600 dark:text-green-500 hover:underline"
-                href="{{ route('password.password-assistance') }}">Don’t have
-                password? Request one</a>
+
+        <div class="mt-6 text-center text-sm">
+            <p class="text-gray-600">Not registered? <a href="{{ route('contact.admin') }}"
+                    class=" text-green-600 dark:text-green-500 hover:underline">Contact Admin</a></p>
         </div>
     </form>
 </x-layouts.guest>
