@@ -15,7 +15,7 @@ class LoginController extends Controller
             return view("auth.login");
         }
 
-       return $this->authenticated();
+        return $this->authenticated();
     }
 
     public function login(LoginRequest $loginRequest)
@@ -42,6 +42,11 @@ class LoginController extends Controller
     private function authenticated()
     {
         $user = Auth::user();
+
+        $firstRole = Auth::user()->roles->first();
+        if ($firstRole) {
+            session(['current_role' => $firstRole->name]);
+        }
 
         // role checking and redirect
         if ($user->hasRole('Admin')) {

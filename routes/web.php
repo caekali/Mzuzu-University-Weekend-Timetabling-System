@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\RoleSwitchController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -15,7 +16,7 @@ Route::middleware('guest')->group(function () {
 
 Route::prefix('password')->group(function () {
     Route::get("/forget-password", function () {
-        
+
         return view('auth.forget-password');
     })->name("password.forget-password");
 
@@ -25,6 +26,7 @@ Route::prefix('password')->group(function () {
     });
 });
 
+Route::get('/switch-role/{role}', [RoleSwitchController::class, 'switch'])->name('switch.role');
 
 Route::prefix("admin")->middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('dashboard', function () {
@@ -36,6 +38,9 @@ Route::prefix("lecturer")->middleware(['auth', 'role:Lecturer'])->group(function
     Route::get('dashboard', function () {
         return view('lecturer.dashboard');
     })->name('lecturer.dashboard');
+      Route::get('weekly-timetable', function () {
+        return view('lecturer.weekly-timetable');
+    })->name('lecturer.weekly-timetable');
 });
 
 Route::prefix("hod")->middleware(['auth', 'role:HOD'])->group(function () {

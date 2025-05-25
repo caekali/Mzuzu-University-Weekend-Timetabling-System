@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <div>{{ auth()->user()  }}</div>
+    <p>Weekly Timetable</p>
+    <x-cards.schedule/>
 @endsection
