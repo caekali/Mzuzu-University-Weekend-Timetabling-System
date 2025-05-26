@@ -28,9 +28,9 @@
     </div>
     <nav class="mt-5 px-4 space-y-1">
         @foreach ($navLinks as $link)
-            <x-nav-link :href="$link['href']" :active="request()->url() === $link['href']" :icon="$link['icon']">
+            <x-nav.nav-link :href="$link['href']" :active="request()->url() === $link['href']" :icon="$link['icon']">
                 {{ $link['text'] }}
-            </x-nav-link>
+            </x-nav.nav-link>
         @endforeach
     </nav>
 </aside>

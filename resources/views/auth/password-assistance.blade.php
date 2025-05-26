@@ -1,7 +1,10 @@
-<x-layouts.guest subheader="Request Password">
+@extends('layouts.guest')
+
+@section('subtitle', 'Request Password')
+
+@section('content')
     <form class="space-y-4">
-        <x-inputs.input label="Email" name="email" type="email" id="name" placeholder="mail@my.mzuni.ac.mw"
-            required />
+        <x-inputs.input label="Email" name="email" type="email" id="name" placeholder="mail@my.mzuni.ac.mw" required />
         <div>
             <button type="submit"
                 class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed">
@@ -18,4 +21,4 @@
                 Login</a>
         </div>
     </form>
-</x-layouts.guest>
+@endsection

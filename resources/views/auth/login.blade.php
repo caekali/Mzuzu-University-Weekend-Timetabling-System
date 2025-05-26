@@ -1,5 +1,9 @@
-<x-layouts.guest subheader="Sign in">
-    <form method="POST" class="space-y-4">
+@extends('layouts.guest')
+
+@section('subtitle','Sign in')
+
+@section('content')
+<form method="POST" class="space-y-4">
         @csrf
         <div>
             <label htmlFor="email" class="block text-sm font-medium text-gray-700">
@@ -49,4 +53,8 @@
                     class=" text-green-600 dark:text-green-500 hover:underline">activate</a></p>
         </div>
     </form>
+@endsection
+
+<x-layouts.guest subheader="Sign in">
+    
 </x-layouts.guest>

@@ -4,12 +4,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mzuzu University Weekend Time tabling System</title>
-
+    <title>{{ config('app.name') }}</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
 </head>
@@ -22,19 +20,17 @@
                     <img class="size-[100px]" src="{{ asset('assests/mzunilogo.webp') }}" alt="">
                 </div>
                 <h2 class="mt-3 text-center text-xl font-extrabold text-gray-900">
-                    Mzuzu University Weekend Time tabling System
+                   {{ config('app.name') }}
                 </h2>
                 <p class="mt-2 text-center text-lg text-gray-600">
-                    {{ $subheader }}
+                    @yield('title')
                 </p>
             </div>
             <div class="mt-4 bg-white p-4 shadow sm:rounded-lg sm:px-6">
-                {{ $slot }}
+                @yield('content')
             </div>
         </div>
     </div>
-
-
 </body>
 
 </html>

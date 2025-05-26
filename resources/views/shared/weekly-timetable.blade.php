@@ -49,7 +49,7 @@
         <div class="space-y-4">
             @foreach ($schedules as $schedule)
                 <div x-show="selectedDay === '{{ $schedule->day }}'" x-transition>
-                    <x-cards.schedule :schedule="$schedule" />
+                    <x-timetable.card :schedule="$schedule" />
                 </div>
             @endforeach
         </div>

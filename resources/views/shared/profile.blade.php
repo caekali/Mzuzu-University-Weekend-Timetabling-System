@@ -60,32 +60,13 @@
                         @csrf
                         @method('PUT')
 
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Current Password</label>
-                            <input type="password" name="current_password"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                required />
-                        </div>
+                        <x-input label='Current Password' name='current-password' id='current-password' type='password'
+                            required />
+                        <x-input label='New Password' name='password' id='password' type='password' required />
+                        <x-input label='Confirm New Password' name='confirm-password' id='confirm-password' type='password'
+                            required />
 
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">New Password</label>
-                            <input type="password" name="new_password"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                required />
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Confirm New Password</label>
-                            <input type="password" name="new_password_confirmation"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                required />
-                        </div>
-
-                        <button type="submit"
-                            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-900 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            <x-icons.lock class="h-4 w-4 mr-2" />
-                            Update Password
-                        </button>
+                       <x-button text='Update' icon='icons.lock'/>
                     </form>
                 </div>
             </div>

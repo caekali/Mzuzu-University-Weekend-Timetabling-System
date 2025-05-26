@@ -13,7 +13,7 @@
              <!-- Scrollable container takes remaining height -->
              <div class="flex-1 overflow-y-auto space-y-4">
                  @foreach ($schedules as $schedule)
-                     <x-cards.schedule :schedule="$schedule" />
+                     <x-timetable.card :schedule="$schedule" />
                  @endforeach
              </div>
          @else

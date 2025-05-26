@@ -17,7 +17,7 @@ Route::prefix('password')->group(function () {
     Route::get("/forget-password", function () {
         return view('auth.forget-password');
     })->name("password.forget-password");
-    
+
     Route::middleware('auth')->group(function () {
         Route::post('/logout', [LoginController::class, 'logout'])->name("logout");
         Route::get('/change-password', [ChangePasswordController::class, 'showChangePasswordForm'])->name("change-password");
@@ -35,26 +35,24 @@ Route::prefix("admin")->middleware(['auth', 'role:Admin'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('profile', function () {
-        return view('profile');
+        return view('shared.profile');
     })->name('profile');
 
     Route::post('profile/update-password', function () {
-        return view('profile');
+        return view('shared.profile');
     })->name('profile.update-password');
 
     Route::get('weekly-timetable', function () {
-        return view('weekly-timetable');
+        return view('shared.weekly-timetable');
     })->name('weekly-timetable');
 
     Route::get('dashboard', function () {
-        return view('dashboard');
+        return view('shared.dashboard');
     })->name('dashboard');
 });
 
 
-Route::prefix("lecturer")->middleware(['auth', 'role:Lecturer'])->group(function () {
-
-});
+Route::prefix("lecturer")->middleware(['auth', 'role:Lecturer'])->group(function () {});
 
 Route::prefix("hod")->middleware(['auth', 'role:HOD'])->group(function () {
     Route::get('dashboard', function () {

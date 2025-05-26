@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Mzuzu University Weekend Time-tabling System</title>
+    <title>{{ config('app.name') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -23,9 +23,9 @@
     <div class="h-screen flex bg-gray-100" x-data="{ sidebarOpen: false }">
         <div x-show="sidebarOpen" @click="sidebarOpen = false"
             class="fixed inset-0 z-20 bg-black/30 transition-opacity md:hidden" x-cloak></div>
-        <x-sidebar />
+        <x-nav.sidebar />
         <div class="flex-1 flex flex-col overflow-hidden">
-            <x-nav-bar />
+            <x-nav.nav-bar />
             <main @click="sidebarOpen = false" class="flex-1 overflow-y-auto bg-gray-50 p-4">
                 <div class="max-w-7xl mx-auto flex-1 flex flex-col">
                     @yield('content')
