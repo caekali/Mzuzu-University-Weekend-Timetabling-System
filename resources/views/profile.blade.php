@@ -13,7 +13,8 @@
                     <div class="ml-6">
                         <h2 class="text-xl font-bold text-gray-900">
                             {{ auth()->user()->first_name . ' ' . auth()->user()->last_name }}</h2>
-                        <p class="text-sm text-gray-500 capitalize">{{ auth()->user()->roles->first() }}</p>
+                        <p class="text-sm text-gray-500 capitalize">{{ auth()->user()->roles->pluck('name')->implode(', ') }}
+                        </p>
                     </div>
                 </div>
 

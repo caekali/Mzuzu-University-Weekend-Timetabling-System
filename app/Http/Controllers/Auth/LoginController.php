@@ -44,30 +44,13 @@ class LoginController extends Controller
         $user = Auth::user();
 
         $roles = $user->roles->pluck('name');
-
         // prefer Lecturer default role
         if ($roles->contains('Lecturer')) {
             session(['current_role' => 'Lecturer']);
-            return redirect()->route('lecturer.dashboard');
+        } else {
+            session(['current_role' => $roles->first()]);
         }
 
-        // fall back for the afirst role
-        $firstRole = $roles->first();
-        if ($firstRole) {
-            session(['current_role' => $firstRole]);
-        }
-
-        // Redirect based on actual roles (priority fallback)
-        if ($user->hasRole('Admin')) {
-            return redirect()->route('admin.dashboard');
-        }
-
-        if ($user->hasRole('HOD')) {
-            return redirect()->route('hod.dashboard');
-        }
-
-        if ($user->hasRole('Student')) {
-            return redirect()->route('student.dashboard');
-        };
+       return redirect()->route('dashboard');
     }
 }

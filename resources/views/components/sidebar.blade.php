@@ -7,12 +7,11 @@
 
     $navLinks = match (session('current_role')) {
         'Admin' => [['href' => route('admin.dashboard'), 'text' => 'Dashboard', 'icon' => 'icons.layout-dashboard']],
-        'Lecturer' => [
-            ['href' => route('lecturer.dashboard'), 'text' => 'Dashboard', 'icon' => 'icons.layout-dashboard'],
-            ['href' => route('lecturer.weekly-timetable'), 'text' => 'My Schedules', 'icon' => 'icons.calender'],
+        default => [
+            ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'icons.layout-dashboard'],
+            ['href' => route('weekly-timetable'), 'text' => 'My Schedules', 'icon' => 'icons.calender'],
             ['href' => route('profile'), 'text' => 'Profile', 'icon' => 'icons.user'],
         ],
-        default => [],
     };
 @endphp
 

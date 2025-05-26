@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\ContactController;
@@ -16,10 +15,9 @@ Route::middleware('guest')->group(function () {
 
 Route::prefix('password')->group(function () {
     Route::get("/forget-password", function () {
-
         return view('auth.forget-password');
     })->name("password.forget-password");
-
+    
     Route::middleware('auth')->group(function () {
         Route::post('/logout', [LoginController::class, 'logout'])->name("logout");
         Route::get('/change-password', [ChangePasswordController::class, 'showChangePasswordForm'])->name("change-password");
@@ -43,16 +41,19 @@ Route::middleware(['auth'])->group(function () {
     Route::post('profile/update-password', function () {
         return view('profile');
     })->name('profile.update-password');
+
+    Route::get('weekly-timetable', function () {
+        return view('weekly-timetable');
+    })->name('weekly-timetable');
+
+    Route::get('dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 });
 
 
 Route::prefix("lecturer")->middleware(['auth', 'role:Lecturer'])->group(function () {
-    Route::get('dashboard', function () {
-        return view('lecturer.dashboard');
-    })->name('lecturer.dashboard');
-    Route::get('weekly-timetable', function () {
-        return view('lecturer.weekly-timetable');
-    })->name('lecturer.weekly-timetable');
+
 });
 
 Route::prefix("hod")->middleware(['auth', 'role:HOD'])->group(function () {
@@ -62,20 +63,7 @@ Route::prefix("hod")->middleware(['auth', 'role:HOD'])->group(function () {
 });
 
 Route::prefix("student")->middleware(['auth', 'role:Student'])->group(function () {
-
     Route::get("account-setup", function () {
         return view('student.account-setup');
     })->name("student.account-setup");
-
-    Route::get('dashboard', function () {
-        return view('student.dashboard');
-    })->name('student.dashboard');
-
-    Route::get('schedules', function () {
-        return view('student.schedules');
-    })->name('student.schedules');
-
-    Route::get('profile', function () {
-        return view('student.profile');
-    })->name('student.profile');
 });
