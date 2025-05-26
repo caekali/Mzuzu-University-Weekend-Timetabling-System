@@ -17,14 +17,14 @@ class UserSeeder extends Seeder
         $admin = User::factory()->create([
             'first_name' => 'Admin',
             'last_name' => 'Admin',
-            'email' => 'admin@example.com',
+            'email' => 'admin@my.mzuni.ac.mw',
         ]);
         $admin->roles()->attach(Role::where('name', 'Admin')->first()->id);
 
         $student = User::factory()->create([
             'first_name' => 'Student',
             'last_name' => 'Student',
-            'email' => 'student@example.com',
+            'email' => 'student@my.mzuni.ac.mw',
         ]);
 
         $student->roles()->attach(Role::where('name', 'Student')->first()->id);
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
         $lecturer = User::factory()->create([
             'first_name' => 'Lecturer',
             'last_name' => 'Lecturer',
-            'email' => 'lecturer@example.com',
+            'email' => 'lecturer@my.mzuni.ac.mw',
         ]);
 
         $lecturer->roles()->attach(Role::where('name', 'Lecturer')->first()->id);
@@ -40,7 +40,7 @@ class UserSeeder extends Seeder
         $hod = User::factory()->create([
             'first_name' => 'HOD',
             'last_name' => 'HOD',
-            'email' => 'hod@example.com',
+            'email' => 'hod@my.mzuni.ac.mw',
         ]);
 
         $hod->roles()->attach(Role::where('name', 'HOD')->first()->id);

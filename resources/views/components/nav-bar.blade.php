@@ -1,4 +1,4 @@
-<header class="bg-white shadow-sm z-10">
+<header class="bg-white shadow-sm z-10 sticky top-0 w-full">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex items-center">
@@ -20,7 +20,7 @@
                             {{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}
                         </div>
                         <div class="text-xs text-gray-500 capitalize">
-                            {{ session('current_role', Auth::user()->roles->first()->name) }}
+                            {{ session('current_role')}}
                         </div>
                     </div>
 

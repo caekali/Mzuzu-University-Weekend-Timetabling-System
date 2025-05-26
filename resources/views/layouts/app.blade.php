@@ -18,17 +18,21 @@
     @vite('resources/js/app.js')
 
 </head>
+
 <body>
-    <div class="min-h-screen flex bg-gray-100" x-data="{ sidebarOpen: false }">
-        <x-sidebar />
+    <div class="h-screen flex bg-gray-100" x-data="{ sidebarOpen: false }">
+        <div>
+             <x-sidebar />
+        </div>
+       
 
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 flex-grow overflow-y-auto">
             <x-nav-bar />
-            <main @click="sidebarOpen = false" class="flex-1 overflow-y-auto bg-gray-50 p-4">
-
-                <div class="max-w-7xl mx-auto">
+            <main @click="sidebarOpen = false" class="min-h-[calc(100vh-64px)]  flex flex-1 overflow-y-auto bg-gray-50 p-4">
+                <div class="max-w-7xl mx-auto flex-1 flex flex-col">
                     @yield('content')
                 </div>
+                {{-- @yield('content') --}}
             </main>
         </div>
     </div>
