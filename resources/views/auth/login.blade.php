@@ -45,8 +45,8 @@
         </div>
 
         <div class="mt-6 text-center text-sm">
-            <p class="text-gray-600">Not registered? <a href="{{ route('contact.admin') }}"
-                    class=" text-green-600 dark:text-green-500 hover:underline">Contact Admin</a></p>
+            <p class="text-gray-600">Account not activated? <a href="{{ route('contact.admin') }}"
+                    class=" text-green-600 dark:text-green-500 hover:underline">activate</a></p>
         </div>
     </form>
 </x-layouts.guest>
