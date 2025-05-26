@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mzuzu University Weekend Timetabling System</title>
-    
+    <title>Mzuzu University Weekend Time tabling System</title>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
@@ -21,8 +21,8 @@
                 <div class="flex justify-center">
                     <img class="size-[100px]" src="{{ asset('assests/mzunilogo.webp') }}" alt="">
                 </div>
-                <h2 class="mt-4 text-center text-xl font-extrabold text-gray-900">
-                    Mzuzu University Weekend Timetabling System
+                <h2 class="mt-3 text-center text-xl font-extrabold text-gray-900">
+                    Mzuzu University Weekend Time tabling System
                 </h2>
                 <p class="mt-2 text-center text-lg text-gray-600">
                     {{ $subheader }}

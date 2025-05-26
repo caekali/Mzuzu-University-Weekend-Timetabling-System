@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Mzuzu University Weekend Timetabling System</title>
+    <title>Mzuzu University Weekend Time-tabling System</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -24,7 +24,7 @@
         <div>
              <x-sidebar />
         </div>
-       
+
 
         <div class="flex-1 flex-grow overflow-y-auto">
             <x-nav-bar />
