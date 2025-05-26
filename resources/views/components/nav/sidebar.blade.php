@@ -6,7 +6,7 @@
     //         : Auth::user()->roles->first()->name;
 
     $navLinks = match (session('current_role')) {
-        'Admin' => [['href' => route('admin.dashboard'), 'text' => 'Dashboard', 'icon' => 'icons.layout-dashboard']],
+        'Admin' => [['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'icons.layout-dashboard']],
         default => [
             ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'icons.layout-dashboard'],
             ['href' => route('weekly-timetable'), 'text' => 'My Schedules', 'icon' => 'icons.calender'],

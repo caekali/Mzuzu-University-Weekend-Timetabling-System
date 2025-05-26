@@ -10,19 +10,12 @@ class ContactController extends Controller
 
     public function show()
     {
-        return view('contact-admin');
+        return view('auth.activate-account');
     }
 
-    public function send(Request $request)
+    public function sendActivationLink(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'message' => 'required|min:10',
-        ]);
-
         // Mail::to('admin@university.edu')->send(new \App\Mail\AdminQuery($request->only('name', 'email', 'message')));
-
-        return back()->with('status', 'Your message has been sent to the admin.');
+        return back()->with('status', 'Activation link has been sent to the provided email');
     }
 }

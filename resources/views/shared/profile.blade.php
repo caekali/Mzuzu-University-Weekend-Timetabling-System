@@ -8,7 +8,7 @@
                 <div class="flex items-center mb-6">
                     <div
                         class="h-20 w-20 rounded-full bg-blue-900 flex items-center justify-center text-white text-2xl font-bold">
-                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                        {{ strtoupper(substr(auth()->user()->first_name, 0, 1)) }}
                     </div>
                     <div class="ml-6">
                         <h2 class="text-xl font-bold text-gray-900">
@@ -24,10 +24,10 @@
                         <span>{{ auth()->user()->email }}</span>
                     </div>
 
-                    @if (auth()->user()->role === 'student')
+                    @if (auth()->user()->hasRole('Student'))
                         <div class="flex items-center text-gray-700">
                             <x-icons.open-book class="h-5 w-5 mr-3 text-gray-400" />
-                            <span>BSc Computer Science - Year {{ $yearOfStudy ?? '1' }}</span>
+                            <span>BSc Computer Science - Level {{ $yearOfStudy ?? '1' }}</span>
 
                             <form action="{{ route('profile') }}" method="POST" class="ml-4 flex items-center space-x-2">
                                 @csrf
@@ -36,7 +36,7 @@
                                     @for ($i = 1; $i <= 4; $i++)
                                         <option value="{{ $i }}"
                                             {{ isset($yearOfStudy) && $yearOfStudy == $i ? 'selected' : '' }}>
-                                            Year {{ $i }}
+                                            Level {{ $i }}
                                         </option>
                                     @endfor
                                 </select>
@@ -45,7 +45,7 @@
                         </div>
                     @endif
 
-                    @if (auth()->user()->role === 'lecturer')
+                    @if (auth()->user()->hasRole('Lecturer'))
                         <div class="flex items-center text-gray-700">
                             <x-icons.building class="h-5 w-5 mr-3 text-gray-400" />
                             <span>Computer Science Department</span>
@@ -59,7 +59,6 @@
                     <form action="{{ route('profile.update-password') }}" method="POST" class="space-y-4 max-w-md">
                         @csrf
                         @method('PUT')
-
                         <x-input label='Current Password' name='current-password' id='current-password' type='password'
                             required />
                         <x-input label='New Password' name='password' id='password' type='password' required />

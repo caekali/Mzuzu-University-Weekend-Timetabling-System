@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('guest')->group(function () {
     Route::get('/', [LoginController::class, 'showLoginForm'])->name("login");
     Route::post('/', [LoginController::class, 'login'])->name("login");
-    Route::get('/contact-admin', [ContactController::class, 'show'])->name('contact.admin');
-    Route::post('/contact-admin', [ContactController::class, 'send']);
+    Route::get('/account-activation', [ContactController::class, 'show'])->name('account-activation');
+    Route::post('/account-activation', [ContactController::class, 'sendActivationLink'])->name('account-activation');
 });
 
 Route::prefix('password')->group(function () {
@@ -27,9 +27,7 @@ Route::prefix('password')->group(function () {
 Route::get('/switch-role/{role}', [RoleSwitchController::class, 'switch'])->name('switch.role');
 
 Route::prefix("admin")->middleware(['auth', 'role:Admin'])->group(function () {
-    Route::get('dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+   
 });
 
 

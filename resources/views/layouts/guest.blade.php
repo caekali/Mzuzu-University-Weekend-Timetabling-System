@@ -23,7 +23,7 @@
                    {{ config('app.name') }}
                 </h2>
                 <p class="mt-2 text-center text-lg text-gray-600">
-                    @yield('title')
+                    @yield('subtitle')
                 </p>
             </div>
             <div class="mt-4 bg-white p-4 shadow sm:rounded-lg sm:px-6">
