@@ -34,11 +34,23 @@ Route::prefix("admin")->middleware(['auth', 'role:Admin'])->group(function () {
     })->name('admin.dashboard');
 });
 
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('profile', function () {
+        return view('profile');
+    })->name('profile');
+
+    Route::post('profile/update-password', function () {
+        return view('profile');
+    })->name('profile.update-password');
+});
+
+
 Route::prefix("lecturer")->middleware(['auth', 'role:Lecturer'])->group(function () {
     Route::get('dashboard', function () {
         return view('lecturer.dashboard');
     })->name('lecturer.dashboard');
-      Route::get('weekly-timetable', function () {
+    Route::get('weekly-timetable', function () {
         return view('lecturer.weekly-timetable');
     })->name('lecturer.weekly-timetable');
 });

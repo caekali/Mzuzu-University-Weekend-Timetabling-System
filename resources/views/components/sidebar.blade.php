@@ -10,17 +10,17 @@
         'Lecturer' => [
             ['href' => route('lecturer.dashboard'), 'text' => 'Dashboard', 'icon' => 'icons.layout-dashboard'],
             ['href' => route('lecturer.weekly-timetable'), 'text' => 'My Schedules', 'icon' => 'icons.calender'],
+            ['href' => route('profile'), 'text' => 'Profile', 'icon' => 'icons.user'],
         ],
         default => [],
     };
 @endphp
 
-<aside x-cloak :class="{
-    'block ': sidebarOpen,
-    'hidden ': !sidebarOpen
-}"
-    class="hidden h-screen lg:block flex-1 flex-grow  z-30 w-64 bg-white shadow-lg  duration-300">
 
+
+<aside x-cloak :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+    class="fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0
+">
     <div class="h-16 px-4 flex items-center justify-center">
         <div class="flex  justify-center">
             <img class="size-12" src="{{ asset('assests/mzunilogo.webp') }}" alt="">

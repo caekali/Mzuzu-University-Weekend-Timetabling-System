@@ -15,7 +15,7 @@
 @endphp
 
 <div
-    class="p-4 rounded-lg shadow-md flex flex-col gap-2 w-full border-l-8 {{ $borderColor }} transition hover:shadow-md bg-white">
+    class=" bg-amber-700 p-4 rounded-lg shadow-md flex flex-col gap-2 w-full border-l-8 {{ $borderColor }} transition hover:shadow-md bg-white">
     <div class="flex gap-2 items-center">
         <x-icons.note-book />
         <p class="text-lg font-bold text-black">{{ $schedule->course->code ?? 'BICT1101' }}</p>

@@ -21,18 +21,15 @@
 
 <body>
     <div class="h-screen flex bg-gray-100" x-data="{ sidebarOpen: false }">
-        <div>
-             <x-sidebar />
-        </div>
-
-
-        <div class="flex-1 flex-grow overflow-y-auto">
+        <div x-show="sidebarOpen" @click="sidebarOpen = false"
+            class="fixed inset-0 z-20 bg-black/30 transition-opacity md:hidden" x-cloak></div>
+        <x-sidebar />
+        <div class="flex-1 flex flex-col overflow-hidden">
             <x-nav-bar />
-            <main @click="sidebarOpen = false" class="min-h-[calc(100vh-64px)]  flex flex-1 overflow-y-auto bg-gray-50 p-4">
+            <main @click="sidebarOpen = false" class="flex-1 overflow-y-auto bg-gray-50 p-4">
                 <div class="max-w-7xl mx-auto flex-1 flex flex-col">
                     @yield('content')
                 </div>
-                {{-- @yield('content') --}}
             </main>
         </div>
     </div>

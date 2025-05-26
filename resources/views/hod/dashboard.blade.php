@@ -7,4 +7,6 @@
         @csrf
         <button>logout</button>
     </form>
+
+    hod
 @endsection
