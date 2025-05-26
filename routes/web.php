@@ -26,8 +26,47 @@ Route::prefix('password')->group(function () {
 
 Route::get('/switch-role/{role}', [RoleSwitchController::class, 'switch'])->name('switch.role');
 
-Route::prefix("admin")->middleware(['auth', 'role:Admin'])->group(function () {
-   
+Route::middleware(['auth', 'role:Admin'])->group(function () {
+    Route::get('programmes', function () {
+        return view('admin.programmes.index');
+    })->name('admin.programmes');
+
+    Route::get('departments', function () {
+        return view('admin.departments.index');
+    })->name('admin.departments');
+
+    Route::get('courses', function () {
+        return view('admin.courses.index');
+    })->name('admin.courses');
+
+    Route::get('users', function () {
+        return view('admin.users.index');
+    })->name('admin.users');
+
+    Route::get('students', function () {
+        return view('admin.users.students');
+    })->name('admin.users.students');
+
+    Route::get('lecturer', function () {
+        return view('admin.users.lecturers');
+    })->name('admin.users.lecturers');
+
+
+    Route::get('timetable', function () {
+        return view('admin.timetable.index');
+    })->name('admin.timetable');
+
+    Route::get('timetable/generate', function () {
+        return view('admin.timetable.generate');
+    })->name('admin.timetable.generate');
+
+    Route::get('constraints', function () {
+        return view('admin.constraints.index');
+    })->name('admin.constraints');
+
+    Route::get('venues', function () {
+        return view('admin.venues.index');
+    })->name('admin.venues');
 });
 
 

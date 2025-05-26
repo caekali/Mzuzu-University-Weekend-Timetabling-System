@@ -6,7 +6,28 @@
     //         : Auth::user()->roles->first()->name;
 
     $navLinks = match (session('current_role')) {
-        'Admin' => [['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'icons.layout-dashboard']],
+        'Admin' => [
+            ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'icons.layout-dashboard'],
+            ['href' => route('admin.departments'), 'text' => 'Departments', 'icon' => 'icons.database'],
+            ['href' => route('admin.programmes'), 'text' => 'Programmes', 'icon' => 'icons.open-book'],
+            ['href' => route('admin.courses'), 'text' => 'Courses', 'icon' => 'icons.open-book'],
+            [
+                'href' => route('admin.users'),
+                'text' => 'User',
+                'children' => [
+                    ['href' => route('admin.users'), 'text' => 'All', 'icon' => 'icons.users'],
+                    ['href' => route('admin.users.students'), 'text' => 'Students', 'icon' => 'icons.graduation-cap'],
+                    ['href' => route('admin.users.lecturers'), 'text' => 'Lecturers', 'icon' => 'icons.lecturer'],
+                ],
+                'icon' => 'icons.users',
+            ],
+            ['href' => route('admin.constraints'), 'text' => 'Constraints', 'icon' => 'icons.settings'],
+            ['href' => route('admin.venues'), 'text' => 'Venues', 'icon' => 'icons.building'],
+            ['href' => route('admin.timetable'), 'text' => 'Timetable', 'icon' => 'icons.calender'],
+            ['href' => route('admin.timetable.generate'), 'text' => 'Generate', 'icon' => 'icons.cpu'],
+
+            ['href' => route('profile'), 'text' => 'Profile', 'icon' => 'icons.user'],
+        ],
         default => [
             ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'icons.layout-dashboard'],
             ['href' => route('weekly-timetable'), 'text' => 'My Schedules', 'icon' => 'icons.calender'],
@@ -28,9 +49,15 @@
     </div>
     <nav class="mt-5 px-4 space-y-1">
         @foreach ($navLinks as $link)
-            <x-nav.nav-link :href="$link['href']" :active="request()->url() === $link['href']" :icon="$link['icon']">
-                {{ $link['text'] }}
-            </x-nav.nav-link>
+            @if (isset($link['children']))
+                <x-nav.nav-group :routes="$link['children']"/>
+            @else
+                <x-nav.nav-link :href="$link['href']" :active="request()->url() === $link['href']" :icon="$link['icon']">
+                    {{ $link['text'] }}
+                </x-nav.nav-link>
+            @endif
         @endforeach
     </nav>
+
+
 </aside>

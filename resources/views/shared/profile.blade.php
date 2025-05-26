@@ -65,7 +65,7 @@
                         <x-input label='Confirm New Password' name='confirm-password' id='confirm-password' type='password'
                             required />
 
-                       <x-button text='Update' icon='icons.lock'/>
+                       <x-button text='Update Password' icon='icons.lock'/>
                     </form>
                 </div>
             </div>
