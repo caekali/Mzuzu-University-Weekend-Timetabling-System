@@ -5,7 +5,22 @@
      <div class="p-6 flex flex-col">
          <div class="flex justify-between items-center mb-6">
              <h1 class="text-2xl font-bold text-gray-900">Courses</h1>
-             <x-button text='Add Courses' icon='icons.plus' />
+             <div x-data="{ modalOpen: false }">
+                 <x-button text='Add Course' icon='icons.plus' @click="modalOpen = true" />
+
+                 <x-modal id="profileModal" title="Add Course">
+                     <x-input label="Course Name" name='course-name' type='text' placeholder='Course Name' required />
+                     <x-input label="Course Code" name='course-code' type='text' placeholder='Course Code' required />
+                     <div class="flex space-x-4">
+                         <x-input label="Weekly Hours" name='weekly-hours' type='number' placeholder='Weekly Hours'
+                             required />
+                         <x-input label="No. of students" name='number-of-student' type='number' placeholder='No. of students'
+                             required />
+                     </div>
+                     <x-input label="Department" name='department' type='text' placeholder='Department' required />
+
+                 </x-modal>
+             </div>
          </div>
 
          <div class="flex-1 grow bg-white rounded-lg shadow">
@@ -33,7 +48,7 @@
                                  Department
                              </th>
                              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                 # Students
+                                 No. of students
                              </th>
                              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                  Actions

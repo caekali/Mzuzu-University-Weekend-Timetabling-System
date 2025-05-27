@@ -40,7 +40,8 @@ class UserSeeder extends Seeder
         $hod = User::factory()->create([
             'first_name' => 'HOD',
             'last_name' => 'HOD',
-            'email' => 'hod@my.mzuni.ac.mw',
+            'email' => 'hod@my.mzuni.ac.mw'
+            ,
         ]);
 
         $hod->roles()->attach(Role::where('name', 'HOD')->first()->id);
