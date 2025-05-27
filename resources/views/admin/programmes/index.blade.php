@@ -5,10 +5,23 @@
      <div class="p-6 flex flex-col">
          <div class="flex justify-between items-center mb-6">
              <h1 class="text-2xl font-bold text-gray-900">Programmes</h1>
-             <x-button text='Add Programme' icon='icons.plus' />
+             <div x-data="{ modalOpen: false }">
+                 <x-button text='Add Programme' icon='icons.plus' @click="modalOpen = true" />
+
+                 <x-modal id="profileModal" title="Add Programme">
+                     <x-input label="Programme Code" name='programme-code' type='text' placeholder='Programme code'
+                         required />
+                     <x-input label="Programme Name" name='Programme Name' type='text' placeholder='Programme Name'
+                         required />
+
+                     <x-input label="Department" name='department' type='text' placeholder='Department'
+                         required />
+
+                 </x-modal>
+             </div>
          </div>
 
-         <div class="flex-1 grow bg-white rounded-lg shadow" >
+         <div class="flex-1 grow bg-white rounded-lg shadow">
              <div class="p-4 border-b">
                  <div class="relative">
                      <x-icons.search class="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />

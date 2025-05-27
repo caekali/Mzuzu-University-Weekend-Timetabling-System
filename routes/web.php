@@ -47,7 +47,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         return view('admin.users.students');
     })->name('admin.users.students');
 
-    Route::get('lecturer', function () {
+    Route::get('lecturers', function () {
         return view('admin.users.lecturers');
     })->name('admin.users.lecturers');
 
