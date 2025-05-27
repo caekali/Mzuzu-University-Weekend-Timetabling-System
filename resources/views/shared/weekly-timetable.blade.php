@@ -3,21 +3,21 @@
 @php
     $schedules = collect([
         (object) [
-            'day' => 'Mon',
+            'day' => 'Fri',
             'course' => (object) ['code' => 'BICT1101'],
             'venue' => (object) ['name' => 'ICT LAB 1'],
             'start_time' => '07:45',
             'end_time' => '09:45',
         ],
         (object) [
-            'day' => 'Tue',
+            'day' => 'Fri',
             'course' => (object) ['code' => 'BICT1202'],
             'venue' => (object) ['name' => 'Lecture Room 2'],
             'start_time' => '10:00',
             'end_time' => '12:00',
         ],
         (object) [
-            'day' => 'Wed',
+            'day' => 'Sun',
             'course' => (object) ['code' => 'MATH1103'],
             'venue' => (object) ['name' => 'Main Hall'],
             'start_time' => '13:00',
@@ -29,11 +29,11 @@
 
 @section('content')
     <p class="text-2xl font-bold text-gray-800 mb-6">Weekly Schedules</p>
-    <div x-data="{ selectedDay: '{{ $selectedDay ?? 'Mon' }}' }" class="space-y-4">
+    <div x-data="{ selectedDay: '{{ $selectedDay ?? 'Fri' }}' }" class="space-y-4">
 
         <!-- Day Tabs -->
         <ul class="flex space-x-4 mb-4">
-            @foreach (['Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'] as $day)
+            @foreach (['Fri', 'Sat', 'Sun'] as $day)
                 <li>
                     <button @click="selectedDay = '{{ $day }}'"
                         class="px-4 py-2 rounded font-medium text-sm transition"

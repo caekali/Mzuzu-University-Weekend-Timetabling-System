@@ -17,23 +17,16 @@
  @php
      $schedules = collect([
          (object) [
-             'day' => 'Mon',
-             'course' => (object) ['code' => 'BICT1101'],
-             'venue' => (object) ['name' => 'ICT LAB 1'],
-             'start_time' => '07:45',
-             'end_time' => '09:45',
-         ],
-         (object) [
              'day' => 'Tue',
              'course' => (object) ['code' => 'BICT1202'],
-             'venue' => (object) ['name' => 'Lecture Room 2'],
+             'venue' => (object) ['name' => 'ICT LAB 2'],
              'start_time' => '10:00',
              'end_time' => '12:00',
          ],
          (object) [
              'day' => 'Wed',
-             'course' => (object) ['code' => 'MATH1103'],
-             'venue' => (object) ['name' => 'Main Hall'],
+             'course' => (object) ['code' => 'MATH1203'],
+             'venue' => (object) ['name' => 'ICT LAB 1'],
              'start_time' => '13:00',
              'end_time' => '15:00',
          ],

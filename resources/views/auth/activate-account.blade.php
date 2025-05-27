@@ -1,6 +1,6 @@
 @extends('layouts.guest')
 
-@section('subtitle', 'Activate Account')
+@section('subtitle', 'Account Activation')
 
 @section('content')
     <form class="space-y-4">

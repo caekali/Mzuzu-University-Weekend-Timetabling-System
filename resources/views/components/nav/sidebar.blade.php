@@ -45,7 +45,7 @@
         <div class="flex  justify-center">
             <img class="size-12" src="{{ asset('assests/mzunilogo.webp') }}" alt="">
         </div>
-        <p class="text-md text-center font-medium text-gray-900">ICTWTS</p>
+        <p class="text-md text-center font-medium text-gray-900">Weekend Timetabling System</p>
     </div>
     <nav class="mt-5 px-4 space-y-1">
         @foreach ($navLinks as $link)
