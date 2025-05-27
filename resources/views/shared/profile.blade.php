@@ -25,11 +25,14 @@
                     </div>
 
                     @if (auth()->user()->hasRole('Student'))
-                        <div class="flex items-center text-gray-700">
+                        <div class="flex items-center text-gray-700" x-data="{ editBtnClicked: false }">
                             <x-icons.open-book class="h-5 w-5 mr-3 text-gray-400" />
-                            <span>BSc Computer Science - Level {{ $yearOfStudy ?? '1' }}</span>
+                            <span>BSc Information and Communication Technology - Level {{ $yearOfStudy ?? '1' }}</span>
+                            <button x-show='!editBtnClicked' type="submit" @click="editBtnClicked = true"
+                                class="ml-4 text-sm text-green-600 hover:text-green-700 hover:underline">Edit</button>
 
-                            <form action="{{ route('profile') }}" method="POST" class="ml-4 flex items-center space-x-2">
+                            <form action="{{ route('profile') }}" method="POST" x-cloak
+                                :class="editBtnClicked ? 'flex' : 'hidden'" class="ml-4 items-center space-x-2">
                                 @csrf
                                 @method('PUT')
                                 <select name="year" class="rounded-md border-gray-300 text-sm">
@@ -40,7 +43,9 @@
                                         </option>
                                     @endfor
                                 </select>
-                                <button type="submit" class="text-sm text-green-600 hover:text-green-700">Save</button>
+                                <button @click="editBtnClicked = false" type="submit" class="text-sm text-green-600 hover:text-green-700 hover:underline">Save</button>
+                                <button @click="editBtnClicked = false" type="button" class="text-sm text-gray-600 hover:text-gray-700 hover:underline">Cancel</button>
+
                             </form>
                         </div>
                     @endif
@@ -65,7 +70,7 @@
                         <x-input label='Confirm New Password' name='confirm-password' id='confirm-password' type='password'
                             required />
 
-                       <x-button text='Update Password' icon='icons.lock'/>
+                        <x-button text='Update Password' icon='icons.lock' />
                     </form>
                 </div>
             </div>

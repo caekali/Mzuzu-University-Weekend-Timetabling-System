@@ -5,7 +5,13 @@
      <div class="p-6 flex flex-col">
          <div class="flex justify-between items-center mb-6">
              <h1 class="text-2xl font-bold text-gray-900">Departments</h1>
-             <x-button text='Add Department' icon='icons.plus' />
+             <div x-data="{ modalOpen: false }">
+                 <x-button text='Add Department' icon='icons.plus' @click="modalOpen = true" />
+
+                 <x-modal id="profileModal" title="Add Department">
+                   <x-input label="Department Name" name='department-name' type='text' placeholder='Department name' required/>
+                 </x-modal>
+             </div>
          </div>
 
          <div class="flex-1 grow bg-white rounded-lg shadow">

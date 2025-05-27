@@ -24,7 +24,7 @@
             ['href' => route('admin.constraints'), 'text' => 'Constraints', 'icon' => 'icons.settings'],
             ['href' => route('admin.venues'), 'text' => 'Venues', 'icon' => 'icons.building'],
             ['href' => route('admin.timetable'), 'text' => 'Timetable', 'icon' => 'icons.calender'],
-            ['href' => route('admin.timetable.generate'), 'text' => 'Generate', 'icon' => 'icons.cpu'],
+            ['href' => route('admin.timetable.generate'), 'text' => 'Generate Timetable', 'icon' => 'icons.cpu'],
 
             ['href' => route('profile'), 'text' => 'Profile', 'icon' => 'icons.user'],
         ],
