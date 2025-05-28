@@ -9,10 +9,6 @@
             </div>
 
             <div class="flex items-center space-x-4">
-                <button class="p-2 rounded-md text-gray-500 hover:text-gray-600 hover:bg-gray-100 focus:outline-none">
-                    <x-icons.bell class="size-5" />
-                </button>
-
                 <!-- User Info + Role Switcher -->
                 <div class="relative flex items-center">
                     <div class="hidden md:block text-right mr-3">

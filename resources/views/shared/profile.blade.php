@@ -49,7 +49,6 @@
                             </form>
                         </div>
                     @endif
-
                     @if (auth()->user()->hasRole('Lecturer'))
                         <div class="flex items-center text-gray-700">
                             <x-icons.building class="h-5 w-5 mr-3 text-gray-400" />
@@ -57,7 +56,6 @@
                         </div>
                     @endif
                 </div>
-
                 <div class="mt-8 pt-8 border-t">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Change Password</h3>
 
