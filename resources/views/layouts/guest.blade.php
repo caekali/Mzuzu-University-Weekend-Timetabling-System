@@ -17,7 +17,7 @@
         <div class="max-w-md w-full space-y-8">
             <div>
                 <div class="flex justify-center">
-                    <img class="size-[100px]" src="{{ asset('assests/mzunilogo.webp') }}" alt="">
+                    <img class="size-[100px]" src="{{ asset('assets/mzunilogo.webp') }}" alt="">
                 </div>
                 <h2 class="mt-3 text-center text-xl font-extrabold text-gray-900">
                    {{ config('app.name') }}

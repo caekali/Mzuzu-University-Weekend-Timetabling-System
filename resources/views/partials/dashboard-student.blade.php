@@ -23,7 +23,7 @@
          @endif
 
          <div class="bg-white p-4 rounded-lg shadow-md mt-6">
-             <a href="{{ route('weekly-timetable') }}" class="text-green-600 font-medium hover:underline">
+             <a href="{{ route('timetable') }}" class="text-green-600 font-medium hover:underline">
                  View Full Weekly Schedule →
              </a>
          </div>

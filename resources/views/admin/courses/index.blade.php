@@ -14,8 +14,8 @@
                      <div class="flex space-x-4">
                          <x-input label="Weekly Hours" name='weekly-hours' type='number' placeholder='Weekly Hours'
                              required />
-                         <x-input label="No. of students" name='number-of-student' type='number' placeholder='No. of students'
-                             required />
+                         <x-input label="No. of students" name='number-of-student' type='number'
+                             placeholder='No. of students' required />
                      </div>
                      <x-input label="Department" name='department' type='text' placeholder='Department' required />
 
@@ -32,7 +32,19 @@
                  </div>
              </div>
              <div class="overflow-x-auto">
-                 <table class="min-w-full divide-y divide-gray-200">
+
+                 @php
+                     $headers = [
+                         'id' => 'ID',
+                         'code' => 'Code',
+                         'name' => 'Name',
+                         'weeklyHours' => 'Weekly Hours',
+                         'department' => 'Department',
+                         'num_of_students' => '',
+                     ];
+                 @endphp
+                 <x-table :headers="$headers" :rows="$courses->toArray()" :actions="true" :paginate="false" />
+                 {{-- <table class="min-w-full divide-y divide-gray-200">
                      <thead class="bg-gray-50">
                          <tr>
                              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -87,8 +99,8 @@
                              </td>
                          </tr>
                          ))} --}}
-                     </tbody>
-                 </table>
+                 </tbody>
+                 </table> --}}
              </div>
          </div>
      </div>

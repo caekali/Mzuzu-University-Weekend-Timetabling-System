@@ -47,8 +47,9 @@
          @include('partials.dashboard-student')
      @elseif ($currentRole === 'Lecturer')
          @include('partials.dashboard-lecturer')
+      @elseif ($currentRole === 'HOD')
+         @include('partials.dashboard-hod')
      @else
-         <p class="text-red-500">Unknown role or access denied.</p>
-     @endif
+{{abort(401)}}     @endif
      
  @endsection

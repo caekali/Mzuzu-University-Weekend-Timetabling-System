@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('code');
             $table->string('name');
-            $table->integer('capacity');
+            $table->integer('num_of_students');
             $table->integer('level');
             $table->foreignId('programme_id')->constrained()->cascadeOnDelete();
         });

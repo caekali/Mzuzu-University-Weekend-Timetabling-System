@@ -18,18 +18,22 @@ class LoginController extends Controller
         return $this->authenticated();
     }
 
-    public function login(LoginRequest $loginRequest)
-    {
+    // public function login(LoginRequest $loginRequest)
+    // {
 
-        // Attempt authenticating user
-        if (!Auth::attempt($loginRequest->only('email', 'password'))) {
-            return back()->withErrors(['status' => 'Invalid credentials'])->withInput();
-        }
+    //     if (! $user->is_active) {
+    //         return back()->withErrors(['status' => 'Your account is not activated. Please activate first.']);
+    //     }
 
-        // Success: redirect
-        $loginRequest->session()->regenerate();
-        return $this->authenticated();
-    }
+    //     // Attempt authenticating user
+    //     if (!Auth::attempt($loginRequest->only('email', 'password'))) {
+    //         return back()->withErrors(['status' => 'Invalid credentials'])->withInput();
+    //     }
+
+    //     // Success: redirect
+    //     $loginRequest->session()->regenerate();
+    //     return $this->authenticated();
+    // }
 
     public function logout(Request $request)
     {
@@ -51,6 +55,6 @@ class LoginController extends Controller
             session(['current_role' => $roles->first()]);
         }
 
-       return redirect()->route('dashboard');
+        return redirect()->route('dashboard');
     }
 }

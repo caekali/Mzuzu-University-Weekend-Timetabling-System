@@ -32,7 +32,7 @@
                             class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50" x-transition>
                             @foreach (Auth::user()->roles as $role)
                                 @if ($role->name !== session('current_role'))
-                                    <a href="{{ route('switch.role', $role->name) }}"
+                                    <a href="{{ route('auth.switch-role', $role->name) }}"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         Switch to {{ ucfirst($role->name) }}
                                     </a>

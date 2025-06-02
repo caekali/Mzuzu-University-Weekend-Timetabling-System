@@ -1,104 +1,135 @@
 <?php
 
+
+use App\Http\Controllers\Admin\VenueController;
+use App\Http\Controllers\Admin\ProgrammeController;
+use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\ActivationController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ChangePasswordController;
-use App\Http\Controllers\ContactController;
 use App\Http\Controllers\RoleSwitchController;
+use App\Http\Controllers\ConstraintController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TimetableController;
+use Illuminate\Support\Facades\Auth;
 
-Route::middleware('guest')->group(function () {
-    Route::get('/', [LoginController::class, 'showLoginForm'])->name("login");
-    Route::post('/', [LoginController::class, 'login'])->name("login");
-    Route::get('/account-activation', [ContactController::class, 'show'])->name('account-activation');
-    Route::post('/account-activation', [ContactController::class, 'sendActivationLink'])->name('account-activation');
-});
-
-Route::prefix('password')->group(function () {
-    Route::get("/forget-password", function () {
-        return view('auth.forget-password');
-    })->name("password.forget-password");
-
-    Route::middleware('auth')->group(function () {
-        Route::post('/logout', [LoginController::class, 'logout'])->name("logout");
-        Route::get('/change-password', [ChangePasswordController::class, 'showChangePasswordForm'])->name("change-password");
-    });
-});
-
-Route::get('/switch-role/{role}', [RoleSwitchController::class, 'switch'])->name('switch.role');
-
-Route::middleware(['auth', 'role:Admin'])->group(function () {
-    Route::get('programmes', function () {
-        return view('admin.programmes.index');
-    })->name('admin.programmes');
-
-    Route::get('departments', function () {
-        return view('admin.departments.index');
-    })->name('admin.departments');
-
-    Route::get('courses', function () {
-        return view('admin.courses.index');
-    })->name('admin.courses');
-
-    Route::get('users', function () {
-        return view('admin.users.index');
-    })->name('admin.users');
-
-    Route::get('students', function () {
-        return view('admin.users.students');
-    })->name('admin.users.students');
-
-    Route::get('lecturers', function () {
-        return view('admin.users.lecturers');
-    })->name('admin.users.lecturers');
-
-
-    Route::get('timetable', function () {
-        return view('admin.timetable.index');
-    })->name('admin.timetable');
-
-    Route::get('timetable/generate', function () {
-        return view('admin.timetable.generate');
-    })->name('admin.timetable.generate');
-
-    Route::get('constraints', function () {
-        return view('admin.constraints.index');
-    })->name('admin.constraints');
-
-    Route::get('venues', function () {
-        return view('admin.venues.index');
-    })->name('admin.venues');
-});
-
+Route::get('/', function () {
+    return Auth::check()
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
+})->name('home');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('profile', function () {
-        return view('shared.profile');
-    })->name('profile');
-
-    Route::post('profile/update-password', function () {
-        return view('shared.profile');
-    })->name('profile.update-password');
-
-    Route::get('weekly-timetable', function () {
-        return view('shared.weekly-timetable');
-    })->name('weekly-timetable');
-
-    Route::get('dashboard', function () {
+    Route::get('/dashboard', function () {
         return view('shared.dashboard');
     })->name('dashboard');
 });
 
 
-Route::prefix("lecturer")->middleware(['auth', 'role:Lecturer'])->group(function () {});
+Route::middleware('guest')->group(function () {
+    // Route::get('/', [LoginController::class, 'showLoginForm'])->name('auth.login');
+    // Route::post('/', [LoginController::class, 'login'])->name('auth.login.submit');
 
-Route::prefix("hod")->middleware(['auth', 'role:HOD'])->group(function () {
-    Route::get('dashboard', function () {
-        return view('hod.dashboard');
-    })->name('hod.dashboard');
+
+// Request form to trigger activation email
+Route::get('/activate', [ActivationController::class, 'requestForm'])->name('auth.account.activation');
+Route::post('/activate', [ActivationController::class, 'sendActivationLink'])->name('auth.account.activation.send');
+
+// Set password via signed URL
+Route::get('/activatee/{user}', [ActivationController::class, 'showActivationForm'])->name('auth.account.activate.form')->middleware('signed');
+Route::post('/activatee/{user}', [ActivationController::class, 'activate'])->name('auth.account.activate');
+
 });
 
-Route::prefix("student")->middleware(['auth', 'role:Student'])->group(function () {
-    Route::get("account-setup", function () {
-        return view('student.account-setup');
-    })->name("student.account-setup");
+
+
+
+Route::middleware('auth')->group(function () {
+    // Route::post('/logout', [LoginController::class, 'logout'])->name('auth.logout');
+    Route::get('/change-password', [ChangePasswordController::class, 'showChangePasswordForm'])->name('auth.change-password');
+
+    Route::get('/dashboard', fn() => view('shared.dashboard'))->name('dashboard');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
+    Route::get('/timetable', fn() => view('shared.timetable'))->name('timetable');
+
+    // Universal Timetable Filtering
+    //  Route::get('/timetable', [TimetableController::class, 'index']); // filter by programme, level, day, etc.
+    // Personal Schedules
+    // Route::get('/schedules', [ScheduleController::class, 'mySchedules']); // varies by role
+
+    Route::get('/switch-role/{role}', [RoleSwitchController::class, 'switch'])->name('auth.switch-role');
+});
+
+
+Route::middleware(['auth', 'role:Admin'])->group(function () {
+    Route::get('/timetable/generate', [TimetableController::class, 'showTimetableGeneratioPage'])->name('timetable.generate');
+    Route::post('/timetable/generate', [TimetableController::class, 'generate'])->name('timetable.generate');
+
+    Route::resource('/departments', DepartmentController::class)->names([
+        'index'   => 'departments.index',
+        'create'  => 'departments.create',
+        'store'   => 'departments.store',
+        'show'    => 'departments.show',
+        'edit'    => 'departments.edit',
+        'update'  => 'departments.update',
+        'destroy' => 'departments.destroy',
+    ]);
+
+    Route::resource('/courses', CourseController::class)->names([
+        'index'   => 'courses.index',
+        'create'  => 'courses.create',
+        'store'   => 'courses.store',
+        'show'    => 'courses.show',
+        'edit'    => 'courses.edit',
+        'update'  => 'courses.update',
+        'destroy' => 'courses.destroy',
+    ]);
+
+    Route::resource('/programmes', ProgrammeController::class)->names([
+        'index'   => 'programmes.index',
+        'create'  => 'programmes.create',
+        'store'   => 'programmes.store',
+        'show'    => 'programmes.show',
+        'edit'    => 'programmes.edit',
+        'update'  => 'programmes.update',
+        'destroy' => 'programmes.destroy',
+    ]);
+
+    Route::resource('/venues', VenueController::class)->names([
+        'index'   => 'venues.index',
+        'create'  => 'venues.create',
+        'store'   => 'venues.store',
+        'show'    => 'venues.show',
+        'edit'    => 'venues.edit',
+        'update'  => 'venues.update',
+        'destroy' => 'venues.destroy',
+    ]);
+
+    Route::resource('/constraints', ConstraintController::class)->names([
+        'index'   => 'constraints.index',
+        'create'  => 'constraints.create',
+        'store'   => 'constraints.store',
+        'show'    => 'constraints.show',
+        'edit'    => 'constraints.edit',
+        'update'  => 'constraints.update',
+        'destroy' => 'constraints.destroy',
+    ]);
+
+    Route::get('/users', [UserController::class, 'allUsers'])->name('users.index');
+    Route::get('/students', fn() => view('admin.users.students'))->name('users.students');
+    Route::get('/lecturers', fn() => view('admin.users.lecturers'))->name('users.lecturers');
+});
+
+
+Route::middleware(['auth', 'role:HOD'])->group(function () {});
+
+
+Route::middleware(['auth', 'role:Student'])->group(function () {
+    Route::get('/profile/setup', fn() => view('student.account-setup'))->name('student.profile.setup');
+    Route::put('/profile/setup', [ProfileController::class, 'setupAccount']); // for students
+
 });

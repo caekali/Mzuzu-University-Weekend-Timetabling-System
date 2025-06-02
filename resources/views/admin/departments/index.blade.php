@@ -9,7 +9,19 @@
                  <x-button text='Add Department' icon='icons.plus' @click="modalOpen = true" />
 
                  <x-modal id="profileModal" title="Add Department">
-                   <x-input label="Department Name" name='department-name' type='text' placeholder='Department name' required/>
+
+                     <form action="{{ route('departments.store') }}" class="space-y-3" method="POST">
+                         @csrf
+                         <x-input label="Department Name" name='name' type='text' placeholder='Department name'
+                             required />
+                         <div class="flex justify-end space-x-3 pt-4 ">
+                             <button type="button" @click="modalOpen = false"
+                                 class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                 Cancel
+                             </button>
+                             <x-button type="submit" text='Add Department' class="cursor-default" />
+                         </div>
+                     </form>
                  </x-modal>
              </div>
          </div>
@@ -18,56 +30,52 @@
              <div class="p-4 border-b">
                  <div class="relative">
                      <x-icons.search class="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                     <input type="text" placeholder="Search programmes..."
+                     <input type="text" placeholder="Search department..."
                          class="pl-10 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
                  </div>
              </div>
              <div class="overflow-x-auto">
-                 <table class="min-w-full divide-y divide-gray-200">
-                     <thead class="bg-gray-50">
-                         <tr>
-                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                 Name
-                             </th>
-                             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                 Actions
-                             </th>
-                         </tr>
-                     </thead>
-                     <tbody class="bg-white divide-y divide-gray-200">
-                         {{-- {filteredProgrammes.map(programme => (
-                         <tr key={programme.id} class="hover:bg-gray-50">
-                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                 {programme.code}
-                             </td>
-                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                 {programme.name}
-                             </td>
-                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                 {departments.find(d => d.id === programme.departmentId)?.name}
-                             </td>
-                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                 {programme.degree}
-                             </td>
-                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                 {programme.duration} years
-                             </td>
-                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                 <button onClick={()=> handleEditProgramme(programme)}
-                                     class="text-blue-600 hover:text-blue-900 mr-4"
-                                     >
-                                     <Pencil class="h-4 w-4" />
-                                 </button>
-                                 <button onClick={()=> handleDeleteProgramme(programme.id)}
-                                     class="text-red-600 hover:text-red-900"
-                                     >
-                                     <Trash2 class="h-4 w-4" />
-                                 </button>
-                             </td>
-                         </tr>
-                         ))} --}}
-                     </tbody>
-                 </table>
+                 @php
+                     $headers = ['id' => 'ID', 'name' => 'Name'];
+                 @endphp
+                 <x-table :headers="$headers" :rows="$departments->toArray()" :actions="true" :paginate="false" />
+                 <script>
+                     document.addEventListener('DOMContentLoaded', function() {
+                         document.querySelectorAll('.delete-department').forEach(button => {
+                             button.addEventListener('click', function(e) {
+                                 e.preventDefault();
+
+                                 if (!confirm('Are you sure you want to delete this department?')) return;
+
+                                 const departmentId = this.getAttribute('data-id');
+                                 const row = this.closest('tr');
+
+                                 fetch(`departments/${departmentId}`, {
+                                         method: 'DELETE',
+                                         headers: {
+                                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                             'Accept': 'application/json',
+                                         },
+                                     })
+                                     .then(response => {
+                                         if (response.ok) {
+                                             row.remove(); // Remove the row from the DOM
+                                         } else {
+                                             return response.json().then(data => {
+                                                 alert(data.message ||
+                                                     'Failed to delete department.');
+                                             });
+                                         }
+                                     })
+                                     .catch(error => {
+                                         alert('An error occurred. Please try again.');
+                                         console.error(error);
+                                     });
+                             });
+                         });
+                     });
+                 </script>
+
              </div>
          </div>
      </div>

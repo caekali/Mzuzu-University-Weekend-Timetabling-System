@@ -17,11 +17,8 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->string('password');
-
-            // activation
-            $table->string('activation_token')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->enum('status', ['pending', 'active', 'suspended'])->default('pending');
+            $table->boolean('is_active')->default(false);
 
             $table->rememberToken();
             $table->timestamps();
