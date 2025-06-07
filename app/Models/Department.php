@@ -10,7 +10,7 @@ class Department extends Model
 {
     /** @use HasFactory<\Database\Factories\DepartmentFactory> */
     use HasFactory;
-    protected $fillable = ['name'];
+    protected $fillable = ['code','name'];
 
     public function courses(): HasMany
     {

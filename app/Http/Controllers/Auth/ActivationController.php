@@ -17,7 +17,7 @@ class ActivationController extends Controller
 {
     public function requestForm()
     {
-        return view('auth.activation-request');
+        return view('auth.request-activation-link');
     }
 
     public function sendActivationLink(Request $request)

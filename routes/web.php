@@ -14,7 +14,14 @@ use App\Http\Controllers\ConstraintController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TimetableController;
+use App\Livewire\Auth\ActivateAccount;
+use App\Livewire\Auth\Login;
+use App\Livewire\Course\CourseList;
+use App\Livewire\Dashboard;
+use App\Livewire\Department\DepartmentList;
+use App\Livewire\Programme\ProgrammeList;
 use Illuminate\Support\Facades\Auth;
+
 
 Route::get('/', function () {
     return Auth::check()
@@ -22,26 +29,33 @@ Route::get('/', function () {
         : redirect()->route('login');
 })->name('home');
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('shared.dashboard');
-    })->name('dashboard');
-});
+
+Route::middleware(['auth'])->get('/dashboard', Dashboard::class)->name('dashboard');
+
+Route::middleware(['auth'])->get('/courses', CourseList::class)->name('courses');
+Route::middleware(['auth'])->get('/departments', DepartmentList::class)->name('departments');
+Route::middleware(['auth'])->get('/programmes', ProgrammeList::class)->name('programmes');
+
+
+
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/dashboard', function () {
+//         return view('shared.dashboard');
+//     })->name('dashboard');
+// });
 
 
 Route::middleware('guest')->group(function () {
-    // Route::get('/', [LoginController::class, 'showLoginForm'])->name('auth.login');
-    // Route::post('/', [LoginController::class, 'login'])->name('auth.login.submit');
+    Route::get('/activate/request', [ActivationController::class, 'requestForm'])->name('activation.request');
+    Route::post('/activate/request', [ActivationController::class, 'sendActivationLink'])->name('activation.email.send');
 
+    Route::get('/activate/{userId}', ActivateAccount::class)
+        ->middleware('signed')
+        ->name('activation.form');
 
-// Request form to trigger activation email
-Route::get('/activate', [ActivationController::class, 'requestForm'])->name('auth.account.activation');
-Route::post('/activate', [ActivationController::class, 'sendActivationLink'])->name('auth.account.activation.send');
-
-// Set password via signed URL
-Route::get('/activatee/{user}', [ActivationController::class, 'showActivationForm'])->name('auth.account.activate.form')->middleware('signed');
-Route::post('/activatee/{user}', [ActivationController::class, 'activate'])->name('auth.account.activate');
-
+    // Set password via signed URL
+    // Route::get('/activate/{user}', [ActivationController::class, 'showActivationForm'])->name('activation.form')->middleware('signed');
+    // Route::post('/activate/{user}', [ActivationController::class, 'activate'])->name('activation.complete');
 });
 
 
@@ -51,7 +65,7 @@ Route::middleware('auth')->group(function () {
     // Route::post('/logout', [LoginController::class, 'logout'])->name('auth.logout');
     Route::get('/change-password', [ChangePasswordController::class, 'showChangePasswordForm'])->name('auth.change-password');
 
-    Route::get('/dashboard', fn() => view('shared.dashboard'))->name('dashboard');
+    // Route::get('/dashboard', fn() => view('shared.dashboard'))->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
     Route::get('/timetable', fn() => view('shared.timetable'))->name('timetable');
@@ -67,9 +81,9 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/timetable/generate', [TimetableController::class, 'showTimetableGeneratioPage'])->name('timetable.generate');
-    Route::post('/timetable/generate', [TimetableController::class, 'generate'])->name('timetable.generate');
+    Route::post('/timetable/generate', [TimetableController::class, 'generate'])->name('timetable.generate.send');
 
-    Route::resource('/departments', DepartmentController::class)->names([
+    Route::resource('/departmentss', DepartmentController::class)->names([
         'index'   => 'departments.index',
         'create'  => 'departments.create',
         'store'   => 'departments.store',
@@ -79,7 +93,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         'destroy' => 'departments.destroy',
     ]);
 
-    Route::resource('/courses', CourseController::class)->names([
+    Route::resource('/coursesss', CourseController::class)->names([
         'index'   => 'courses.index',
         'create'  => 'courses.create',
         'store'   => 'courses.store',
@@ -89,7 +103,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         'destroy' => 'courses.destroy',
     ]);
 
-    Route::resource('/programmes', ProgrammeController::class)->names([
+    Route::resource('/programmess', ProgrammeController::class)->names([
         'index'   => 'programmes.index',
         'create'  => 'programmes.create',
         'store'   => 'programmes.store',

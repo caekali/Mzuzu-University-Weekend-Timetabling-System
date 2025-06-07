@@ -5,19 +5,14 @@
     <form class="space-y-4" action="{{ route('password.update') }}" method="POST">
         @csrf
         <input type="hidden" name="token" value="{{ $token }}">
-        <x-input label="Email" name="email" type="email" id="email" required readonly
-            value="{{ old('email', $request->email) }}" />
+        <input type="hidden" name="email" value="{{ old('email', $request->email) }}">
 
-        <x-input label="New Password" name="password" type="password" id="password" required />
-        <x-input label="Confirm Password" name="password_confirmation" type="password" id="password_confirmation" required />
-
-       
+        <x-password label="New Password" name="password" id="password" autoComplete="password" required :error="false" />
+        <x-password label="Confirm Password" name="password_confirmation" id="password_confirmation"
+            autoComplete="password_confirmation" required :error="false" />
         @session('status')
-            <p>{{ session('status') }}</p>
+            <x-alert title="{{ session('status') }}" info />
         @endsession
-        <div>
-            <x-button text='Reset Password' type='submit' class="w-full" />
-        </div>
-         {{ dd($errors) }}
+        <x-button primary label='Reset Password' type='submit' class="w-full" />
     </form>
 @endsection

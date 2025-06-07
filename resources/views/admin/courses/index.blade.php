@@ -5,22 +5,37 @@
      <div class="p-6 flex flex-col">
          <div class="flex justify-between items-center mb-6">
              <h1 class="text-2xl font-bold text-gray-900">Courses</h1>
-             <div x-data="{ modalOpen: false }">
-                 <x-button text='Add Course' icon='icons.plus' @click="modalOpen = true" />
 
-                 <x-modal id="profileModal" title="Add Course">
-                     <x-input label="Course Name" name='course-name' type='text' placeholder='Course Name' required />
-                     <x-input label="Course Code" name='course-code' type='text' placeholder='Course Code' required />
-                     <div class="flex space-x-4">
-                         <x-input label="Weekly Hours" name='weekly-hours' type='number' placeholder='Weekly Hours'
+             <x-button icon="plus" label="Add Course" x-on:click="$openModal('courseModal')" primary />
+
+             <x-modal-card title="Add Course" name="courseModal">
+                 <form id="courseForm" action="{{ route('courses.store') }}" method="POST">
+                     @csrf
+                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                         <x-input label="Course Code" placeholder="Course Code" name='code' required />
+                         <x-input label="Course Name" placeholder="Course Name" name='name' required />
+
+                         <div class="col-span-1 sm:col-span-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                             <x-number label="Level" placeholder="Level" name='level' required />
+                             <x-number label="Semester" placeholder='Semester' name='semester' required />
+                         </div>
+                         <div class="col-span-1 sm:col-span-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                             <x-number label="Weekly Hours" placeholder="Weekly Hours" name='weekly_hours' required />
+                             <x-number label="No. of students" placeholder='No. of students' name='num_of_students'
+                                 required />
+                         </div>
+                         <x-select class="col-span-1 sm:col-span-2" label="Department" name='department_id'
+                             placeholder="Select Department" :options="$departments"
                              required />
-                         <x-input label="No. of students" name='number-of-student' type='number'
-                             placeholder='No. of students' required />
                      </div>
-                     <x-input label="Department" name='department' type='text' placeholder='Department' required />
-
-                 </x-modal>
-             </div>
+                 </form>
+                 <x-slot name="footer" class="flex justify-end gap-x-4">
+                     <div class="flex gap-x-4">
+                         <x-button flat label="Cancel" x-on:click="close" />
+                         <x-button primary label="Save" type='submit' form='courseForm' />
+                     </div>
+                 </x-slot>
+             </x-modal-card>
          </div>
 
          <div class="flex-1 grow bg-white rounded-lg shadow">
@@ -68,7 +83,7 @@
                          </tr>
                      </thead>
                      <tbody class="bg-white divide-y divide-gray-200">
-                         {{-- {filteredProgrammes.map(programme => (
+                         {filteredProgrammes.map(programme => (
                          <tr key={programme.id} class="hover:bg-gray-50">
                              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                  {programme.code}
@@ -98,7 +113,7 @@
                                  </button>
                              </td>
                          </tr>
-                         ))} --}}
+                         ))}
                  </tbody>
                  </table> --}}
              </div>

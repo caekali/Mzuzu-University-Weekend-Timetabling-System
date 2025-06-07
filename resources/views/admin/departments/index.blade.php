@@ -1,11 +1,28 @@
  @extends('layouts.app')
-
-
  @section('content')
      <div class="p-6 flex flex-col">
          <div class="flex justify-between items-center mb-6">
              <h1 class="text-2xl font-bold text-gray-900">Departments</h1>
-             <div x-data="{ modalOpen: false }">
+             <x-button icon="plus" label="Add Department" x-on:click="$openModal('departmentModal')" primary />
+
+             <x-modal-card title="Add Department" name="departmentModal">
+                 <form id="departmentForm" action="{{ route('departments.store') }}" method="POST">
+                    @csrf
+                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                         <x-input label="Department Code" name='code' placeholder="Department Code"
+                             value="{{ old('code') }}" required />
+                         <x-input label="Department Name" name='name' placeholder="Department Name"
+                             value="{{ old('name') }}" required />
+                     </div>
+                     <x-slot name="footer" class="flex justify-end gap-x-4">
+                         <div class="flex gap-x-4">
+                             <x-button flat label="Cancel" x-on:click="close" />
+                             <x-button type='submit' primary label="Save" form="departmentForm" />
+                         </div>
+                     </x-slot>
+                 </form>
+             </x-modal-card>
+             {{-- <div x-data="{ modalOpen: false }">
                  <x-button text='Add Department' icon='icons.plus' @click="modalOpen = true" />
 
                  <x-modal id="profileModal" title="Add Department">
@@ -23,7 +40,7 @@
                          </div>
                      </form>
                  </x-modal>
-             </div>
+             </div> --}}
          </div>
 
          <div class="flex-1 grow bg-white rounded-lg shadow">
@@ -36,7 +53,7 @@
              </div>
              <div class="overflow-x-auto">
                  @php
-                     $headers = ['id' => 'ID', 'name' => 'Name'];
+                     $headers = ['code' => 'Code', 'name' => 'Name'];
                  @endphp
                  <x-table :headers="$headers" :rows="$departments->toArray()" :actions="true" :paginate="false" />
                  <script>

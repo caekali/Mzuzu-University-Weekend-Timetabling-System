@@ -8,25 +8,26 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+    <wireui:scripts />
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
 </head>
 
 <body>
-    <div class="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
+    <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-800 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
             <div>
                 <div class="flex justify-center">
                     <img class="size-[100px]" src="{{ asset('assets/mzunilogo.webp') }}" alt="">
                 </div>
-                <h2 class="mt-3 text-center text-xl font-extrabold text-gray-900">
-                   {{ config('app.name') }}
+                <h2 class="mt-3 text-center text-xl font-extrabold text-gray-900  dark:text-white">
+                    {{ config('app.name') }}
                 </h2>
-                <p class="mt-2 text-center text-lg text-gray-600">
+                <p class="mt-2 text-center text-lg text-gray-600 dark:text-white">
                     @yield('subtitle')
                 </p>
             </div>
-            <div class="mt-4 bg-white p-4 shadow sm:rounded-lg sm:px-6">
+            <div class="mt-4 bg-white  dark:bg-gray-900 p-4 drop-shadow-2xl rounded-2xl sm:px-6">
                 @yield('content')
             </div>
         </div>

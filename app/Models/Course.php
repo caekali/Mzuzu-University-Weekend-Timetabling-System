@@ -16,7 +16,10 @@ class Course extends Model
         'name',
         'capacity',
         'level',
-        'programme_id'
+        'weekly_hours',
+        'semester',
+        'num_of_students',
+        'department_id'
     ];
 
     public function department(): BelongsTo

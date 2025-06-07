@@ -17,16 +17,18 @@
                     <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-700">
                         {{ $row[$key] ?? '' }}
                     </td>
-                    @if ($actions)
-                        <td class="px-6  whitespace-nowrap text-sm font-medium text-gray-900 space-x-2">
-                            <a href="" class="text-blue-600 hover:underline">Edit</a>
-                            <button class="text-red-600 hover:underline delete-department" data-id="{{ $row['id'] }}">
-                                Delete
-                            </button>
-                        </td>
-                    @endif
                 @endforeach
-
+                @if ($actions)
+                    <td class="px-6  whitespace-nowrap text-sm font-medium text-gray-900 space-x-2">
+                        <button class="text-green-600 hover:underline" wire:click="openModal({{ $row['id'] }})">
+                            Edit
+                        </button>
+                        <button class="text-red-600 hover:underline delete-department"
+                            wire:click="confirmDelete({{ $row['id'] }})">
+                            Delete
+                        </button>
+                    </td>
+                @endif
             </tr>
         @empty
             <tr>

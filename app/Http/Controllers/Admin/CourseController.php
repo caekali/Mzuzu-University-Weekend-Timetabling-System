@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\Department;
 
 class CourseController extends Controller
 {
@@ -14,7 +15,8 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::all();
-        return view('admin.courses.index', ['courses' => $courses]);
+        $departments = Department::pluck('name', 'id')->toArray();
+        return view('admin.courses.index', compact('courses', 'departments'));
     }
 
     /**
@@ -30,7 +32,7 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request);
     }
 
     /**

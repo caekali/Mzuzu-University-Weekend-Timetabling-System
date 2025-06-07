@@ -15,7 +15,6 @@ class DepartmentController extends Controller
     public function index()
     {
         $departments = Department::all();
-        // dd($departments->toArray());
         return view('admin.departments.index', ['departments' => $departments]);
     }
 
@@ -36,7 +35,7 @@ class DepartmentController extends Controller
 
         Department::create($validated);
 
-        // return redirect()->route('admin.departments.index', [])->with('success', 'Department created successfully.');
+        return redirect()->route('departments.index', [])->with('success', 'Department created successfully.');
     }
 
     /**

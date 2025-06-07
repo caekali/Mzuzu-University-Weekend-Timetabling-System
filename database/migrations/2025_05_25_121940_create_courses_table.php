@@ -16,8 +16,11 @@ return new class extends Migration
             $table->string('code');
             $table->string('name');
             $table->integer('num_of_students');
+            $table->integer('weekly_hours');
             $table->integer('level');
-            $table->foreignId('programme_id')->constrained()->cascadeOnDelete();
+            $table->integer('semester');
+            $table->foreignId('department_id')->constrained()->cascadeOnDelete();
+            $table->timestamps();
         });
     }
 

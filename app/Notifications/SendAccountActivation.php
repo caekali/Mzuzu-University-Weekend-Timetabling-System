@@ -13,7 +13,7 @@ class SendAccountActivation extends Notification
 {
     use Queueable;
 
-   public function __construct(public $user) {}
+    public function __construct(public $user) {}
 
     public function via($notifiable)
     {
@@ -23,14 +23,14 @@ class SendAccountActivation extends Notification
     public function toMail($notifiable)
     {
         $url = URL::temporarySignedRoute(
-            'auth.account.activate.form',
+            'activation.form',
             Carbon::now()->addMinutes(60),
-            ['user' => $this->user->id]
+            ['userId' => $this->user->id]
         );
 
         return (new MailMessage)
             ->subject('Activate Your Account')
-            ->greeting('Hello ' . $this->user->name . ',')
+            ->greeting('Hello ' . $this->user->first_name . ' ' . $this->user->last_name . ',')
             ->line('Click the button below to activate your account.')
             ->action('Activate Account', $url)
             ->line('This link will expire in 60 minutes.');

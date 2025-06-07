@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Laravel\Fortify\Contracts\LogoutResponse;
+use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -27,30 +27,6 @@ class FortifyServiceProvider extends ServiceProvider
             return view('auth.login');
         });
 
-
-        Fortify::authenticateUsing(function (Request $request) {
-            $user = User::where('email', $request->email)->first();
-
-            if (! $user) {
-                session()->flash('auth_error', 'No account found with that email.');
-                return null;
-            }
-            if (! $user->is_active) {
-                session()->flash('auth_error', 'Your account is not active. Please contact the administrator.');
-                return null;
-            }
-            if (! Hash::check($request->password, $user->password)) {
-                session()->flash('auth_error', 'Invalid Credentials.');
-                return null;
-            }
-
-            $roles = $user->roles->pluck('name');
-            session(['current_role' => $roles->contains('Lecturer') ? 'Lecturer' : $roles->first()]);
-
-            return $user;
-        });
-
-
         Fortify::requestPasswordResetLinkView(function () {
             return view('auth.forgot-password');
         });
@@ -61,6 +37,33 @@ class FortifyServiceProvider extends ServiceProvider
                 'token' => $request->route('token'), // ✅ required
                 'email' => $request->email,
             ]);
+        });
+
+        Fortify::authenticateUsing(function (Request $request) {
+            $user = User::where('email', $request->email)->first();
+
+            if (! $user) {
+                throw ValidationException::withMessages([
+                    Fortify::username() => 'No account found with that email.',
+                ]);
+            }
+
+            if (! $user->is_active) {
+                throw ValidationException::withMessages([
+                    Fortify::username() => 'Your account is not activated. Activate now.',
+                ]);
+            }
+
+            if (! Hash::check($request->password, $user->password)) {
+                throw ValidationException::withMessages([
+                    Fortify::username() => 'Invalid credentials.',
+                ]);
+            }
+
+            $roles = $user->roles->pluck('name');
+            session(['current_role' => $roles->contains('Lecturer') ? 'Lecturer' : $roles->first()]);
+
+            return $user;
         });
     }
 
