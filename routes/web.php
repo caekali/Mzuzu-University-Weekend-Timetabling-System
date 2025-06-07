@@ -1,13 +1,11 @@
 <?php
 
-
 use App\Http\Controllers\Admin\VenueController;
 use App\Http\Controllers\Admin\ProgrammeController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\ActivationController;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\RoleSwitchController;
 use App\Http\Controllers\ConstraintController;
@@ -15,7 +13,6 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TimetableController;
 use App\Livewire\Auth\ActivateAccount;
-use App\Livewire\Auth\Login;
 use App\Livewire\Course\CourseList;
 use App\Livewire\Dashboard;
 use App\Livewire\Department\DepartmentList;
@@ -28,15 +25,6 @@ Route::get('/', function () {
         ? redirect()->route('dashboard')
         : redirect()->route('login');
 })->name('home');
-
-
-Route::middleware(['auth'])->get('/dashboard', Dashboard::class)->name('dashboard');
-
-Route::middleware(['auth'])->get('/courses', CourseList::class)->name('courses');
-Route::middleware(['auth'])->get('/departments', DepartmentList::class)->name('departments');
-Route::middleware(['auth'])->get('/programmes', ProgrammeList::class)->name('programmes');
-
-
 
 // Route::middleware(['auth'])->group(function () {
 //     Route::get('/dashboard', function () {
@@ -146,4 +134,15 @@ Route::middleware(['auth', 'role:Student'])->group(function () {
     Route::get('/profile/setup', fn() => view('student.account-setup'))->name('student.profile.setup');
     Route::put('/profile/setup', [ProfileController::class, 'setupAccount']); // for students
 
+});
+
+
+
+
+// Laravel Livewire based views
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    Route::get('/courses', CourseList::class)->name('courses');
+    Route::get('/departments', DepartmentList::class)->name('departments');
+    Route::get('/programmes', ProgrammeList::class)->name('programmes');
 });
