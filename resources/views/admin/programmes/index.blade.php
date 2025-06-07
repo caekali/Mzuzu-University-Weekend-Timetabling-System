@@ -48,37 +48,7 @@
                          </tr>
                      </thead>
                      <tbody class="bg-white divide-y divide-gray-200">
-                         {{-- {filteredProgrammes.map(programme => (
-                         <tr key={programme.id} class="hover:bg-gray-50">
-                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                 {programme.code}
-                             </td>
-                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                 {programme.name}
-                             </td>
-                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                 {departments.find(d => d.id === programme.departmentId)?.name}
-                             </td>
-                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                 {programme.degree}
-                             </td>
-                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                 {programme.duration} years
-                             </td>
-                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                 <button onClick={()=> handleEditProgramme(programme)}
-                                     class="text-blue-600 hover:text-blue-900 mr-4"
-                                     >
-                                     <Pencil class="h-4 w-4" />
-                                 </button>
-                                 <button onClick={()=> handleDeleteProgramme(programme.id)}
-                                     class="text-red-600 hover:text-red-900"
-                                     >
-                                     <Trash2 class="h-4 w-4" />
-                                 </button>
-                             </td>
-                         </tr>
-                         ))} --}}
+                       
                      </tbody>
                  </table>
              </div>
