@@ -5,8 +5,6 @@ namespace App\Livewire\Auth;
 use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-use App\Events\UserActivated;
 
 class ActivateAccount extends Component
 {
@@ -47,10 +45,6 @@ class ActivateAccount extends Component
             'is_active' => true,
             'email_verified_at' => now(),
         ]);
-
-
-        // Auto login the user
-        // Auth::login($user);
 
         return redirect()->route('login')->with('status', 'Account activated, You can now sign in.');
     }

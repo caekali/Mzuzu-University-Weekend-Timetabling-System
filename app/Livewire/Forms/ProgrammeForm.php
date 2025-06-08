@@ -32,8 +32,5 @@ class ProgrammeForm extends Form
 
         $this->reset('form');
         $this->resetValidation();
-
-        //  refresh other components
-        // $this->dispatch('course-created');
     }
 }

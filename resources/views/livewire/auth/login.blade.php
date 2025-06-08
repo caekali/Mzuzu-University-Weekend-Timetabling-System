@@ -19,7 +19,7 @@
             <x-alert title="{{ session('status') }}" icon="check" info />
         @endif
 
-        <x-button primary label="Sign in" type="submit" class="w-full" />
+        <x-button primary label="Sign in" spinner='login' type="submit" class="w-full" />
     </form>
     <div class="mt-4 text-center text-sm">
         <p class="font-semibold text-gray-600 dark:text-white">

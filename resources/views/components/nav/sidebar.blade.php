@@ -11,21 +11,11 @@
             ['href' => route('departments'), 'text' => 'Departments', 'icon' => 'icons.database'],
             ['href' => route('programmes'), 'text' => 'Programmes', 'icon' => 'icons.open-book'],
             ['href' => route('courses'), 'text' => 'Courses', 'icon' => 'icons.open-book'],
-            [
-                'href' => route('users.index'),
-                'text' => 'User',
-                'children' => [
-                    ['href' => route('users.index'), 'text' => 'All', 'icon' => 'icons.users'],
-                    ['href' => route('users.students'), 'text' => 'Students', 'icon' => 'icons.graduation-cap'],
-                    ['href' => route('users.lecturers'), 'text' => 'Lecturers', 'icon' => 'icons.lecturer'],
-                ],
-                'icon' => 'icons.users',
-            ],
             ['href' => route('constraints.index'), 'text' => 'Constraints', 'icon' => 'icons.settings'],
             ['href' => route('venues'), 'text' => 'Venues', 'icon' => 'icons.map-pin'],
             ['href' => route('timetable'), 'text' => 'Timetable', 'icon' => 'icons.calender'],
             ['href' => route('timetable.generate'), 'text' => 'Generate Timetable', 'icon' => 'icons.cpu'],
-
+                ['href' => route('users.index'),'text' => 'Users','icon' => 'icons.users'],
             ['href' => route('profile'), 'text' => 'Profile', 'icon' => 'icons.user'],
         ],
         default => [
@@ -52,13 +42,6 @@
             <x-nav.nav-link :href="$link['href']" :icon="$link['icon']">
                 {{ $link['text'] }}
             </x-nav.nav-link>
-            {{-- @if (isset($link['children']))
-                <x-nav.nav-group :routes="$link['children']" />
-            @else
-                <x-nav.nav-link :href="$link['href']" :active="request()->url() === $link['href']" :icon="$link['icon']">
-                    {{ $link['text'] }}
-                </x-nav.nav-link>
-            @endif --}}
         @endforeach
     </nav>
 

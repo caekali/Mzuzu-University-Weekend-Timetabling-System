@@ -58,15 +58,11 @@
              </div>
              <div class="mt-8 pt-8 border-t">
                  <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Change Password</h3>
-
-                 <form action="{{ route('profile.update-password') }}" method="POST" class="space-y-4 max-w-md">
-                     <x-input label='Current Password' name='current-password' id='current-password' type='password'
-                         required />
-                     <x-input label='New Password' name='password' id='password' type='password' required />
-                     <x-input label='Confirm New Password' name='password_confirmation' id='password_confirmation'
-                         type='password' required />
-
-                     <x-button label='Update Password' icon='lock-closed' />
+                 <form wire:submit.prevent="update" class="space-y-4 max-w-md">
+                     <x-input type="password" label="Current Password" wire:model.defer="form.current_password" />
+                     <x-input type="password" label="New Password" wire:model.defer="form.password" />
+                     <x-input type="password" label="Confirm Password" wire:model.defer="form.password_confirmation" />
+                     <x-button type="submit" label="Update Password" spinner='update' icon='lock-closed' primary />
                  </form>
              </div>
          </div>
