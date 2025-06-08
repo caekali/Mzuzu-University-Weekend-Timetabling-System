@@ -1,4 +1,4 @@
-<header class="bg-white shadow-sm z-10">
+<header class="bg-white dark:bg-slate-900 drop-shadow-2xl z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex items-center">
@@ -12,7 +12,7 @@
                 <!-- User Info + Role Switcher -->
                 <div class="relative flex items-center">
                     <div class="hidden md:block text-right mr-3">
-                        <div class="text-sm font-medium text-gray-900">
+                        <div class="text-sm font-medium text-gray-900  dark:text-white">
                             {{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}
                         </div>
                         <div class="text-xs text-gray-500 capitalize">

@@ -16,7 +16,9 @@ use App\Livewire\Auth\ActivateAccount;
 use App\Livewire\Course\CourseList;
 use App\Livewire\Dashboard;
 use App\Livewire\Department\DepartmentList;
+use App\Livewire\Profile;
 use App\Livewire\Programme\ProgrammeList;
+use App\Livewire\Venue\VenueList;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -54,7 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/change-password', [ChangePasswordController::class, 'showChangePasswordForm'])->name('auth.change-password');
 
     // Route::get('/dashboard', fn() => view('shared.dashboard'))->name('dashboard');
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    // Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
     Route::get('/timetable', fn() => view('shared.timetable'))->name('timetable');
 
@@ -101,7 +103,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         'destroy' => 'programmes.destroy',
     ]);
 
-    Route::resource('/venues', VenueController::class)->names([
+    Route::resource('/venuess', VenueController::class)->names([
         'index'   => 'venues.index',
         'create'  => 'venues.create',
         'store'   => 'venues.store',
@@ -145,4 +147,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/courses', CourseList::class)->name('courses');
     Route::get('/departments', DepartmentList::class)->name('departments');
     Route::get('/programmes', ProgrammeList::class)->name('programmes');
+    Route::get('/venues', VenueList::class)->name('venues');
+    Route::get('/profile', Profile::class)->name('profile');
 });

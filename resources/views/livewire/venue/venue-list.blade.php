@@ -1,0 +1,28 @@
+<div class="p-6 flex flex-col">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">Venues</h1>
+        <x-button icon="plus" label="Add Venue" wire:click="openModal" primary />
+    </div>
+
+    <div class="flex-1 grow bg-white rounded-lg shadow">
+        <div class="p-4 border-b">
+            <div class="relative">
+                <x-icons.search class="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                <input type="text" placeholder="Search venue..."
+                    class="pl-10 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            @php
+                $headers = [
+                    'id' => 'ID',
+                    'name' => 'Name',
+                    'capacity' => 'Capacity',
+                    'is_lab' => 'Type',
+                ];
+            @endphp
+            <x-table :headers="$headers" :rows="$venues->toArray()" :actions="true" :paginate="false" />
+        </div>
+    </div>
+    <livewire:venue.venue-modal />
+</div>

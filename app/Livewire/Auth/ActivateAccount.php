@@ -52,7 +52,7 @@ class ActivateAccount extends Component
         // Auto login the user
         // Auth::login($user);
 
-        return redirect()->route('login')->with('status', 'Your account has been activated, You can now sign in.');
+        return redirect()->route('login')->with('status', 'Account activated, You can now sign in.');
     }
 
     public function render()

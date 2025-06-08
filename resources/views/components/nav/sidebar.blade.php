@@ -22,7 +22,7 @@
                 'icon' => 'icons.users',
             ],
             ['href' => route('constraints.index'), 'text' => 'Constraints', 'icon' => 'icons.settings'],
-            ['href' => route('venues.index'), 'text' => 'Venues', 'icon' => 'icons.building'],
+            ['href' => route('venues'), 'text' => 'Venues', 'icon' => 'icons.map-pin'],
             ['href' => route('timetable'), 'text' => 'Timetable', 'icon' => 'icons.calender'],
             ['href' => route('timetable.generate'), 'text' => 'Generate Timetable', 'icon' => 'icons.cpu'],
 
@@ -39,13 +39,13 @@
 
 
 <aside x-cloak :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-    class="fixed inset-y-0 left-0 z-30 w-64 bg-white   shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0
+    class="fixed inset-y-0 left-0 z-30 w-64 bg-white dark: dark:bg-slate-900  drop-shadow-2xl  transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0
 ">
     <div class="h-16 px-4 flex items-center justify-center">
         <div class="flex  justify-center">
             <img class="size-12" src="{{ asset('assets/mzunilogo.webp') }}" alt="Mzuni logo">
         </div>
-        <p class="text-md text-center font-medium text-gray-900">Weekend Timetabling System</p>
+        <p class="text-md text-center font-medium text-gray-900  dark:text-white">Weekend Timetabling System</p>
     </div>
     <nav class="mt-5 px-4 space-y-1">
         @foreach ($navLinks as $link)

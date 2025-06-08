@@ -30,7 +30,7 @@
         {{-- <x-nav.sidebar /> --}}
         <div class="flex-1 flex flex-col overflow-hidden">
             {{-- <x-nav.nav-bar /> --}}
-            <main @click="sidebarOpen = false" class="flex-1 overflow-y-auto bg-gray-50 p-4">
+            <main @click="sidebarOpen = false" class="flex-1 overflow-y-auto bg-gray- dark:bg-slate-800 p-4">
                 <div class="max-w-7xl mx-auto flex-1 flex flex-col">
                     @yield('content')
                 </div>
