@@ -1,6 +1,6 @@
 {{-- <x-slot:subheader>Activate Account</x-slot> --}}
 
-<form wire:submit="sendActivationLink" class="space-y-4">
+<form wire:submit.prevent="sendActivationLink" class="space-y-4">
     <x-input label="Email" name="email" type="email" wire:model.defer="email" placeholder="mail@my.mzuni.ac.mw" required
         :error="$errors->first('email')" />
 
@@ -12,7 +12,7 @@
         <x-alert icon="check" info title="{{ session('status') }}" />
     @endif
 
-    <x-button primary label="Send Activation Link" spinner='sendActivationLink' wire:click="sendActivationLink"
+    <x-button primary label="Send Activation Link" spinner='sendActivationLink'
         wire:target="sendActivationLink" class="w-full" />
     <div class="text-center text-sm">
         <x-link label="Back to login" href="{{ route('login') }}" />

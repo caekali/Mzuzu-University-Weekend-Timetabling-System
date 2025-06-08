@@ -25,7 +25,8 @@
                  @if (auth()->user()->hasRole('Student'))
                      <div class="flex items-center text-gray-500" x-data="{ editBtnClicked: false }">
                          <x-icons.open-book class="h-5 w-5 mr-3 text-gray-500" />
-                         <span>BSc Information and Communication Technology - Level {{ $yearOfStudy ?? '1' }}</span>
+                         <span>{{ auth()->user()->student->programme->name }} - Level
+                             {{ auth()->user()->student->level }}</span>
                          <button x-show='!editBtnClicked' type="submit" @click="editBtnClicked = true"
                              class="ml-4 text-sm text-green-600 hover:text-green-700 hover:underline">Edit</button>
 
@@ -52,7 +53,7 @@
                  @if (auth()->user()->hasRole('Lecturer'))
                      <div class="flex items-center text-gray-500">
                          <x-icons.building class="h-5 w-5 mr-3 text-gray-500" />
-                         <span>Computer Science Department</span>
+                         <span>{{ auth()->user()->lecturer->department->name }}</span>
                      </div>
                  @endif
              </div>

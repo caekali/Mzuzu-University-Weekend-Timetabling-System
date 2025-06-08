@@ -16,7 +16,8 @@ use App\Livewire\Auth\ActivateAccount;
 use App\Livewire\Course\CourseList;
 use App\Livewire\Dashboard;
 use App\Livewire\Department\DepartmentList;
-use App\Livewire\Profile;
+use App\Livewire\Profile\Profile;
+use App\Livewire\Profile\ProfileSetup;
 use App\Livewire\Programme\ProgrammeList;
 use App\Livewire\Venue\VenueList;
 use Illuminate\Support\Facades\Auth;
@@ -142,7 +143,10 @@ Route::middleware(['auth', 'role:Student'])->group(function () {
 
 
 // Laravel Livewire based views
-Route::middleware('auth')->group(function () {
+Route::get('/profile/setup', ProfileSetup::class)
+    ->middleware(['auth'])
+    ->name('profile.setup');
+Route::middleware(['auth', 'profile.setup'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/courses', CourseList::class)->name('courses');
     Route::get('/departments', DepartmentList::class)->name('departments');

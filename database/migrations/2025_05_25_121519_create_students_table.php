@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->integer('level');
-            $table->foreignId('department_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('programme_id')->constrained()->cascadeOnDelete();
+$table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

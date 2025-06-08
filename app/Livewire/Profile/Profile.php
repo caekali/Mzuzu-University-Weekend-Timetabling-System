@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Profile;
 
 use App\Livewire\Forms\PasswordUpdateForm;
 use Livewire\Component;
@@ -23,6 +23,6 @@ class Profile extends Component
 
     public function render()
     {
-        return view('livewire.profile');
+        return view('livewire.profile.profile');
     }
 }

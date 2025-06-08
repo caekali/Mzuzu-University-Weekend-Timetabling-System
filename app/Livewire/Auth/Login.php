@@ -43,6 +43,12 @@ class Login extends Component
 
         session()->regenerate();
 
+        if ($user->hasRole('Student')) {
+            $student = $user->student;
+        } else if ($user->hasRole('Lecturer')) {
+            $lecturer = $user->lecturer;
+        }
+
         return redirect()->intended('/dashboard');
     }
 
