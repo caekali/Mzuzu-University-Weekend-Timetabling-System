@@ -5,13 +5,14 @@ namespace App\Livewire\Course;
 use App\Models\Course;
 use Livewire\Component;
 use Livewire\Attributes\On;
-
+use Livewire\WithoutUrlPagination;
+use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
 
 class CourseList extends Component
 {
-    use WireUiActions;
-
+    use WireUiActions,WithPagination ,WithoutUrlPagination;
+   
     public $search = '';
 
     public function openModal($id = null)
@@ -54,9 +55,8 @@ class CourseList extends Component
 
     public function render()
     {
-        $courses = Course::with('department')->latest()->get();
-        return view('livewire.course.course-list', [
-            'courses' => $courses
-        ]);
+        $courses = Course::with('department')->latest()->paginate(6);
+
+        return view('livewire.course.course-list', compact('courses'));
     }
 }

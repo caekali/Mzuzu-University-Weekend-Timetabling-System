@@ -1,4 +1,4 @@
-<header class="bg-white dark:bg-slate-900 drop-shadow-2xl z-10">
+<header class="bg-white dark:bg-slate-900 shadow-sm z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex items-center">

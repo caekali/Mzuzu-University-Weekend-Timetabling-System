@@ -29,7 +29,7 @@
 
 
 <aside x-cloak :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-    class="fixed inset-y-0 left-0 z-30 w-64 bg-white dark: dark:bg-slate-900  drop-shadow-2xl  transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0
+    class="fixed inset-y-0 left-0 z-30 w-64 bg-white dark: dark:bg-slate-900  shadow-lg  transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0
 ">
     <div class="h-16 px-4 flex items-center justify-center">
         <div class="flex  justify-center">

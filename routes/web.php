@@ -19,6 +19,7 @@ use App\Livewire\Department\DepartmentList;
 use App\Livewire\Profile\Profile;
 use App\Livewire\Profile\ProfileSetup;
 use App\Livewire\Programme\ProgrammeList;
+use App\Livewire\Timetable\GenerateTimetable;
 use App\Livewire\Venue\VenueList;
 use Illuminate\Support\Facades\Auth;
 
@@ -71,7 +72,7 @@ Route::middleware('auth')->group(function () {
 
 
 Route::middleware(['auth', 'role:Admin'])->group(function () {
-    Route::get('/timetable/generate', [TimetableController::class, 'showTimetableGeneratioPage'])->name('timetable.generate');
+    // Route::get('/timetable/generate', [TimetableController::class, 'showTimetableGeneratioPage'])->name('timetable.generate');
     Route::post('/timetable/generate', [TimetableController::class, 'generate'])->name('timetable.generate.send');
 
     Route::resource('/departmentss', DepartmentController::class)->names([
@@ -153,4 +154,5 @@ Route::middleware(['auth', 'profile.setup'])->group(function () {
     Route::get('/programmes', ProgrammeList::class)->name('programmes');
     Route::get('/venues', VenueList::class)->name('venues');
     Route::get('/profile', Profile::class)->name('profile');
+    Route::get('/timetable/generate', GenerateTimetable::class)->name('timetable.generate');
 });

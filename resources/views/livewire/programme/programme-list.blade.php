@@ -15,7 +15,6 @@
         <div class="overflow-x-auto">
             @php
                 $headers = [
-                    'id' => 'ID',
                     'code' => 'Code',
                     'name' => 'Name',
                     'department' => 'Department',

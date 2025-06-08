@@ -15,7 +15,6 @@
         <div class="overflow-x-auto">
             @php
                 $headers = [
-                    'id' => 'ID',
                     'code' => 'Code',
                     'name' => 'Name',
                     'weekly_hours' => 'Weekly Hours',
@@ -43,5 +42,7 @@
             <x-table :headers="$headers" :rows="$rows" :actions="true" :paginate="false" />
         </div>
     </div>
+
+    {{ $courses->links() }}
     <livewire:course.course-modal />
 </div>
