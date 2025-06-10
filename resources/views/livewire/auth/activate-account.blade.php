@@ -1,8 +1,8 @@
 <x-slot:subheader>Activate Account</x-slot>
 <form wire:submit.prevent="activate" class="space-y-4">
-    <x-password label="New Password" wire:model.defer="password" name="password" required />
+    <x-password label="New Password" wire:model.defer="password" name="password" />
 
-    <x-password label="Confirm Password" wire:model.defer="password_confirmation" name="password_confirmation" required />
+    <x-password label="Confirm Password" wire:model.defer="password_confirmation" name="password_confirmation" />
 
     @if ($errors->has('general'))
         <x-alert title="{{ $errors->first('general') }}" icon="error" negative />

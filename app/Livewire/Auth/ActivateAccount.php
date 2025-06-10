@@ -5,11 +5,16 @@ namespace App\Livewire\Auth;
 use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Hash;
+use Livewire\Attributes\Validate;
 
 class ActivateAccount extends Component
 {
     public $userId;
+
+    #[Validate('required|min:8|confirmed')]
     public $password;
+
+    #[Validate('required')]
     public $password_confirmation;
 
     public function mount($userId)
@@ -29,9 +34,7 @@ class ActivateAccount extends Component
 
     public function activate()
     {
-        $this->validate([
-            'password' => ['required', 'min:8', 'confirmed'],
-        ]);
+        $this->validate();
 
         $user = User::findOrFail($this->userId);
 

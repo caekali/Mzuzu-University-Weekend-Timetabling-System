@@ -15,7 +15,7 @@
             ['href' => route('venues'), 'text' => 'Venues', 'icon' => 'icons.map-pin'],
             ['href' => route('timetable'), 'text' => 'Timetable', 'icon' => 'icons.calender'],
             ['href' => route('timetable.generate'), 'text' => 'Generate Timetable', 'icon' => 'icons.cpu'],
-                ['href' => route('users.index'),'text' => 'Users','icon' => 'icons.users'],
+            ['href' => route('users'), 'text' => 'Users', 'icon' => 'icons.users'],
             ['href' => route('profile'), 'text' => 'Profile', 'icon' => 'icons.user'],
         ],
         default => [

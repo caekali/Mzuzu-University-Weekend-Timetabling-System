@@ -1,10 +1,10 @@
 <div class="p-6">
-    <h1 class="text-2xl font-bold text-gray-900 mb-6">Generate Timetable</h1>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white  mb-6">Generate Timetable</h1>
     <div class="grid grid-cols-1 gap-6">
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white dark:bg-slate-900 rounded-lg shadow-sm p-6">
             <div class="flex items-center mb-4">
                 <x-icons.sliders class="text-green-900 mr-2" />
-                <h2 class="text-lg font-medium text-gray-900">Algorithm Parameters</h2>
+                <h2 class="text-lg font-medium text-gray-900 dark:text-white">Algorithm Parameters</h2>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div class="space-y-4">
@@ -25,10 +25,10 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white dark:bg-slate-900   rounded-lg shadow-sm p-6">
             <div class="flex items-center mb-4">
-                <x-icons.cpu class="mr-2" />
-                <h2 class="text-lg font-medium text-gray-900">Timetable Generation</h2>
+                <x-icons.cpu class="mr-2 text-green-900" />
+                <h2 class="text-lg font-medium text-gray-900 dark:text-white">Timetable Generation</h2>
             </div>
 
             @if ($isGenerating)

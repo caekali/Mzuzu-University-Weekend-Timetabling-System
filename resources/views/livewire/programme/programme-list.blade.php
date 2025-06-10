@@ -1,4 +1,4 @@
-<div class="p-6 flex flex-col">
+<div class="p-6">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900">Programme</h1>
         <x-button icon="plus" label="Add Programme" wire:click="openModal" primary />

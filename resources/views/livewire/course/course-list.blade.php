@@ -40,9 +40,10 @@
                     ->toArray();
             @endphp
             <x-table :headers="$headers" :rows="$rows" :actions="true" :paginate="false" />
-        </div>
+
+        
+        </div>    {{ $courses->links() }}
     </div>
 
-    {{ $courses->links() }}
     <livewire:course.course-modal />
 </div>

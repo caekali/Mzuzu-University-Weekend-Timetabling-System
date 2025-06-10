@@ -12,13 +12,15 @@ class Table extends Component
     public $rows;
     public $actions;
     public $paginate;
+    public $customCell;
 
-    public function __construct($headers = [], $rows = [], $actions = false, $paginate = false)
+    public function __construct($headers = [], $rows = [], $actions = false, $paginate = false, $customCell = null)
     {
         $this->headers = $headers;
         $this->rows = $rows;
         $this->actions = $actions;
         $this->paginate = $paginate;
+        $this->customCell = $customCell;
     }
 
     public function render(): View|Closure|string

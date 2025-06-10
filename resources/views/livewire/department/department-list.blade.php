@@ -20,7 +20,6 @@
         <div class="overflow-x-auto">
             @php
                 $headers = ['code' => 'Code', 'name' => 'Name'];
-                // $rows = $this->filteredDepartments->toArray(); // Use computed property
             @endphp
             <x-table :headers="$headers" :rows="$departments" :actions="true" :paginate="false" />
         </div>

@@ -6,21 +6,21 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Livewire\Attributes\Validate;
 
 class Login extends Component
 {
+    #[Validate('required|email|exists:users,email')]
     public $email = '';
+
+    #[Validate('required')]
     public $password = '';
+
     public $remember = false;
 
     public function login()
     {
-        $this->validate([
-            'email' => 'required|email|exists:users,email',
-            'password' => 'required',
-        ], [
-            'email.exists' => 'We couldn’t find an account with that email address.',
-        ]);
+        $this->validate();
 
         $user = User::where('email', $this->email)->first();
 
@@ -54,6 +54,6 @@ class Login extends Component
 
     public function render()
     {
-        return view('livewire.auth.login');
+        return view('livewire.auth.login')->layout('components.layouts.guest');
     }
 }

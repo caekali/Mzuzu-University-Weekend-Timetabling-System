@@ -6,17 +6,17 @@ use App\Models\User;
 use App\Notifications\SendAccountActivation;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class RequestActivationLink extends Component
 {
+    #[Validate('required|email')]
     public $email;
 
     public function sendActivationLink()
     {
-        $this->validate([
-            'email' => ['required', 'email'],
-        ]);
+        $this->validate();
 
         $user = User::where('email', $this->email)->first();
 
@@ -41,7 +41,7 @@ class RequestActivationLink extends Component
             ]);
         }
 
-        // Notify user with signed link
+        // Send Activation Email
         $user->notify(new SendAccountActivation($user));
 
         session()->flash('status', 'Activation link has been sent to your email.');
@@ -49,6 +49,6 @@ class RequestActivationLink extends Component
 
     public function render()
     {
-        return view('livewire.auth.request-activation-link');
+        return view('livewire.auth.request-activation-link')->layout('components.layouts.guest');
     }
 }

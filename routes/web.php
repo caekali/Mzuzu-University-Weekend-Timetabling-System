@@ -13,6 +13,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TimetableController;
 use App\Livewire\Auth\ActivateAccount;
+use App\Livewire\Auth\RequestActivationLink;
 use App\Livewire\Course\CourseList;
 use App\Livewire\Dashboard;
 use App\Livewire\Department\DepartmentList;
@@ -20,15 +21,16 @@ use App\Livewire\Profile\Profile;
 use App\Livewire\Profile\ProfileSetup;
 use App\Livewire\Programme\ProgrammeList;
 use App\Livewire\Timetable\GenerateTimetable;
+use App\Livewire\User\UserList;
 use App\Livewire\Venue\VenueList;
 use Illuminate\Support\Facades\Auth;
 
 
-Route::get('/', function () {
-    return Auth::check()
-        ? redirect()->route('dashboard')
-        : redirect()->route('login');
-})->name('home');
+// Route::get('/', function () {
+//     return Auth::check()
+//         ? redirect()->route('dashboard')
+//         : redirect()->route('login');
+// })->name('home');
 
 // Route::middleware(['auth'])->group(function () {
 //     Route::get('/dashboard', function () {
@@ -38,12 +40,10 @@ Route::get('/', function () {
 
 
 Route::middleware('guest')->group(function () {
-    Route::get('/activate/request', [ActivationController::class, 'requestForm'])->name('activation.request');
-    Route::post('/activate/request', [ActivationController::class, 'sendActivationLink'])->name('activation.email.send');
+    // Route::get('/activate/request', [ActivationController::class, 'requestForm'])->name('activation.request');
+    // Route::post('/activate/request', [ActivationController::class, 'sendActivationLink'])->name('activation.email.send');
 
-    Route::get('/activate/{userId}', ActivateAccount::class)
-        ->middleware('signed')
-        ->name('activation.form');
+
 
     // Set password via signed URL
     // Route::get('/activate/{user}', [ActivationController::class, 'showActivationForm'])->name('activation.form')->middleware('signed');
@@ -125,7 +125,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         'destroy' => 'constraints.destroy',
     ]);
 
-    Route::get('/users', [UserController::class, 'allUsers'])->name('users.index');
+    // Route::get('/users', [UserController::class, 'allUsers'])->name('users.index');
     Route::get('/students', fn() => view('admin.users.students'))->name('users.students');
     Route::get('/lecturers', fn() => view('admin.users.lecturers'))->name('users.lecturers');
 });
@@ -141,18 +141,35 @@ Route::middleware(['auth', 'role:Student'])->group(function () {
 });
 
 
+// Laravel + Livewire based views
+Route::get('/', function () {
+    return Auth::check()
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
+})->name('home');
 
+Route::middleware('guest')->group(function () {
+    Route::get('/activate/request', RequestActivationLink::class)->name('activation.request');
+    Route::get('/activate/{userId}', ActivateAccount::class)
+        ->middleware('signed')
+        ->name('activation.form');
+});
 
-// Laravel Livewire based views
-Route::get('/profile/setup', ProfileSetup::class)
-    ->middleware(['auth'])
-    ->name('profile.setup');
 Route::middleware(['auth', 'profile.setup'])->group(function () {
-    Route::get('/dashboard', Dashboard::class)->name('dashboard');
-    Route::get('/courses', CourseList::class)->name('courses');
-    Route::get('/departments', DepartmentList::class)->name('departments');
-    Route::get('/programmes', ProgrammeList::class)->name('programmes');
-    Route::get('/venues', VenueList::class)->name('venues');
-    Route::get('/profile', Profile::class)->name('profile');
-    Route::get('/timetable/generate', GenerateTimetable::class)->name('timetable.generate');
+
+    Route::get('/profile/setup', ProfileSetup::class)->name('profile.setup');
+
+    Route::middleware('profile.setup')->group(function () {
+        Route::get('/profile', Profile::class)->name('profile');
+        Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    });
+
+    Route::middleware('role:Admin')->group(function () {
+        Route::get('/courses', CourseList::class)->name('courses');
+        Route::get('/departments', DepartmentList::class)->name('departments');
+        Route::get('/programmes', ProgrammeList::class)->name('programmes');
+        Route::get('/venues', VenueList::class)->name('venues');
+        Route::get('/users', UserList::class)->name('users');
+        Route::get('/timetable/generate', GenerateTimetable::class)->name('timetable.generate');
+    });
 });

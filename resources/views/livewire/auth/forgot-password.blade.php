@@ -1,7 +1,7 @@
 <div class="max-w-md mx-auto space-y-6">
     <form wire:submit.prevent="sendResetLink" class="space-y-4">
-        <x-input label="Email address" name="email" type="email" wire:model.defer="email" placeholder="you@example.com"
-            required />
+        <x-input label="Email address" name="email" type="email" wire:model.defer="email"
+            placeholder="you@my.mzuni.ac.mw" />
 
         @if (session('status'))
             <x-alert title="{{ session('status') }}" icon="check" info />

@@ -1,8 +1,6 @@
-{{-- <x-slot:subheader>Activate Account</x-slot> --}}
-
+<x-slot:subheader>Activate Account</x-slot>
 <form wire:submit.prevent="sendActivationLink" class="space-y-4">
-    <x-input label="Email" name="email" type="email" wire:model.defer="email" placeholder="mail@my.mzuni.ac.mw" required
-        :error="$errors->first('email')" />
+    <x-input label="Email" name="email" type="email" wire:model.defer="email" placeholder="you@my.mzuni.ac.mw" />
 
     @if ($errors->has('general'))
         <x-alert title="{{ $errors->first('general') }}" icon="error" negative />
@@ -11,9 +9,8 @@
     @if (session('status'))
         <x-alert icon="check" info title="{{ session('status') }}" />
     @endif
+    <x-button type="submit" primary label="Send Activation Link" spinner='sendActivationLink' class="w-full" />
 
-    <x-button primary label="Send Activation Link" spinner='sendActivationLink'
-        wire:target="sendActivationLink" class="w-full" />
     <div class="text-center text-sm">
         <x-link label="Back to login" href="{{ route('login') }}" />
     </div>
