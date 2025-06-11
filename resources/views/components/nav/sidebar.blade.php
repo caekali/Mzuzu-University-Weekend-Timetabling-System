@@ -11,7 +11,7 @@
             ['href' => route('departments'), 'text' => 'Departments', 'icon' => 'icons.database'],
             ['href' => route('programmes'), 'text' => 'Programmes', 'icon' => 'icons.open-book'],
             ['href' => route('courses'), 'text' => 'Courses', 'icon' => 'icons.open-book'],
-            ['href' => route('constraints.index'), 'text' => 'Constraints', 'icon' => 'icons.settings'],
+            ['href' => route('constraints'), 'text' => 'Constraints', 'icon' => 'icons.settings'],
             ['href' => route('venues'), 'text' => 'Venues', 'icon' => 'icons.map-pin'],
             ['href' => route('timetable'), 'text' => 'Timetable', 'icon' => 'icons.calender'],
             ['href' => route('timetable.generate'), 'text' => 'Generate Timetable', 'icon' => 'icons.cpu'],
