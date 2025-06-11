@@ -26,16 +26,8 @@ use App\Livewire\User\UserList;
 use App\Livewire\Venue\VenueList;
 use Illuminate\Support\Facades\Auth;
 
-Route::middleware(['auth', 'role:HOD'])->group(function () {});
 
-
-Route::middleware(['auth', 'role:Student'])->group(function () {
-    Route::get('/profile/setup', fn() => view('student.account-setup'))->name('student.profile.setup');
-    Route::put('/profile/setup', [ProfileController::class, 'setupAccount']); // for students
-
-});
-
-    Route::get('/switch-role/{role}', [RoleSwitchController::class, 'switch'])->name('auth.switch-role');
+Route::get('/switch-role/{role}', [RoleSwitchController::class, 'switch'])->name('auth.switch-role');
 
 
 // Laravel + Livewire based views
@@ -46,7 +38,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware('guest')->group(function () {
-    Route::login('/login',Login::class)->name('login');
+    Route::login('/login', Login::class)->name('login');
     Route::get('/activate/request', RequestActivationLink::class)->name('activation.request');
     Route::get('/activate/{userId}', ActivateAccount::class)
         ->middleware('signed')
