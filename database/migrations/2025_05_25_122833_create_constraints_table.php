@@ -17,12 +17,11 @@ return new class extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->boolean('is_hard');
-            $table->string('note')->nullable();
-
             $table->unsignedBigInteger('constrainable_id');
             $table->string('constrainable_type');
             // Index for faster polymorphic queries
             $table->index(['constrainable_type', 'constrainable_id']);
+            $table->timestamps();
         });
     }
 

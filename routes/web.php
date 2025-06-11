@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\GAController;
 use App\Http\Controllers\RoleSwitchController;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Auth\ActivateAccount;
@@ -22,13 +22,13 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/switch-role/{role}', [RoleSwitchController::class, 'switch'])->name('auth.switch-role');
 
-
+Route::get('/',[GAController::class,'run']);
 // Laravel + Livewire based views
-Route::get('/', function () {
-    return Auth::check()
-        ? redirect()->route('dashboard')
-        : redirect()->route('login');
-})->name('home');
+// Route::get('/', function () {
+//     return Auth::check()
+//         ? redirect()->route('dashboard')
+//         : redirect()->route('login');
+// })->name('home');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');

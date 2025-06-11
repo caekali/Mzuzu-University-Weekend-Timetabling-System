@@ -1,0 +1,26 @@
+[90m= [39m[34;4mApp\Services\Scheduling\Individual[39;24m {#5568
+    +[1mschedule[22m: [34;4mApp\Services\Scheduling\Schedule[39;24m {#5567
+      +[1mentries[22m: [
+        [
+          "[34mcourse_id[39m" => [35m1[39m,
+          "[34mvenue_id[39m" => [35m2[39m,
+          "[34mlecturer_id[39m" => [35m1[39m,
+          "[34mtime_slot[39m" => [35m34[39m,
+        ],
+        [
+          "[34mcourse_id[39m" => [35m2[39m,
+          "[34mvenue_id[39m" => [35m2[39m,
+          "[34mlecturer_id[39m" => [35m1[39m,
+          "[34mtime_slot[39m" => [35m22[39m,
+        ],
+        [
+          "[34mcourse_id[39m" => [35m3[39m,
+          "[34mvenue_id[39m" => [35m1[39m,
+          "[34mlecturer_id[39m" => [35m2[39m,
+          "[34mtime_slot[39m" => [35m8[39m,
+        ],
+      ],
+    },
+    +[1mfitness[22m: [33m6.0[39m,
+  }
+
