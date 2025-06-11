@@ -7,21 +7,21 @@
 
     $navLinks = match (session('current_role')) {
         'Admin' => [
-            ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'icons.layout-dashboard'],
-            ['href' => route('departments'), 'text' => 'Departments', 'icon' => 'icons.database'],
-            ['href' => route('programmes'), 'text' => 'Programmes', 'icon' => 'icons.open-book'],
-            ['href' => route('courses'), 'text' => 'Courses', 'icon' => 'icons.open-book'],
-            ['href' => route('constraints'), 'text' => 'Constraints', 'icon' => 'icons.settings'],
-            ['href' => route('venues'), 'text' => 'Venues', 'icon' => 'icons.map-pin'],
-            ['href' => route('timetable'), 'text' => 'Timetable', 'icon' => 'icons.calender'],
-            ['href' => route('timetable.generate'), 'text' => 'Generate Timetable', 'icon' => 'icons.cpu'],
-            ['href' => route('users'), 'text' => 'Users', 'icon' => 'icons.users'],
-            ['href' => route('profile'), 'text' => 'Profile', 'icon' => 'icons.user'],
+            ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'lucide-layout-dashboard'],
+            ['href' => route('departments'), 'text' => 'Departments', 'icon' => 'lucide-database'],
+            ['href' => route('programmes'), 'text' => 'Programmes', 'icon' => 'lucide-book-open'],
+            ['href' => route('courses'), 'text' => 'Courses', 'icon' => 'lucide-book-open'],
+           
+            ['href' => route('venues'), 'text' => 'Venues', 'icon' => 'lucide-map-pin'],
+            ['href' => route('timetable'), 'text' => 'Timetable', 'icon' => 'lucide-calendar'],
+            ['href' => route('timetable.generate'), 'text' => 'Generate Timetable', 'icon' => 'lucide-cpu'],
+            ['href' => route('users'), 'text' => 'Users', 'icon' => 'lucide-users'],
+            ['href' => route('profile'), 'text' => 'Profile', 'icon' => 'lucide-user'],
         ],
         default => [
-            ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'icons.layout-dashboard'],
-            ['href' => route('timetable'), 'text' => 'My Timetable', 'icon' => 'icons.calender'],
-            ['href' => route('profile'), 'text' => 'Profile', 'icon' => 'icons.user'],
+            ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'lucide-layout-dashboard'],
+            ['href' => route('timetable'), 'text' => 'My Timetable', 'icon' => 'lucide-calendar'],
+            ['href' => route('profile'), 'text' => 'Profile', 'icon' => 'lucide-user'],
         ],
     };
 @endphp

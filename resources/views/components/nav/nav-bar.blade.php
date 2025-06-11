@@ -4,7 +4,7 @@
             <div class="flex items-center">
                 <button @click="sidebarOpen = !sidebarOpen"
                     class="p-2 rounded-md text-gray-500 hover:text-gray-600 hover:bg-gray-100 focus:outline-none md:hidden">
-                    <x-icons.menu class="size-4" />
+                    <x-lucide-menu class="size-4" />
                 </button>
             </div>
 
@@ -38,13 +38,13 @@
                                     </a>
                                 @endif
                             @endforeach
-                            <form method="POST" action="{{ route('logout') }}">
+                            {{-- <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit"
                                     class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
                                     Logout
                                 </button>
-                            </form>
+                            </form> --}}
                         </div>
                     </div>
                 </div>

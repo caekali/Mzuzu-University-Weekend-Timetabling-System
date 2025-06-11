@@ -3,7 +3,7 @@
     <div class="grid grid-cols-1 gap-6">
         <div class="bg-white dark:bg-slate-900 rounded-lg shadow-sm p-6">
             <div class="flex items-center mb-4">
-                <x-icons.sliders class="text-green-900 mr-2" />
+                <x-lucide-sliders class="text-green-900 mr-2 w-5 h-5" />
                 <h2 class="text-lg font-medium text-gray-900 dark:text-white">Algorithm Parameters</h2>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -27,7 +27,7 @@
 
         <div class="bg-white dark:bg-slate-900   rounded-lg shadow-sm p-6">
             <div class="flex items-center mb-4">
-                <x-icons.cpu class="mr-2 text-green-900" />
+                <x-lucide-cpu class="w-5 h-5 mr-2 text-green-900" />
                 <h2 class="text-lg font-medium text-gray-900 dark:text-white">Timetable Generation</h2>
             </div>
 
