@@ -1,20 +1,13 @@
 <?php
 
-use App\Http\Controllers\Admin\VenueController;
-use App\Http\Controllers\Admin\ProgrammeController;
-use App\Http\Controllers\Admin\CourseController;
-use App\Http\Controllers\Admin\DepartmentController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Auth\ActivationController;
-use App\Http\Controllers\Auth\ChangePasswordController;
+
 use App\Http\Controllers\RoleSwitchController;
-use App\Http\Controllers\ConstraintController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TimetableController;
 use App\Livewire\Auth\ActivateAccount;
+use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\RequestActivationLink;
+use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Course\CourseList;
 use App\Livewire\Dashboard;
 use App\Livewire\Department\DepartmentList;
@@ -38,7 +31,8 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware('guest')->group(function () {
-    Route::login('/login', Login::class)->name('login');
+    Route::get('/login', Login::class)->name('login');
+    Route::get('/forgot-password',ForgotPassword::class)->name('password.request');
     Route::get('/activate/request', RequestActivationLink::class)->name('activation.request');
     Route::get('/activate/{userId}', ActivateAccount::class)
         ->middleware('signed')
@@ -52,18 +46,18 @@ Route::middleware('auth')->group(function () {
     //     return redirect()->route('login');
 
     Route::get('/profile/setup', ProfileSetup::class)->name('profile.setup');
+});
 
-    Route::middleware('profile.setup')->group(function () {
-        Route::get('/profile', Profile::class)->name('profile');
-        Route::get('/dashboard', Dashboard::class)->name('dashboard');
-    });
+Route::middleware(['auth', 'profile.setup'])->group(function () {
+    Route::get('/profile', Profile::class)->name('profile');
+    Route::get('/dashboard', Dashboard::class)->name('dashboard');
+});
 
-    Route::middleware('role:Admin')->group(function () {
-        Route::get('/courses', CourseList::class)->name('courses');
-        Route::get('/departments', DepartmentList::class)->name('departments');
-        Route::get('/programmes', ProgrammeList::class)->name('programmes');
-        Route::get('/venues', VenueList::class)->name('venues');
-        Route::get('/users', UserList::class)->name('users');
-        Route::get('/timetable/generate', GenerateTimetable::class)->name('timetable.generate');
-    });
+Route::middleware(['auth', 'role:Admin'])->group(function () {
+    Route::get('/courses', CourseList::class)->name('courses');
+    Route::get('/departments', DepartmentList::class)->name('departments');
+    Route::get('/programmes', ProgrammeList::class)->name('programmes');
+    Route::get('/venues', VenueList::class)->name('venues');
+    Route::get('/users', UserList::class)->name('users');
+    Route::get('/timetable/generate', GenerateTimetable::class)->name('timetable.generate');
 });

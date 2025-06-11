@@ -1,3 +1,4 @@
+<x-slot:subheader>Sign in</x-slot>
 <div>
     <form wire:submit.prevent="login" class="space-y-4">
         <x-input label="Email" name="email" type="email" wire:model.defer="email" autocomplete="on"
