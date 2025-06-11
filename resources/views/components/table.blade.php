@@ -108,11 +108,10 @@
         @endforelse
     </tbody>
 </table>
-      
 
-{{-- @if ($paginate)
+
+@if ($paginate)
     <div class="mt-4">
         {{ $rows->links() }}
     </div>
-@endif --}}
-
+@endif

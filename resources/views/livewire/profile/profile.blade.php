@@ -1,6 +1,6 @@
- <div class="p-6">
+ <div class="py-6">
      <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Profile</h1>
-     <div class="bg-white dark:bg-slate-900 rounded-lg shadow-sm">
+     <div class="bg-white dark:bg-slate-900 rounded shadow-md">
          <div class="p-6">
              <div class="flex items-center mb-6">
                  <div

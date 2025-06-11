@@ -78,7 +78,7 @@ class UserList extends Component
             }
         }
 
-        $users = $query->paginate(6);
+        $users = $query->paginate(8);
 
         $users->getCollection()->transform(function ($user) {
             $data = [

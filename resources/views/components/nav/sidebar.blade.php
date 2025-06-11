@@ -26,17 +26,26 @@
     };
 @endphp
 
-
-
-<aside x-cloak :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-    class="fixed inset-y-0 left-0 z-30 w-64 bg-white dark: dark:bg-slate-900  shadow-lg  transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0
-">
-    <div class="h-16 px-4 flex items-center justify-center">
-        <div class="flex  justify-center">
+<aside x-cloak 
+    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+    class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100  shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0"
+>
+    <!-- Top bar with logo and close icon -->
+    <div class="h-16 px-4 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
             <img class="size-12" src="{{ asset('assets/mzunilogo.webp') }}" alt="Mzuni logo">
+            <p class="text-md font-medium text-gray-900 dark:text-white">ICT Weekend</p>
         </div>
-        <p class="text-md text-center font-medium text-gray-900  dark:text-white">Weekend Timetabling System</p>
+
+        <!-- Close button (visible only on small screens) -->
+        <button x-on:click="sidebarOpen = false" class="md:hidden text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
     </div>
+
+    <!-- Navigation links -->
     <nav class="mt-5 px-4 space-y-1">
         @foreach ($navLinks as $link)
             <x-nav.nav-link :href="$link['href']" :icon="$link['icon']">
@@ -44,6 +53,6 @@
             </x-nav.nav-link>
         @endforeach
     </nav>
-
-
 </aside>
+
+
