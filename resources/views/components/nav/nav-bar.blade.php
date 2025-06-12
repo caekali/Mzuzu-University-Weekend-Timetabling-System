@@ -16,28 +16,22 @@
                     {{ session('current_role') }}
                 </div>
             </div>
-            <div x-data="{ open: false }" class="relative">
+            <div x-data="{ open: false }" @close-dropdown.window="open = false" class="relative">
                 <button @click="open = !open"
                     class="h-8 w-8 rounded-full bg-blue-900 text-white font-medium flex items-center justify-center focus:outline-none">
                     {{ strtoupper(substr(Auth::user()->first_name, 0, 1)) }}
                 </button>
                 <div x-show="open" @click.outside="open = false"
                     class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50" x-transition>
-                    @foreach (Auth::user()->roles as $role)
-                        @if ($role->name !== session('current_role'))
-                            <a href="{{ route('auth.switch-role', $role->name) }}"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                Switch to {{ ucfirst($role->name) }}
-                            </a>
-                        @endif
-                    @endforeach
-                    {{-- <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit"
-                                    class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-                                    Logout
-                                </button>
-                            </form> --}}
+                    {{-- <livewire:role-switcher /> --}}
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                            class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                            Logout
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

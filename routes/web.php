@@ -17,6 +17,7 @@ use App\Livewire\Programme\ProgrammeList;
 use App\Livewire\Timetable\GenerateTimetable;
 use App\Livewire\User\UserList;
 use App\Livewire\Venue\VenueList;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -43,6 +44,12 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
 
+    Route::post('/logout', function (Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('login');
+    })->name('logout');
 
     Route::get('/profile/setup', ProfileSetup::class)->name('profile.setup');
 });
