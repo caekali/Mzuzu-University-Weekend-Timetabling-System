@@ -4,34 +4,14 @@ namespace App\Services\GeneticAlgorithm;
 
 class GeneticAlgorithm
 {
-    protected int $populationSize;
-    protected int $maxGenerations;
-    protected float $mutationRate;
-
-    protected array $courses;
-    protected array $venues;
-    protected array $timeSlots;
-
-    protected FitnessEvaluator $evaluator;
-
     public function __construct(
-        array $courses,
-        array $venues,
-        array $timeSlots,
-        int $populationSize = 50,
-        int $maxGenerations = 100,
-        float $mutationRate = 0.1
-    ) {
-        $this->courses = $courses;
-        $this->venues = $venues;
-        $this->timeSlots = $timeSlots;
-
-        $this->populationSize = $populationSize;
-        $this->maxGenerations = $maxGenerations;
-        $this->mutationRate = $mutationRate;
-
-        $this->evaluator = new FitnessEvaluator();
-    }
+        protected array $courses,
+        protected array $venues,
+        protected array $timeSlots,
+        protected int $populationSize = 30,
+        protected int $generations = 100,
+        protected float $mutationRate = 0.1
+    ) {}
 
     public function run(): Schedule
     {
@@ -42,15 +22,12 @@ class GeneticAlgorithm
             $this->timeSlots
         );
 
-        $best = $population->getFittest($this->evaluator);
+        for ($gen = 0; $gen < $this->generations; $gen++) {
+            $newSchedules = [];
+            $fittest = $population->getFittest();
+            $newSchedules[] = $fittest;
 
-        for ($generation = 0; $generation < $this->maxGenerations; $generation++) {
-            $newChromosomes = [];
-
-            // Elitism: carry the best forward
-            $newChromosomes[] = $best;
-
-            while (count($newChromosomes) < $this->populationSize) {
+            while (count($newSchedules) < $this->populationSize) {
                 $parent1 = $population->selectParent();
                 $parent2 = $population->selectParent();
 
@@ -60,21 +37,13 @@ class GeneticAlgorithm
                     $child->mutate($this->venues, $this->timeSlots);
                 }
 
-                $child->calculateFitness($this->evaluator);
-                $newChromosomes[] = $child;
+                $child->calculateFitness();
+                $newSchedules[] = $child;
             }
 
-            $population = new Population($newChromosomes);
-            $best = $population->getFittest($this->evaluator);
-
-            // Optional: log progress
-            logger("Generation $generation - Fitness: " . $best->fitness);
+            $population = new Population($newSchedules);
         }
 
-        return $best;
+        return $population->getFittest();
     }
-
-
-
-    
 }
