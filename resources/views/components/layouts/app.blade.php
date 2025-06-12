@@ -20,7 +20,7 @@
         <div x-show="sidebarOpen" @click="sidebarOpen = false"
             class="fixed inset-0 z-20 bg-black bg-opacity-50 transition-opacity md:hidden" x-cloak></div>
         <x-nav.sidebar />
-        <div class="flex-1 flex-grow overflow-y-auto">
+        <div class="flex-1 flex-grow  overflow-y-auto">
             <x-nav.nav-bar />
             <main
                 class="mx-auto max-w-7xl px-4 sm:px-6 min-h-screen bg-gray-50 dark:bg-gray-900 p-4 transition-colors duration-200">
