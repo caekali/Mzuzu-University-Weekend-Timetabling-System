@@ -1,6 +1,7 @@
  <div class="py-6">
      <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Profile</h1>
-     <div class="bg-white dark:bg-slate-900 rounded shadow-md">
+     <div
+         class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
          <div class="p-6">
              <div class="flex items-center mb-6">
                  <div
@@ -8,17 +9,17 @@
                      {{ strtoupper(substr(auth()->user()->first_name, 0, 1)) }}
                  </div>
                  <div class="ml-6">
-                     <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+                     <h2 class="text-xl font-bold text-gray-900 dark:text-gray-200">
                          {{ auth()->user()->first_name . ' ' . auth()->user()->last_name }}</h2>
-                     <p class="text-sm text-gray-500 capitalize">
+                     <p class="text-sm text-gray-500 dark:text-gray-400">
                          {{ auth()->user()->roles->pluck('name')->implode(', ') }}
                      </p>
                  </div>
              </div>
 
              <div class="space-y-4">
-                 <div class="flex items-center text-gray-500">
-                     <x-lucide-mail class="h-5 w-5 mr-3 text-gray-500  " />
+                 <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                     <x-lucide-mail class="h-5 w-5 mr-3" />
                      <span>{{ auth()->user()->email }}</span>
                  </div>
 

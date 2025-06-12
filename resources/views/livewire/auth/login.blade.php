@@ -8,11 +8,11 @@
 
         <div class="flex justify-between items-center">
             <x-checkbox label="Remember Me" wire:model="remember" />
-            <x-link label="Forgot password?" href="{{ route('password.request') }}" />
+            <x-link class="text-sm font-medium" label="Forgot password?" href="{{ route('password.request') }}" />
         </div>
 
         @if ($errors->has('general'))
-            <x-alert title="{{ $errors->first('general') }}" icon="error" negative />
+            <x-alert title="{{ $errors->first('general') }}" negative />
         @endif
 
         @if (session('status'))
@@ -22,9 +22,9 @@
         <x-button primary label="Sign in" spinner='login' type="submit" class="w-full" />
     </form>
     <div class="mt-4 text-center text-sm">
-        <p class="font-semibold text-gray-600 dark:text-white">
+        <p class="text-sm font-medium text-gray-700 dark:text-gray-400">
             New here?
-            <x-link label="Activate account" href="{{ route('activation.request') }}" />
+            <x-link class="text-sm font-medium" label="Activate account" href="{{ route('activation.request') }}" />
         </p>
     </div>
 </div>

@@ -22,13 +22,13 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/switch-role/{role}', [RoleSwitchController::class, 'switch'])->name('auth.switch-role');
 
-Route::get('/',[GAController::class,'run']);
+// Route::get('/',[GAController::class,'run']);
 // Laravel + Livewire based views
-// Route::get('/', function () {
-//     return Auth::check()
-//         ? redirect()->route('dashboard')
-//         : redirect()->route('login');
-// })->name('home');
+Route::get('/', function () {
+    return Auth::check()
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
+})->name('home');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');
@@ -42,7 +42,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-  
+
 
     Route::get('/profile/setup', ProfileSetup::class)->name('profile.setup');
 });

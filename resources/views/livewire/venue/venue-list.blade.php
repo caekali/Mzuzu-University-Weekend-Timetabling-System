@@ -1,16 +1,13 @@
-<div class="p-6 flex flex-col">
+<div class="py-6 flex flex-col">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900">Venues</h1>
         <x-button icon="plus" label="Add Venue" wire:click="openModal" primary />
     </div>
 
-    <div class="flex-1 grow bg-white rounded-lg shadow">
-        <div class="p-4 border-b">
-            <div class="relative">
-                <x-lucide-search class="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                <input type="text" placeholder="Search venue..."
-                    class="pl-10 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
-            </div>
+    <div
+        class="bg-white p-6 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+        <div class="pb-4 w-64">
+            <x-input placeholder="Search venue..." />
         </div>
         <div class="overflow-x-auto">
             @php
@@ -22,6 +19,6 @@
             @endphp
             <x-table :headers="$headers" :rows="$venues->toArray()" :actions="true" :paginate="false" />
         </div>
+        <livewire:venue.venue-modal />
     </div>
-    <livewire:venue.venue-modal />
 </div>

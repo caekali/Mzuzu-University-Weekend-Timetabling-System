@@ -3,7 +3,8 @@
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Users</h1>
             <x-button icon="plus" label="Add User" wire:click="openModal" primary />
         </div>
-        <div class="bg-white dark:bg-gray-900 rounded shadow-md">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
             <div class="border-b border-gray-200 ">
                 <x-tab-navigation :tabs="[
                     ['label' => 'Manage Users', 'value' => 'users', 'icon' => 'users'],
@@ -15,7 +16,7 @@
                 <div class="p-6">
                     <div class="mb-6 space-y-4">
                         <div class="flex flex-col sm:flex-row gap-4">
-                            <div class="relative flex-1">
+                            <div class="relative flex-1 ">
                                 <x-input placeholder="Search users..." />
                             </div>
                             <div class="flex items-center space-x-4">
@@ -75,7 +76,7 @@
 
                         <x-table :headers="$headers" :rows="$users" :actions="true" :paginate="true"
                             :customCell="$customCell" />
-                       
+
                     </div>
                 </div>
             @else

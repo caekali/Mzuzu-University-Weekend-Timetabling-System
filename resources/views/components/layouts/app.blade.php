@@ -15,14 +15,15 @@
     @livewireStyles
 </head>
 
-<body class="bg-white dark:bg-slate-950 text-slate-900  dark:text-slate-100">
+<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
     <div class="flex h-screen" x-data="{ sidebarOpen: false }">
         <div x-show="sidebarOpen" @click="sidebarOpen = false"
-            class="fixed inset-0 z-20 bg-black/30 transition-opacity md:hidden" x-cloak></div>
+            class="fixed inset-0 z-20 bg-black bg-opacity-50 transition-opacity md:hidden" x-cloak></div>
         <x-nav.sidebar />
         <div class="flex-1 flex-grow overflow-y-auto">
             <x-nav.nav-bar />
-            <main class="mx-auto max-w-7xl px-4 sm:px-6 min-h-screen">
+            <main
+                class="mx-auto max-w-7xl px-4 sm:px-6 min-h-screen bg-gray-50 dark:bg-gray-900 p-4 transition-colors duration-200">
                 {{ $slot }}
             </main>
         </div>
@@ -34,4 +35,5 @@
     @wireUiScripts
     @livewireScripts
 </body>
+
 </html>
