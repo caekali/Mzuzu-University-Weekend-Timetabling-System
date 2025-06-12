@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
-use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 use WireUi\Traits\WireUiActions;
 
 class RoleSwitcher extends Component
 {
+
     use WireUiActions;
     public $roles;
     public $currentRole;
@@ -26,7 +27,7 @@ class RoleSwitcher extends Component
                 $description = 'You do not have this role.'
             );
 
-            $this->dispatchBrowserEvent('close-dropdown');
+            $this->dispatch('close-dropdown');
             return;
         }
 
@@ -37,10 +38,10 @@ class RoleSwitcher extends Component
             $title = 'Role Switched',
             $description = 'You are now using the role: ' . ucfirst($role)
         );
+        $this->dispatch('close-dropdown');
 
-        $this->dispatchBrowserEvent('close-dropdown');
+        redirect()->route('dashboard');
     }
-
 
     public function render()
     {

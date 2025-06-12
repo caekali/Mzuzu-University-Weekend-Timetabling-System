@@ -22,8 +22,8 @@
                     {{ strtoupper(substr(Auth::user()->first_name, 0, 1)) }}
                 </button>
                 <div x-show="open" @click.outside="open = false"
-                    class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50" x-transition>
-
+                    class="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-50" x-transition>
+                    <livewire:role-switcher />
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit"
@@ -36,4 +36,4 @@
         </div>
     </div>
 </header>
-  {{-- <livewire:role-switcher /> --}}
+

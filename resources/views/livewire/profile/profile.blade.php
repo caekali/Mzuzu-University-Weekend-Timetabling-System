@@ -24,7 +24,7 @@
                  </div>
 
                  @if (auth()->user()->hasRole('Student'))
-                     <div class="flex items-center text-gray-500" x-data="{ editBtnClicked: false }">
+                     <div class="flex items-center text-sm text-gray-500 dark:text-gray-400" x-data="{ editBtnClicked: false }">
                          <x-lucide-book-open class="h-5 w-5 mr-3 text-gray-500" />
                          <span>{{ auth()->user()->student->programme->name }} - Level
                              {{ auth()->user()->student->level }}</span>
@@ -52,7 +52,7 @@
                      </div>
                  @endif
                  @if (auth()->user()->hasRole('Lecturer'))
-                     <div class="flex items-center text-gray-500">
+                     <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
                          <x-lucide-building class="h-5 w-5 mr-3 text-gray-500" />
                          <span>{{ auth()->user()->lecturer->department->name }}</span>
                      </div>
