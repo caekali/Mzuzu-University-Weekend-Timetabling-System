@@ -38,7 +38,7 @@ class RoleSwitcher extends Component
             $description = 'You are now using the role: ' . ucfirst($role)
         );
 
-        $this->dispatchBrowserEvent('close-dropdown'); // 👈 Notify Alpine to close
+        $this->dispatchBrowserEvent('close-dropdown');
     }
 
 
