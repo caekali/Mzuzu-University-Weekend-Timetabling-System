@@ -28,51 +28,6 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class
         ]);
 
-        Department::factory(3)->create()->each(function ($department) {
-            Programme::factory(2)->create(['department_id' => $department->id])->each(function ($programme) use ($department) {
-                Course::factory(5)->create([
-                    'department_id' => $department->id,
-                    'level' => 100,
-                    'semester' => 1
-                ])->each(function ($course) use ($programme) {
-                    CourseProgramme::create([
-                        'course_id' => $course->id,
-                        'programme_id' => $programme->id
-                    ]);
-                });
-            });
-        });
-
-        User::factory(10)->create()->each(function ($user) {
-            $user->update(['is_active' => true]);
-            Lecturer::create([
-                'user_id' => $user->id,
-                'department_id' => Department::inRandomOrder()->first()->id
-            ]);
-        });
-
-        // Allocate courses to lecturers
-        $courseProgrammes = CourseProgramme::all();
-        foreach ($courseProgrammes as $cp) {
-            CourseAllocation::create([
-                'course_programme_id' => $cp->id,
-                'lecturer_id' => Lecturer::inRandomOrder()->first()->id
-            ]);
-        }
-
-        Venue::factory(5)->create();
-
-        // Create students
-        Programme::all()->each(function ($programme) {
-            User::factory(10)->create()->each(function ($user) use ($programme) {
-                $user->update(['is_active' => true]);
-                Student::create([
-                    'user_id' => $user->id,
-                    'programme_id' => $programme->id,
-                    'level' => 100
-                ]);
-            });
-        });
-    
+        
     }
 }

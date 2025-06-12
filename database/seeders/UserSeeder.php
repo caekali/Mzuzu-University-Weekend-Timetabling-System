@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             'first_name' => 'Admin',
             'last_name' => 'Admin',
             'email' => 'admin@my.mzuni.ac.mw',
+            'is_active' => 1
         ]);
         $admin->roles()->attach(Role::where('name', 'Admin')->first()->id);
 
