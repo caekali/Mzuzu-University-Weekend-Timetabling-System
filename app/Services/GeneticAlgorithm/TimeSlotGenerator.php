@@ -1,30 +1,29 @@
 <?php
 
-namespace App\Services\Scheduling;
+namespace App\Services\GeneticAlgorithm;
+
 
 class TimeSlotGenerator
 {
-    public static function generate(array $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], string $start = '09:00', string $end = '17:00'): array
+    public static function generate(array $days = ['Friday', 'Saturday', 'Sunday'], string $start = '07:45', string $end = '18:45', int $slotMinutes = 60): array
     {
         $slots = [];
-
         foreach ($days as $day) {
             $current = strtotime($start);
             $endTime = strtotime($end);
 
             while ($current < $endTime) {
-                $next = strtotime('+1 hour', $current);
+                $next = strtotime("+$slotMinutes minutes", $current);
 
                 $slots[] = [
                     'day' => $day,
-                    'start_time' => date('H:i', $current),
-                    'end_time' => date('H:i', $next),
+                    'start' => date('H:i', $current),
+                    'end' => date('H:i', $next),
                 ];
 
                 $current = $next;
             }
         }
-
         return $slots;
     }
 }

@@ -2,20 +2,18 @@
 
 namespace App\Services\GeneticAlgorithm;
 
-use App\Models\Course;
-use App\Models\Venue;
-
 class ScheduleEntry
 {
     public $course;
+    public $lecturer;
     public $venue;
-    public $timeSlot;
+    public array $timeSlots; // timeslots
 
-    public function __construct($course, $venue, $timeSlot)
+    public function __construct($course, $lecturer, $venue, array $timeSlots)
     {
-        // Accept both stdClass and App\Models\Course
         $this->course = $course;
+        $this->lecturer = $lecturer;
         $this->venue = $venue;
-        $this->timeSlot = $timeSlot;
+        $this->timeSlots = $timeSlots;
     }
 }
