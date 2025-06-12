@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\GAController;
 use App\Http\Controllers\RoleSwitchController;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Auth\ActivateAccount;
@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/switch-role/{role}', [RoleSwitchController::class, 'switch'])->name('auth.switch-role');
 
-
+// Route::get('/',[GAController::class,'run']);
 // Laravel + Livewire based views
 Route::get('/', function () {
     return Auth::check()
@@ -32,7 +32,9 @@ Route::get('/', function () {
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');
-    Route::get('/forgot-password',ForgotPassword::class)->name('password.request');
+    Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
+    Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
+
     Route::get('/activate/request', RequestActivationLink::class)->name('activation.request');
     Route::get('/activate/{userId}', ActivateAccount::class)
         ->middleware('signed')
@@ -40,10 +42,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    // Auth::logout();
-    //     $request->session()->invalidate();
-    //     $request->session()->regenerateToken();
-    //     return redirect()->route('login');
+
 
     Route::get('/profile/setup', ProfileSetup::class)->name('profile.setup');
 });
@@ -59,5 +58,6 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/programmes', ProgrammeList::class)->name('programmes');
     Route::get('/venues', VenueList::class)->name('venues');
     Route::get('/users', UserList::class)->name('users');
+    Route::get('/timetable', UserList::class)->name('timetable');
     Route::get('/timetable/generate', GenerateTimetable::class)->name('timetable.generate');
 });

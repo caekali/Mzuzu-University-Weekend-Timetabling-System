@@ -11,6 +11,6 @@
     </form>
 
     <div class="text-center text-sm mt-4">
-        <x-link label="Back to login" href="{{ route('login') }}" />
+        <x-link class="text-sm font-medium" label="Back to login" href="{{ route('login') }}" />
     </div>
 </div>

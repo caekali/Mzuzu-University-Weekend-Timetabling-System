@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('ga_parameters', function (Blueprint $table) {
             $table->id();
-            $table->integer("pupolation_size");
-            $table->integer('generations');
+            $table->integer("population_size");
+            $table->integer('number_of_generations');
             $table->float('mutation_rate');
             $table->float("crossover_rate");
-            $table->float("penalty_hard");
-            $table->float("penalty_soft");
+            $table->integer("tournament_size");
             $table->timestamp('last_updated');
         });
     }

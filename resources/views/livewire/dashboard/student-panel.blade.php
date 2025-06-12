@@ -1,5 +1,5 @@
- @php
-     use Carbon\Carbon;
+@php 
+  use Carbon\Carbon;
 
      $now = Carbon::now();
      $hour = $now->hour;
@@ -11,10 +11,7 @@
      };
 
      $formattedDate = $now->format('l, F j, Y'); // Saturday, May 24, 2025
- @endphp
 
-
- @php
      $schedules = collect([
          (object) [
              'day' => 'Tue',

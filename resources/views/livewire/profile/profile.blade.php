@@ -1,6 +1,7 @@
- <div class="p-6">
+ <div class="py-6">
      <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Profile</h1>
-     <div class="bg-white dark:bg-slate-900 rounded-lg shadow-sm">
+     <div
+         class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
          <div class="p-6">
              <div class="flex items-center mb-6">
                  <div
@@ -8,23 +9,23 @@
                      {{ strtoupper(substr(auth()->user()->first_name, 0, 1)) }}
                  </div>
                  <div class="ml-6">
-                     <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+                     <h2 class="text-xl font-bold text-gray-900 dark:text-gray-200">
                          {{ auth()->user()->first_name . ' ' . auth()->user()->last_name }}</h2>
-                     <p class="text-sm text-gray-500 capitalize">
+                     <p class="text-sm text-gray-500 dark:text-gray-400">
                          {{ auth()->user()->roles->pluck('name')->implode(', ') }}
                      </p>
                  </div>
              </div>
 
              <div class="space-y-4">
-                 <div class="flex items-center text-gray-500">
-                     <x-icons.email class="h-5 w-5 mr-3 text-gray-500  " />
+                 <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                     <x-lucide-mail class="h-5 w-5 mr-3" />
                      <span>{{ auth()->user()->email }}</span>
                  </div>
 
                  @if (auth()->user()->hasRole('Student'))
                      <div class="flex items-center text-gray-500" x-data="{ editBtnClicked: false }">
-                         <x-icons.open-book class="h-5 w-5 mr-3 text-gray-500" />
+                         <x-lucide-book-open class="h-5 w-5 mr-3 text-gray-500" />
                          <span>{{ auth()->user()->student->programme->name }} - Level
                              {{ auth()->user()->student->level }}</span>
                          <button x-show='!editBtnClicked' type="submit" @click="editBtnClicked = true"
@@ -52,12 +53,12 @@
                  @endif
                  @if (auth()->user()->hasRole('Lecturer'))
                      <div class="flex items-center text-gray-500">
-                         <x-icons.building class="h-5 w-5 mr-3 text-gray-500" />
+                         <x-lucide-building class="h-5 w-5 mr-3 text-gray-500" />
                          <span>{{ auth()->user()->lecturer->department->name }}</span>
                      </div>
                  @endif
              </div>
-             <div class="mt-8 pt-8 border-t">
+             <div class="mt-8 pt-8 border-t dark:border-t-gray-500">
                  <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Change Password</h3>
                  <form wire:submit.prevent="update" class="space-y-4 max-w-md">
                      <x-input type="password" label="Current Password" wire:model.defer="form.current_password" />
