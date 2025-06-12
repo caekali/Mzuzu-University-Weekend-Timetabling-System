@@ -54,6 +54,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/setup', ProfileSetup::class)->name('profile.setup');
 });
 
+
+
 Route::middleware(['auth', 'profile.setup'])->group(function () {
     Route::get('/profile', Profile::class)->name('profile');
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
