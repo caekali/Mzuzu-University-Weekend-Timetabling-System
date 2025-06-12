@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services\GeneticAlgorithm;
 
 class Schedule
@@ -66,17 +67,24 @@ class Schedule
         return $this->fitness;
     }
 
-    public function crossover(Schedule $partner): Schedule
+    public function crossover(Schedule $other)
     {
-        $child = new Schedule();
-        $mid = floor(count($this->entries) / 2);
+        // Clone this schedule and the other
+        $child1 = clone $this;
+        $child2 = clone $other;
 
-        foreach ($this->entries as $i => $entry) {
-            $child->entries[] = $i < $mid ? $entry : $partner->entries[$i];
+        // Example: One-point crossover
+        $splitPoint = floor(count($this->entries) / 2);
+
+        for ($i = 0; $i < $splitPoint; $i++) {
+            $temp = $child1->entries[$i];
+            $child1->entries[$i] = $child2->entries[$i];
+            $child2->entries[$i] = $temp;
         }
 
-        return $child;
+        return [$child1, $child2]; // ✅ Ensure this is an array
     }
+
 
     public function mutate(array $venues, array $timeSlots): void
     {
@@ -88,4 +96,3 @@ class Schedule
         }
     }
 }
-

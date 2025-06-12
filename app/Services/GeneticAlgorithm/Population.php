@@ -24,6 +24,15 @@ class Population
         return new self($schedules);
     }
 
+    /**
+     * Replace the schedules.
+     */
+    public function setSchedules(array $schedules): void
+    {
+        $this->schedules = $schedules;
+    }
+
+
     public function getFittest(): Schedule
     {
         usort($this->schedules, fn($a, $b) => $b->fitness <=> $a->fitness);
@@ -36,5 +45,15 @@ class Population
         $b = $this->schedules[array_rand($this->schedules)];
 
         return $a->fitness > $b->fitness ? $a : $b;
+    }
+
+    public function size(): int
+    {
+        return count($this->schedules);
+    }
+
+    public function all()
+    {
+        return $this->schedules;
     }
 }
