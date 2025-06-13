@@ -1,5 +1,4 @@
 <x-slot:subheader>Reset Password</x-slot>
-
 <form wire:submit.prevent="resetPassword" class="space-y-4">
     <x-password label="New Password" wire:model.defer="password" name="password" placeholder='Password' />
 

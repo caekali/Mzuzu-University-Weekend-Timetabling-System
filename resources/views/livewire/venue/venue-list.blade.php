@@ -7,18 +7,9 @@
     <div
         class="bg-white p-6 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
         <div class="pb-4 w-64">
-            <x-input placeholder="Search venue..." />
+            <x-input wire:model.live='search' placeholder="Search venue..." />
         </div>
-        <div class="overflow-x-auto">
-            @php
-                $headers = [
-                    'name' => 'Name',
-                    'capacity' => 'Capacity',
-                    'is_lab' => 'Type',
-                ];
-            @endphp
-            <x-table :headers="$headers" :rows="$venues->toArray()" :actions="true" :paginate="false" />
-        </div>
+        <x-table :headers="$headers" :rows="$venues" :actions="true" :paginate="true" />
         <livewire:venue.venue-modal />
     </div>
 </div>

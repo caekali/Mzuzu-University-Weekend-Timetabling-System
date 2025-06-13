@@ -15,6 +15,13 @@ class CourseModal extends Component
 
     public CourseForm $form;
 
+    public $departments;
+
+    public function mount()
+    {
+        $this->departments = Department::all();
+    }
+
     public function openModal($id = null)
     {
         $this->form->reset();
@@ -47,8 +54,6 @@ class CourseModal extends Component
     }
     public function render()
     {
-        return view('livewire.course.course-modal', [
-            'departments' => Department::all(),
-        ]);
+        return view('livewire.course.course-modal');
     }
 }

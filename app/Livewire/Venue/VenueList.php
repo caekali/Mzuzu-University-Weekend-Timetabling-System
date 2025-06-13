@@ -14,6 +14,12 @@ class VenueList extends Component
 
     public $search = '';
 
+    public $headers  = [
+        'name' => 'Name',
+        'capacity' => 'Capacity',
+        'is_lab' => 'Type',
+    ];
+
     public function openModal($id = null)
     {
         $this->dispatch('openModal', $id)->to('venue.venue-modal');
@@ -53,9 +59,17 @@ class VenueList extends Component
 
     public function render()
     {
-        $venues = Venue::latest()->get();
-        return view('livewire.venue.venue-list', [
-            'venues' => $venues
-        ]);
+        $venues = Venue::query()
+            ->when(
+                trim($this->search),
+                function ($query) {
+                    $query->where(function ($query) {
+                        $query->where('name', 'like', '%' . trim($this->search) . '%');
+                    });
+                }
+            )
+            ->latest()
+            ->paginate(6);
+        return view('livewire.venue.venue-list', compact('venues'));
     }
 }

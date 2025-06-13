@@ -85,8 +85,6 @@
                                             </div>
                                         @endforeach
                                     @endif
-
-                                    <!-- Add new schedule button, always shown -->
                                     <div class="h-8 w-full flex items-center justify-center text-gray-400 hover:text-gray-600 cursor-pointer"
                                         wire:click="openModal(null, '{{ $day }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')"
                                         title="Add Schedule">

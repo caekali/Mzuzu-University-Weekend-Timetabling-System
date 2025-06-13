@@ -1,7 +1,8 @@
 <div class="py-6">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-white  mb-6">Generate Timetable</h1>
     <div class="grid grid-cols-1 gap-6">
-        <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+        <div
+            class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
             <div class="flex items-center mb-4">
                 <x-lucide-sliders class="text-green-900 mr-2 w-5 h-5" />
                 <h2 class="text-lg font-medium text-gray-900 dark:text-white">Algorithm Parameters</h2>
@@ -25,7 +26,8 @@
             </div>
         </div>
 
-        <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+        <div
+            class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
             <div class="flex items-center mb-4">
                 <x-lucide-cpu class="w-5 h-5 mr-2 text-green-900" />
                 <h2 class="text-lg font-medium text-gray-900 dark:text-white">Timetable Generation</h2>

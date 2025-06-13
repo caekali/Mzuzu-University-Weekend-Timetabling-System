@@ -12,6 +12,7 @@ class DepartmentList extends Component
     use WireUiActions;
 
     public string $search = '';
+    public  $headers = ['code' => 'Code', 'name' => 'Name'];
 
     public function openModal($id = null)
     {
@@ -54,14 +55,16 @@ class DepartmentList extends Component
     {
         $departments = Department::query()
             ->when(
-                $this->search,
-                fn($query) =>
-                $query->where('name', 'like', '%' . $this->search . '%')
+                trim($this->search),
+                function ($query) {
+                    $query->where(function ($query) {
+                        $query->where('name', 'like', '%' . trim($this->search) . '%')
+                            ->orWhere('code', 'like', '%' . trim($this->search) . '%');
+                    });
+                }
             )
             ->latest()
-            ->get();
-        return view('livewire.department.department-list', [
-            'departments' => $departments,
-        ]);
+            ->paginate(6);
+        return view('livewire.department.department-list', compact('departments'));
     }
 }

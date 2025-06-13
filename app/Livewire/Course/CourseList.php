@@ -11,9 +11,25 @@ use WireUi\Traits\WireUiActions;
 
 class CourseList extends Component
 {
-    use WireUiActions,WithPagination ,WithoutUrlPagination;
-   
+    use WireUiActions, WithPagination, WithoutUrlPagination;
+
     public $search = '';
+
+    public $headers = [
+        'code' => 'Code',
+        'name' => 'Name',
+        'weekly_hours' => 'Weekly Hours',
+        'level' => 'Level',
+        'semester' => 'Semester',
+        'department' => 'Department',
+        'num_of_students' => 'No. of Students',
+    ];
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+        // $this->refresh();
+    }
 
     public function openModal($id = null)
     {
@@ -55,7 +71,30 @@ class CourseList extends Component
 
     public function render()
     {
-        $courses = Course::with('department')->latest()->paginate(6);
+        $courses = Course::with('department')
+            ->when(trim($this->search), function ($query) {
+                $query->where(function ($q) {
+                    $q->where('name', 'like', '%' . trim($this->search) . '%')
+                        ->orWhere('code', 'like', '%' . trim($this->search) . '%');
+                });
+            })
+            ->latest()
+            ->paginate(6);
+
+        $courses->setCollection(
+            $courses->getCollection()->transform(function ($course) {
+                return [
+                    'id' => $course->id,
+                    'code' => $course->code,
+                    'name' => $course->name,
+                    'weekly_hours' => $course->weekly_hours,
+                    'level' => $course->level,
+                    'semester' => $course->semester,
+                    'department' => $course->department->name ?? 'N/A',
+                    'num_of_students' => $course->num_of_students,
+                ];
+            })
+        );
 
         return view('livewire.course.course-list', compact('courses'));
     }

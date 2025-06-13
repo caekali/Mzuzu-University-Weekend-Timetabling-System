@@ -14,7 +14,8 @@ class ProfileSetup extends Component
     use WireUiActions;
 
     public ProfileSetupForm $form;
-
+    public $departements;
+    public $programmes;
 
     public function mount()
     {
@@ -29,7 +30,9 @@ class ProfileSetup extends Component
         // Setup form type
         if ($user->hasRole('Student')) {
             $this->form->profileType = 'student';
+            $this->programmes = Programme::all();
         } elseif ($user->hasRole('Lecturer')) {
+            $this->departements =  Department::all();
             $this->form->profileType = 'lecturer';
         } else {
             abort(403, 'Invalid role for setup.');
@@ -57,15 +60,6 @@ class ProfileSetup extends Component
     }
     public function render()
     {
-        $view = view('livewire.profile.profile-setup', [
-            'departments' => Department::all(),
-        ]);
-
-        if ($this->form->profileType === 'student') {
-            $view = view('livewire.profile.profile-setup', [
-                'programmes' => Programme::all(),
-            ]);
-        }
-        return $view->layout('components.layouts.guest');
+        return view('livewire.profile.profile-setup')->layout('components.layouts.guest');
     }
 }
