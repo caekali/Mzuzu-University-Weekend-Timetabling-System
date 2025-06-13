@@ -21,7 +21,7 @@
                     class="h-8 w-8 rounded-full bg-blue-900 text-white font-medium flex items-center justify-center focus:outline-none">
                     {{ strtoupper(substr(Auth::user()->first_name, 0, 1)) }}
                 </button>
-                <div x-show="open" @click.outside="open = false"
+                <div x-show="open"  @click.outside="open = false" x-cloak
                     class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50"
                     x-transition>
                     <livewire:role-switcher />

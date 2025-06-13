@@ -38,7 +38,7 @@ class ScheduleForm extends Form
         if (!$this->scheduleEntryId) {
             ScheduleEntry::create($validated);
         } else {
-            ScheduleEntry::findOrFail($this->$this->scheduleEntryId)
+            ScheduleEntry::findOrFail($this->scheduleEntryId)
                 ->update($validated);
         }
         $this->reset();

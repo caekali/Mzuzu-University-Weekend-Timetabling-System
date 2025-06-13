@@ -6,12 +6,11 @@
          <x-select name='form.programme_id' label="Programme" placeholder="Select programme" :options="$programmes"
              option-label="name" option-value="id" wire:model.defer="form.programme_id" />
 
-         <x-select name='form.lecturer_id"' label="Lecturer" placeholder="Select lecturer" :options="$lecturers"
+         <x-select name='form.lecturer_id' label="Lecturer" placeholder="Select lecturer" :options="$lecturers"
              option-label="name" option-value="id" wire:model.defer="form.lecturer_id" />
 
          <x-select name='form.venue_id' label="Venue" placeholder="Select venue" :options="$venues" option-label="name"
              option-value="id" wire:model.defer="form.venue_id" />
-
      </form>
      <x-slot name="footer" class="flex justify-end gap-x-4">
          <div class="flex gap-x-4">

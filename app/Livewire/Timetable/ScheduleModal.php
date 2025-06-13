@@ -15,7 +15,38 @@ class ScheduleModal extends Component
 {
     use WireUiActions;
     protected $listeners = ['openModal'];
+
     public ScheduleForm $form;
+
+    public $courses;
+    public $programmes;
+    public $venues;
+    public $lecturers;
+
+    public function mount()
+    {
+        $this->programmes = Programme::all();
+        $this->courses = Course::all()
+            ->transform(fn($course) => [
+                'id' => $course->id,
+                'name' => $course->code . ' - ' . $course->name,
+            ])
+            ->toArray();
+
+        $this->venues = Venue::all()
+            ->transform(fn($venue) => [
+                'id' => $venue->id,
+                'name' => $venue->name . ' (Capacity: ' . $venue->capacity . ')',
+            ])
+            ->toArray();
+
+        $this->lecturers = Lecturer::with('user')->get()
+            ->transform(fn($lecturer) => [
+                'id' => $lecturer->id,
+                'name' => $lecturer->user->first_name . ' ' . $lecturer->user->last_name,
+            ])
+            ->toArray();
+    }
 
     public function openModal($id = null, $day, $startTime, $endTime)
     {
@@ -26,7 +57,7 @@ class ScheduleModal extends Component
         $this->form->day = $day;
         $this->form->start_time = $startTime;
         $this->form->end_time = $endTime;
-        
+
         if ($id) {
             $scheduleEntry = ScheduleEntry::findOrFail($id);
             $this->form->scheduleEntryId = $scheduleEntry->id;
@@ -51,36 +82,6 @@ class ScheduleModal extends Component
     }
     public function render()
     {
-        $courses = Course::all();
-
-        $courses->transform(function ($course) {
-            $data = [
-                'id'    => $course->id,
-                'name'  => $course->code . ' - ' . $course->name,
-            ];
-            return $data;
-        });
-        $programmes = Programme::all();
-
-        $venues = Venue::all();
-        $lecturers = Lecturer::all();
-
-        $lecturers->transform(function ($lecturer) {
-            $data = [
-                'id'    => $lecturer->id,
-                'name'  => $lecturer->user->first_name . ' ' . $lecturer->user->last_name,
-            ];
-            return $data;
-        });
-
-        $venues->transform(function ($venue) {
-            $data = [
-                'id'    => $venue->id,
-                'name'  => $venue->name . ' (Capacity : ' . $venue->capacity . ')'
-            ];
-            return $data;
-        });
-
-        return view('livewire.timetable.schedule-modal', compact('courses', 'programmes', 'venues', 'lecturers'));
+        return view('livewire.timetable.schedule-modal');
     }
 }

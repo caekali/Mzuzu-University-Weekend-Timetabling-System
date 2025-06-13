@@ -59,7 +59,9 @@ class UserList extends Component
     }
 
     #[On('refresh-list')]
-    public function refresh() {}
+    public function refresh() {
+        
+    }
 
     public function render()
     {

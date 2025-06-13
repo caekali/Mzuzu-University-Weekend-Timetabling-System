@@ -10,7 +10,7 @@
          <x-select label="Roles" placeholder="Select user roles" :options="$roles" option-label="name"
              option-value="id" wire:model.live="userRoleIds" multiselect />
 
-         {{-- Student details --}}
+      
          @if ($this->hasRole('student'))
              <x-select label="Level" placeholder="Level" name="form.level" wire:model="form.level" :options="[1, 2, 3, 4, 5]"
                  required />
@@ -19,7 +19,7 @@
                  option-value="id" wire:model.defer="form.programme_id" />
          @endif
 
-         {{-- Lecturer | HOD details --}}
+      
          @if ($this->hasRole('lecturer') || $this->hasRole('hod'))
              <x-select label="Department" placeholder="Select department" :options="$departments" option-label="name"
                  option-value="id" wire:model.defer="form.department_id" />

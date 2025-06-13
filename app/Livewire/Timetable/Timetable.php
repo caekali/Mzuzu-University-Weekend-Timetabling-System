@@ -5,6 +5,7 @@ namespace App\Livewire\Timetable;
 use App\Models\Lecturer;
 use App\Models\Programme;
 use App\Models\ScheduleEntry;
+use App\Models\Venue;
 use Carbon\Carbon;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -18,21 +19,23 @@ class Timetable extends Component
 
     public $selectedProgramme = '';
     public $selectedLecturer = '';
+    public $selectedVenue = '';
+
     public $programmes;
     public $lecturers;
-    public $showFilters = false;
+    public $venues;
 
     public function mount()
     {
         $this->programmes = Programme::all();
-        $this->lecturers = Lecturer::with('user')->get();
-        // $this->lecturers->transform(function ($lecturer) {
-        //     $data = [
-        //         'id'    => $lecturer->id,
-        //         'name'  => $lecturer->user->first_name . ' ' . $lecturer->user->last_name,
-        //     ];
-        //     return $data;
-        // });
+        $this->venues = Venue::all();
+
+        $this->lecturers = Lecturer::with('user')->get()->map(function ($lecturer) {
+            return [
+                'id' => $lecturer->id,
+                'name' => $lecturer->user->first_name . ' ' . $lecturer->user->last_name,
+            ];
+        });
 
         $start = Carbon::createFromTime(8, 0);
         $end = Carbon::createFromTime(17, 0);
@@ -54,6 +57,11 @@ class Timetable extends Component
         $this->loadEntries();
     }
 
+    public function updatedSelectedVenue()
+    {
+        $this->loadEntries();
+    }
+
     public function updatedSelectedLecturer()
     {
         $this->loadEntries();
@@ -71,11 +79,18 @@ class Timetable extends Component
             $query->where('lecturer_id', $this->selectedLecturer);
         }
 
+        if ($this->selectedVenue) {
+            $query->where('venue_id', $this->selectedVenue);
+        }
+
         $this->entries = $query->get();
     }
 
     #[On('refresh-list')]
-    public function refresh() {}
+    public function refresh()
+    {
+        $this->loadEntries();
+    }
 
     public function openModal($id = null, $day, $startTime, $endTime)
     {
