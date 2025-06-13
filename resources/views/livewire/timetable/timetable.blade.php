@@ -69,9 +69,19 @@
                                             <div class="bg-blue-100 rounded p-1 mb-1"
                                                 wire:click="openModal({{ $entry->id }}, '{{ $day }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')"
                                                 title="Edit Schedule">
-                                                <div class="font-bold">{{ $entry->course->code }}</div>
-                                                <div>{{ $entry->lecturer->user->first_name }}</div>
-                                                <div class="text-xs text-gray-700">{{ $entry->venue->name }}</div>
+                                                <div class="font-bold flex items-center gap-2 ">
+                                                    <x-lucide-book-open class="w-3 h-3" />
+                                                    <span> {{ $entry->course->code }}</span>
+                                                </div>
+                                                <div class="text-gray-600 flex items-center gap-2">
+                                                    <x-lucide-user class="w-3 h-3" />
+                                                    <span>{{ $entry->lecturer->user->first_name . ' ' . $entry->lecturer->user->last_name }}</span>
+                                                </div>
+
+                                                <div class="text-gray-600 flex items-center gap-2">
+                                                    <x-lucide-map-pin class="w-3 h-3" />
+                                                    <span>{{ $entry->venue->name }}</span>
+                                                </div>
                                             </div>
                                         @endforeach
                                     @endif

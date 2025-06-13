@@ -37,8 +37,8 @@ class Timetable extends Component
             ];
         });
 
-        $start = Carbon::createFromTime(8, 0);
-        $end = Carbon::createFromTime(17, 0);
+        $start = Carbon::createFromTime(7, 45);
+        $end = Carbon::createFromTime(18, 45);
         while ($start < $end) {
             $slotStart = $start->copy();
             $slotEnd = $start->copy()->addHour();
@@ -92,7 +92,7 @@ class Timetable extends Component
         $this->loadEntries();
     }
 
-    public function openModal($id = null, $day, $startTime, $endTime)
+    public function openModal($id = null, $day = null, $startTime = null, $endTime = null)
     {
         $this->dispatch('openModal', $id, $day, $startTime, $endTime)->to('timetable.schedule-modal');
     }

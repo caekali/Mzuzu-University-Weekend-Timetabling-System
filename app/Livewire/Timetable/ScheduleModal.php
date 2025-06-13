@@ -48,7 +48,7 @@ class ScheduleModal extends Component
             ->toArray();
     }
 
-    public function openModal($id = null, $day, $startTime, $endTime)
+    public function openModal($id = null, $day = null, $startTime = null, $endTime = null)
     {
 
         $this->form->reset();
