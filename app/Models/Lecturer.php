@@ -27,8 +27,8 @@ class Lecturer extends Model
         return $this->belongsTo(Department::class);
     }
 
-    public function lectures(): HasMany
+    public function scheduleEntries(): HasMany
     {
-        return $this->hasMany(Lecture::class);
+        return $this->hasMany(ScheduleEntry::class);
     }
 }

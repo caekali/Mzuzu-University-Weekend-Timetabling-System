@@ -21,12 +21,17 @@ class ScheduleEntry extends Model
         'venue_id'
     ];
 
-    public function lecture() : BelongsTo
+    public function course() : BelongsTo
     {
-        return $this->belongsTo(Lecture::class);
+        return $this->belongsTo(Course::class);
     }
 
-    public function venue() : BelongsTo
+    public function lecturer(): BelongsTo
+    {
+        return $this->belongsTo(Lecturer::class);
+    }
+
+    public function venue(): BelongsTo
     {
         return $this->belongsTo(Venue::class);
     }
