@@ -15,7 +15,7 @@
             @endif
         </tr>
     </thead>
-    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200">
+    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-500">
         @forelse($rows as $index => $row)
             <tr class=" hover:bg-gray-100 dark:hover:bg-gray-700">
                 @foreach ($headers as $key => $header)

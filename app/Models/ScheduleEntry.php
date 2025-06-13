@@ -15,7 +15,9 @@ class ScheduleEntry extends Model
         'day',
         'start_time',
         'end_time',
-        'lecture_id',
+        'lecturer_id',
+        'programme_id',
+        'course_id',
         'venue_id'
     ];
 
