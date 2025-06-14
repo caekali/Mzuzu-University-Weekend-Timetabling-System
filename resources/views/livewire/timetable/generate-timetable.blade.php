@@ -26,26 +26,22 @@
             </div>
         </div>
 
-        <div
+
+
+
+        <div x-data="{ shown: {{ $progress }} }"
+            @if (!$isDone) wire:poll.500ms="pollProgress" @else wire:init="pollProgress" @endif
+            x-effect="shown = {{ $progress }} "
             class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+
             <div class="flex items-center mb-4">
                 <x-lucide-cpu class="w-5 h-5 mr-2 text-green-900" />
                 <h2 class="text-lg font-medium text-gray-900 dark:text-white">Timetable Generation</h2>
             </div>
 
-            @if ($isGenerating)
-                <div class="mb-6">
-                    <div class="flex justify-between text-sm text-gray-600 mb-1">
-                        <span>Generation Progress</span>
-                        <span>100%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        {{-- Progress bar --}}
-                    </div>
-                </div>
-            @endif
 
-            @if ($showSuccess)
+
+            @if ($isDone)
                 <div class="mb-6 p-4 bg-green-50 rounded-md flex items-start">
                     <x-icon name="check" class="w-5 h-5" />
                     <div>
@@ -55,35 +51,26 @@
                         </p>
                     </div>
                 </div>
-            @endif
+            @else
+                <div class="mb-6">
+                    <div class="flex justify-between text-sm text-gray-600 mb-1">
+                        <p class="mt-2 text-sm text-gray-700">
+                            Generation Progress: <span x-text="Math.round(shown)"></span>%
+                        </p>
 
-            {{--           
-          {/* Conflicts section */}
-          {conflicts.length > 0 && (
-            <div class="mb-6 p-4 bg-amber-50 rounded-md">
-              <div class="flex items-center mb-2">
-                <AlertCircle class="h-5 w-5 text-amber-500 mr-2" />
-                <h3 class="text-sm font-medium text-amber-800">Timetable generated with {conflicts.length} conflicts</h3>
-              </div>
-              <p class="text-sm text-amber-700 mb-2">
-                The generated timetable has the following conflicts that need resolution:
-              </p>
-              <ul class="mt-2 space-y-1 list-disc list-inside text-sm text-amber-700 max-h-40 overflow-y-auto">
-                {conflicts.slice(0, 5).map((conflict, index) => (
-                  <li key={index}>{conflict.message}</li>
-                ))}
-                {conflicts.length > 5 && (
-                  <li>...and {conflicts.length - 5} more</li>
-                )}
-              </ul>
-            </div>
-          )} --}}
+                        <p>Running Generation {{ $currentGeneration }} / {{ $totalGenerations }}</p>
+                        <p>Fitness: {{ $currentFitness }}</strong></p>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-green-500 h-2.5 rounded transition-all duration-300" :style="`width: ${shown}%`">
+                        </div>
+                    </div>
+                </div>
+            @endif
             <div class="flex flex-col space-y-4">
-                @if ($isGenerating)
-                    <x-button label='Generating...' spinner />
-                @else
-                    <x-button icon='cpu-chip' label=' Generate Timetable' />
-                @endif
+                <x-button icon="cpu-chip" :label="$progress > 0 && $progress < 100 ? 'Generating...' : 'Generate Timetable'" :spinner="$progress > 0 && $progress < 100"
+                    :disabled="$progress > 0 && $progress < 100" wire:click="startGeneration"
+                    wire:loading.attr="disabled" wire:target="startGeneration" />
                 <x-button outline icon='calendar' label=" View Current Timetable" />
             </div>
         </div>

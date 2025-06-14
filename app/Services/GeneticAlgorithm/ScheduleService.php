@@ -2,32 +2,28 @@
 
 namespace App\Services\GeneticAlgorithm;
 
-class GeneticAlgorithm
+class ScheduleService
 {
     protected Population $population;
+    protected array $courses;
+    protected array $venues;
+    protected array $timeSlots;
+    protected int $populationSize = 50;
+    protected int $numberOfGenerations = 1000;
+    protected float $crossoverRate = 0.7;
+    protected float $mutationRate = 0.1;
+    protected float $tournamentSize = 3;
 
-    public function __construct(
-        protected array $courses,
-        protected array $venues,
-        protected array $timeSlots,
-        protected int $populationSize = 50,
-        protected int $numberOfGenerations = 1000,
-        protected float $crossoverRate = 0.7,
-        protected float $mutationRate = 0.1,
-        protected float $tournamentSize = 3
-
-    ) {}
-
-    public function run(): Schedule
+    public function __construct(array $courses = [], array $venues = [], array $timeSlots = [])
     {
+        $this->courses = $courses;
+        $this->venues = $venues;
+        $this->timeSlots = $timeSlots;
+
         $this->population = $this->initializePopulation();
-        for ($generation = 0; $generation < $this->numberOfGenerations; $generation++) {
-            $this->population->setSchedules($this->evolvePopulation());
-        }
-        return $this->population->getFittest();
     }
 
-    protected function initializePopulation(): Population
+    public function initializePopulation(): Population
     {
         $schedules = [];
         for ($i = 0; $i < $this->populationSize; $i++) {
@@ -37,7 +33,7 @@ class GeneticAlgorithm
     }
 
 
-    protected function evolvePopulation(): array
+    public function evolvePopulation()
     {
         $newSchedules = [];
         while (count($newSchedules) < $this->populationSize) {
@@ -60,9 +56,7 @@ class GeneticAlgorithm
 
             $newSchedules[] = $child1;
             $newSchedules[] = $child2;
-        }
-
-        return $newSchedules;
+        }$this->population->setSchedules($newSchedules);
     }
 
     protected function tournamentSelection(): Schedule

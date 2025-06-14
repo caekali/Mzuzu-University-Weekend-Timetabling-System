@@ -7,7 +7,7 @@ class ScheduleEntry
     public $course;
     public $lecturer;
     public $venue;
-    public array $timeSlots; // timeslots
+    public array $timeSlots;
 
     public function __construct($course, $lecturer, $venue, array $timeSlots)
     {

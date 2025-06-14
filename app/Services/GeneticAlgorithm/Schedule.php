@@ -24,7 +24,7 @@ class Schedule
             foreach ($sessions as $hours) {
                 $slotSet = static::randomConsecutiveTimeSlots($timeSlots, $hours);
                 $venue = $venues[array_rand($venues)];
-               $schedule->entries[] = new ScheduleEntry($course, $course->lecturer, $venue, $slotSet);
+               $schedule->entries[] = new ScheduleEntry($course, $course->lecturer_id, $venue, $slotSet);
             }
         }
 
@@ -68,12 +68,12 @@ class Schedule
                         $conflicts++;
                     }
 
-                    // Programme conflict
-                    $prog1 = collect($entry1->course->programmes)->pluck('id')->all();
-                    $prog2 = collect($entry2->course->programmes)->pluck('id')->all();
-                    if (count(array_intersect($prog1, $prog2)) > 0) {
-                        $conflicts++;
-                    }
+                    // // Programme conflict
+                    // $prog1 = collect($entry1->course->programmes)->pluck('id')->all();
+                    // $prog2 = collect($entry2->course->programmes)->pluck('id')->all();
+                    // if (count(array_intersect($prog1, $prog2)) > 0) {
+                    //     $conflicts++;
+                    // }
 
                     // Venue conflict
                     if ($entry1->venue->id === $entry2->venue->id) {

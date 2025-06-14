@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GAController;
 use App\Http\Controllers\RoleSwitchController;
+use App\Jobs\GenerateDatabaseReport;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Auth\ActivateAccount;
 use App\Livewire\Auth\ForgotPassword;
@@ -70,4 +71,8 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/users', UserList::class)->name('users');
     Route::get('/timetable', Timetable::class)->name('timetable');
     Route::get('/timetable/generate', GenerateTimetable::class)->name('timetable.generate');
+});
+Route::get('/dispatch-job', function () {
+    GenerateDatabaseReport::dispatch(1);
+    return 'Job dispatched!';
 });

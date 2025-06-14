@@ -1,25 +1,184 @@
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow">
-        <div class="space-y-2 text-white">
-            <div>USERS</div>
+@php
+    $stats = [
+        [
+            'title' => 'Total Students',
+            'value' => 10,
+            'icon' => 'users',
+        ],
+        [
+            'title' => 'Total Courses',
+            'value' => 100,
+            'icon' => 'book-open',
+        ],
+        [
+            'title' => 'Departments',
+            'value' => 16,
+            'icon' => 'building',
+        ],
+        [
+            'title' => 'Programmes',
+            'value' => 50,
+            'icon' => 'school',
+        ],
+    ];
+@endphp
+
+<div class="py-6">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">System Dashboard</h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                Welcome back, {{ auth()->user()->first_name . ' ' . auth()->user()->last_name }}
+            </p>
+        </div>
+        <a href="{{ route('timetable.generate') }}"
+            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-900 hover:bg-green-800 dark:bg-green-700 dark:hover:bg-green-600 transition-colors duration-200">
+            <x-lucide-cpu class="h-4 w-4 mr-2" />
+            Generate Timetable
+        </a>
+
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        @foreach ($stats as $stat)
+            <x-stat-card title="{{ $stat['title'] }}" value="{{ $stat['value'] }}" icon="{{ $stat['icon'] }}" />
+        @endforeach
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+            <div class="flex items-center mb-4">
+                <x-lucide-bar-chart-3 class="h-5 w-5 text-blue-900 dark:text-blue-400 mr-2" />
+                <h2 class="text-lg font-medium text-gray-900 dark:text-white">System Overview</h2>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
+                        <span>Course Allocation Progress</span>
+                        <span>100%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div class="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
+                            style={{ ' width:50%' }}></div>
+                    </div>
+                </div>
+                <div class="pt-4">
+                    <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Quick Stats</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Total Venues</p>
+                            <p class="text-lg font-semibold text-gray-900 dark:text-white">0</p>
+                        </div>
+                        <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Active Users</p>
+                            <p class="text-lg font-semibold text-gray-900 dark:text-white">
+                                0
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+            <div class="flex items-center mb-4">
+                <x-lucide-building class="h-5 w-5 text-blue-900 dark:text-blue-400 mr-2" />
+                <h2 class="text-lg font-medium text-gray-900 dark:text-white">Department Overview</h2>
+            </div>
+            <div class="space-y-4">
+
+                <div>
+                    <div class="flex justify-between text-sm text-gray-900 dark:text-white mb-1">
+                        <span>Ict</span>
+                        <span class="text-gray-600 dark:text-gray-400">
+                            2 students • 3 lecturers
+                        </span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div class="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
+                            style={{ ' width:50%' }}></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-sm text-gray-900 dark:text-white mb-1">
+                        <span>Ict</span>
+                        <span class="text-gray-600 dark:text-gray-400">
+                            2 students • 3 lecturers
+                        </span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div class="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
+                            style={{ ' width:50%' }}></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-sm text-gray-900 dark:text-white mb-1">
+                        <span>Ict</span>
+                        <span class="text-gray-600 dark:text-gray-400">
+                            2 students • 3 lecturers
+                        </span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div class="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
+                            style={{ ' width:50%' }}></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-sm text-gray-900 dark:text-white mb-1">
+                        <span>Ict</span>
+                        <span class="text-gray-600 dark:text-gray-400">
+                            2 students • 3 lecturers
+                        </span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div class="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
+                            style={{ ' width:50%' }}></div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow">
-        <div class="space-y-2 text-white">
-            <div>VENUES</div>
-        </div>
-    </div>
 
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow">
-        <div class="space-y-2 text-white">
-            <div>COURSES</div>
-        </div>
-    </div>
+    {{-- quick actions --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a href="{{ route('departments') }}"
+            class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm hover:shadow-md dark:hover:shadow-lg transition-all duration-200 border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center mb-2">
+                <div class="p-2 bg-green-50 dark:bg-green-900/50 rounded-lg">
+                    <x-lucide-building class="h-6 w-6 text-green-900 dark:text-green-400" />
+                </div>
+                <h3 class="ml-3 text-lg font-medium text-gray-900 dark:text-white">Departments</h3>
+            </div>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Manage academic departments</p>
+        </a>
 
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow">
-        <div class="space-y-2 text-white">
-            <div>ALL DEPARTMENTS</div>
-        </div>
+
+        <a href="{{ route('users') }}"
+            class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm hover:shadow-md dark:hover:shadow-lg transition-all duration-200 border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center mb-2">
+                <div class="p-2 bg-green-50 dark:bg-green-900/50 rounded-lg">
+                    <x-lucide-users class="h-6 w-6 text-green-900 dark:text-green-400" />
+                </div>
+                <h3 class="ml-3 text-lg font-medium text-gray-900 dark:text-white">User Management</h3>
+            </div>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Manage system users and roles</p>
+        </a>
+
+
+        <a href="{{ route('venues') }}"
+            class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm hover:shadow-md dark:hover:shadow-lg transition-all duration-200 border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center mb-2">
+                <div class="p-2 bg-green-50 dark:bg-green-900/50 rounded-lg">
+                    <x-lucide-map-pin class="h-6 w-6 text-green-900 dark:text-green-400" />
+                </div>
+                <h3 class="ml-3 text-lg font-medium text-gray-900 dark:text-white">Venues</h3>
+            </div>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Manage teaching venues and facilities</p>
+        </a>
     </div>
 </div>
