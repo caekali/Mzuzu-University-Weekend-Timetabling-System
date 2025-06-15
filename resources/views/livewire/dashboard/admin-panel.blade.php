@@ -1,28 +1,3 @@
-@php
-    $stats = [
-        [
-            'title' => 'Total Students',
-            'value' => 10,
-            'icon' => 'users',
-        ],
-        [
-            'title' => 'Total Courses',
-            'value' => 100,
-            'icon' => 'book-open',
-        ],
-        [
-            'title' => 'Departments',
-            'value' => 16,
-            'icon' => 'building',
-        ],
-        [
-            'title' => 'Programmes',
-            'value' => 50,
-            'icon' => 'school',
-        ],
-    ];
-@endphp
-
 <div class="py-6">
     <div class="flex justify-between items-center mb-6">
         <div>

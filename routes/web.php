@@ -19,19 +19,19 @@ use App\Livewire\Timetable\GenerateTimetable;
 use App\Livewire\Timetable\Timetable;
 use App\Livewire\User\UserList;
 use App\Livewire\Venue\VenueList;
+use App\Models\ScheduleEntry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
 
 Route::get('/switch-role/{role}', [RoleSwitchController::class, 'switch'])->name('auth.switch-role');
-
-// Route::get('/',[GAController::class,'generateSchedule']);
+Route::get('/', [GAController::class, 'generateSchedule']);
 // Laravel + Livewire based views
-Route::get('/', function () {
-    return Auth::check()
-        ? redirect()->route('dashboard')
-        : redirect()->route('login');
-})->name('home');
+// Route::get('/', function () {
+//     return Auth::check()
+//         ? redirect()->route('dashboard')
+//         : redirect()->route('login');
+// })->name('home');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');
@@ -57,7 +57,6 @@ Route::middleware('auth')->group(function () {
 });
 
 
-
 Route::middleware(['auth', 'profile.setup'])->group(function () {
     Route::get('/profile', Profile::class)->name('profile');
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
@@ -71,8 +70,4 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/users', UserList::class)->name('users');
     Route::get('/timetable', Timetable::class)->name('timetable');
     Route::get('/timetable/generate', GenerateTimetable::class)->name('timetable.generate');
-});
-Route::get('/dispatch-job', function () {
-    GenerateDatabaseReport::dispatch(1);
-    return 'Job dispatched!';
 });

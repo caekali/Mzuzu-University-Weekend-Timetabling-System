@@ -13,6 +13,7 @@ class GenerateTimetable extends Component
     public $currentFitness = 0.0;
     public $totalGenerations = 100;
     public $isDone = false;
+    public bool $isPolling = false;
 
     public function startGeneration()
     {
@@ -23,6 +24,8 @@ class GenerateTimetable extends Component
         $this->isDone = false;
 
         RunScheduleGeneration::dispatch($this->totalGenerations);
+         $this->isPolling = true;
+
     }
     public function pollProgress()
     {
@@ -31,8 +34,13 @@ class GenerateTimetable extends Component
             $this->currentGeneration = $scheduleGenerationProcess['generation'] ?? 0;
             $this->currentFitness = $scheduleGenerationProcess['fitness'] ?? 0.0;
             $this->progress = $scheduleGenerationProcess['progress'] ?? 0;
-            $this->isDone = $scheduleGenerationProcess['is_done'] ?? false;
+
+             if ($this->progress >= 100) {
+            $this->isDone = true;
+            $this->isPolling = false;
         }
+        }
+
     }
     public function render()
     {

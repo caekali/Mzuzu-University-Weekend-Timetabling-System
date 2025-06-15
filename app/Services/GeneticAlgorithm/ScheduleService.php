@@ -5,21 +5,19 @@ namespace App\Services\GeneticAlgorithm;
 class ScheduleService
 {
     protected Population $population;
-    protected array $courses;
-    protected array $venues;
-    protected array $timeSlots;
+
+
     protected int $populationSize = 50;
     protected int $numberOfGenerations = 1000;
     protected float $crossoverRate = 0.7;
     protected float $mutationRate = 0.1;
     protected float $tournamentSize = 3;
 
-    public function __construct(array $courses = [], array $venues = [], array $timeSlots = [])
-    {
-        $this->courses = $courses;
-        $this->venues = $venues;
-        $this->timeSlots = $timeSlots;
-
+    public function __construct(
+        public array $courses,
+        public array $venues,
+        public array $timeslots
+    ) {
         $this->population = $this->initializePopulation();
     }
 
@@ -27,7 +25,7 @@ class ScheduleService
     {
         $schedules = [];
         for ($i = 0; $i < $this->populationSize; $i++) {
-            $schedules[] = Schedule::generateRandomSchedule($this->courses, $this->venues, $this->timeSlots);
+            $schedules[] = Schedule::generateRandomSchedule($this->courses, $this->venues, $this->timeslots);
         }
         return new Population($schedules);
     }
@@ -48,15 +46,16 @@ class ScheduleService
             }
 
             if (mt_rand() / mt_getrandmax() < $this->mutationRate) {
-                $child1->mutate($this->venues, $this->timeSlots);
+                $child1->mutate($this->venues, $this->timeslots);
             }
             if (mt_rand() / mt_getrandmax() < $this->mutationRate) {
-                $child2->mutate($this->venues, $this->timeSlots);
+                $child2->mutate($this->venues, $this->timeslots);
             }
 
             $newSchedules[] = $child1;
             $newSchedules[] = $child2;
-        }$this->population->setSchedules($newSchedules);
+        }
+        $this->population->setSchedules($newSchedules);
     }
 
     protected function tournamentSelection(): Schedule

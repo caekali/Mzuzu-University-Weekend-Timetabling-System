@@ -4,15 +4,19 @@ namespace App\Services\GeneticAlgorithm;
 
 use App\Models\Course;
 use App\Models\Venue;
+use App\DTO\VenueDTO;
+use App\DTO\CourseDTO;
+use App\DTO\TimeSlotDTO;
 
 class GADataLoaderService
 {
+
     public function loadGAData(): array
     {
         return [
             'venues'    => $this->getVenues(),
             'courses'   => $this->getCourses(),
-            'timeslots' => $this->generateTimeslots(), // or fetch
+            'timeslots' => $this->generateTimeslots(),
         ];
     }
 
@@ -20,11 +24,7 @@ class GADataLoaderService
     {
         return Venue::select('id', 'name', 'capacity')
             ->get()
-            ->map(fn($v) => (object)[
-                'id'       => $v->id,
-                'name'     => $v->name,
-                'capacity' => $v->capacity,
-            ])
+            ->map(fn($v) => new VenueDTO($v->id, $v->name, $v->capacity))
             ->toArray();
     }
 
@@ -32,14 +32,14 @@ class GADataLoaderService
     {
         return Course::select('id', 'code', 'name', 'weekly_hours', 'num_of_students')
             ->get()
-            ->map(fn($c) => (object)[
-                'id'             => $c->id,
-                'code'           => $c->code,
-                'name'           => $c->name,
-                'weekly_hours'   => $c->weekly_hours,
-                'num_of_students' => $c->num_of_students,
-                'lecturer'    => rand(1, 4),
-            ])
+            ->map(fn($c) => new CourseDTO(
+                $c->id,
+                $c->code,
+                $c->name,
+                $c->weekly_hours,
+                $c->num_of_students,
+                rand(1, 4), // Simulated lecturer_id
+            ))
             ->toArray();
     }
 
@@ -51,14 +51,13 @@ class GADataLoaderService
         $slots = [];
         foreach ($days as $dayIndex => $day) {
             for ($i = 0; $i < $slotsPerDay; $i++) {
-                $slots[] = (object)[
-                    'id'   => ($dayIndex * $slotsPerDay) + $i + 1,
-                    'day'  => $day,
-                    'slot' => $i + 1,
-                ];
+                $slots[] = new TimeSlotDTO(
+                    ($dayIndex * $slotsPerDay) + $i + 1,
+                    $day,
+                    $i + 1
+                );
             }
         }
-
         return $slots;
     }
 }
