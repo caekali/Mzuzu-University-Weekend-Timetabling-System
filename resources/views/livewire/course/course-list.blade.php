@@ -1,6 +1,6 @@
 <div class="py-6 flex flex-col">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray- dark:text-white">Courses</h1>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Courses</h1>
         <x-button icon="plus" label="Add Course" wire:click="openModal" primary />
     </div>
     <div

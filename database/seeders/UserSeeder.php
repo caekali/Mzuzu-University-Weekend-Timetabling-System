@@ -14,37 +14,23 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = User::factory()->create([
-            'first_name' => 'Admin',
-            'last_name' => 'Admin',
-            'email' => 'admin@my.mzuni.ac.mw',
-            'is_active' => 1
-        ]);
-        $admin->roles()->attach(Role::where('name', 'Admin')->first()->id);
-
         $student = User::factory()->create([
             'first_name' => 'Student',
-            'last_name' => 'Student',
+            'last_name' => 'Example',
             'email' => 'student@my.mzuni.ac.mw',
         ]);
-
-        $student->roles()->attach(Role::where('name', 'Student')->first()->id);
-
+        $student->assignRole('Student');
         $lecturer = User::factory()->create([
             'first_name' => 'Lecturer',
-            'last_name' => 'Lecturer',
+            'last_name' => 'Example',
             'email' => 'lecturer@my.mzuni.ac.mw',
         ]);
-
-        $lecturer->roles()->attach(Role::where('name', 'Lecturer')->first()->id);
-
+        $lecturer->assignRole('Lecturer');
         $hod = User::factory()->create([
             'first_name' => 'HOD',
-            'last_name' => 'HOD',
-            'email' => 'hod@my.mzuni.ac.mw'
-            ,
+            'last_name' => 'Example',
+            'email' => 'hod@my.mzuni.ac.mw',
         ]);
-
-        $hod->roles()->attach(Role::where('name', 'HOD')->first()->id);
+        $hod->assignRole('HOD');
     }
 }

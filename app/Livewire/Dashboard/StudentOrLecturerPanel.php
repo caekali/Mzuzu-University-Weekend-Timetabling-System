@@ -6,9 +6,8 @@ use App\Models\ScheduleEntry;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
-class LecturerPanel extends Component
+class StudentOrLecturerPanel extends Component
 {
-
     public $todayScheduleEntries = [];
 
     public function mount()
@@ -24,12 +23,12 @@ class LecturerPanel extends Component
                 fn($query) =>
                 $query->where('programme_id', Auth::user()->student->programme_id)
             )
-            ->where('day', now()->format('l'))
+            // ->where('day', now()->format('l'))
             ->get();
     }
 
     public function render()
     {
-        return view('livewire.dashboard.lecturer-panel');
+        return view('livewire.dashboard.student-or-lecturer-panel');
     }
 }

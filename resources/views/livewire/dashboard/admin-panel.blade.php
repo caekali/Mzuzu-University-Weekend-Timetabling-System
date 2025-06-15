@@ -6,12 +6,13 @@
                 Welcome back, {{ auth()->user()->first_name . ' ' . auth()->user()->last_name }}
             </p>
         </div>
-        <a href="{{ route('timetable.generate') }}"
-            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-900 hover:bg-green-800 dark:bg-green-700 dark:hover:bg-green-600 transition-colors duration-200">
-            <x-lucide-cpu class="h-4 w-4 mr-2" />
-            Generate Timetable
-        </a>
 
+        <x-button href="{{ route('timetable.generate') }}">
+            <x-slot:prepend>
+                <x-lucide-cpu class="h-4 w-4 mr-2" />
+            </x-slot:prepend>
+            Generate Timetable
+        </x-button>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         @foreach ($stats as $stat)

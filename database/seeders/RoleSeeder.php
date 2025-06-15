@@ -13,9 +13,9 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::factory()->admin()->create();
-        Role::factory()->student()->create();
-        Role::factory()->lecturer()->create();
-        Role::factory()->hod()->create();
+        $roles = ['Admin', 'Student', 'Lecturer', 'HOD'];
+        foreach ($roles as $role) {
+            Role::firstOrCreate(['name' => $role]);
+        }
     }
 }

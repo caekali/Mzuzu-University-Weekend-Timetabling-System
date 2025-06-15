@@ -38,7 +38,7 @@ class GADataLoaderService
                 $c->name,
                 $c->weekly_hours,
                 $c->num_of_students,
-                rand(1, 4), // Simulated lecturer_id
+                rand(1, 5), // Simulated lecturer_id
             ))
             ->toArray();
     }
