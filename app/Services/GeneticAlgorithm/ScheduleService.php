@@ -6,18 +6,34 @@ class ScheduleService
 {
     protected Population $population;
 
-
-    protected int $populationSize = 50;
-    protected int $numberOfGenerations = 1000;
-    protected float $crossoverRate = 0.7;
-    protected float $mutationRate = 0.1;
-    protected float $tournamentSize = 3;
+    protected int $populationSize;
+    protected int $numberOfGenerations;
+    protected int $tournamentSize;
+    protected float $mutationRate;
+    protected float $crossoverRate;
+    protected array $courses;
+    protected array $venues;
+    protected array $timeslots;
 
     public function __construct(
-        public array $courses,
-        public array $venues,
-        public array $timeslots
+        int $populationSize,
+        int $numberOfGenerations,
+        int $tournamentSize,
+        float $mutationRate,
+        float $crossoverRate,
+        array $courses,
+        array $venues,
+        array $timeslots
     ) {
+        $this->populationSize = $populationSize;
+        $this->numberOfGenerations = $numberOfGenerations;
+        $this->tournamentSize = $tournamentSize;
+        $this->mutationRate = $mutationRate;
+        $this->crossoverRate = $crossoverRate;
+        $this->courses = $courses;
+        $this->venues = $venues;
+        $this->timeslots = $timeslots;
+
         $this->population = $this->initializePopulation();
     }
 

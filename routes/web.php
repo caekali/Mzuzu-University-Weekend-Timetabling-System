@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\GAController;
 use App\Http\Controllers\RoleSwitchController;
-use App\Jobs\GenerateDatabaseReport;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Auth\ActivateAccount;
 use App\Livewire\Auth\ForgotPassword;
@@ -19,19 +18,17 @@ use App\Livewire\Timetable\GenerateTimetable;
 use App\Livewire\Timetable\Timetable;
 use App\Livewire\User\UserList;
 use App\Livewire\Venue\VenueList;
-use App\Models\ScheduleEntry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 Route::get('/switch-role/{role}', [RoleSwitchController::class, 'switch'])->name('auth.switch-role');
 Route::get('/', [GAController::class, 'generateSchedule']);
-// Laravel + Livewire based views
-// Route::get('/', function () {
-//     return Auth::check()
-//         ? redirect()->route('dashboard')
-//         : redirect()->route('login');
-// })->name('home');
+
+Route::get('/', function () {
+    return Auth::check()
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
+})->name('home');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');

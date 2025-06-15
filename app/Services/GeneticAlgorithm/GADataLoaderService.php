@@ -43,19 +43,36 @@ class GADataLoaderService
             ->toArray();
     }
 
-    protected function generateTimeslots(): array
+
+
+    public static function generateTimeslots(): array
     {
         $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-        $slotsPerDay = 5;
-
+        $start = '07:45';
+        $end = '18:45';
+        $slotMinutes = 60;
         $slots = [];
-        foreach ($days as $dayIndex => $day) {
-            for ($i = 0; $i < $slotsPerDay; $i++) {
-                $slots[] = new TimeSlotDTO(
-                    ($dayIndex * $slotsPerDay) + $i + 1,
-                    $day,
-                    $i + 1
-                );
+
+        foreach ($days as $day) {
+            $current = strtotime($start);
+            $endTime = strtotime($end);
+
+            while ($current < $endTime) {
+                $next = strtotime("+$slotMinutes minutes", $current);
+
+                $slots[] = [
+                    'day' => $day,
+                    'start' => date('H:i', $current),
+                    'end' => date('H:i', $next),
+                ];
+
+                //  $slots[] = new TimeSlotDTO(
+                //     ($dayIndex * $slotsPerDay) + $i + 1,
+                //     $day,
+                //     $i + 1
+                // );
+
+                $current = $next;
             }
         }
         return $slots;

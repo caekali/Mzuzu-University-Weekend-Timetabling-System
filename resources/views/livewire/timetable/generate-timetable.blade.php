@@ -1,30 +1,48 @@
 <div class="py-6">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-white  mb-6">Generate Timetable</h1>
+
     <div class="grid grid-cols-1 gap-6">
         <div
             class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
-            <div class="flex items-center mb-4">
-                <x-lucide-sliders class="text-green-900 mr-2 w-5 h-5" />
-                <h2 class="text-lg font-medium text-gray-900 dark:text-white">Algorithm Parameters</h2>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div class="space-y-4">
-                    <x-number label='Population Size' name='pupolation-size' />
-                    <x-number label='Number of Generations' name='number-of-generations' />
-                    <x-number label='Tournament Selection Size' name='tournament-selection-size' />
+            <form wire:submit.prevent="updateGAParameter">
+                <div class="flex items-center mb-4">
+
+                    <x-lucide-sliders class="text-green-900 mr-2 w-5 h-5" />
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-white">Algorithm Parameters</h2>
                 </div>
-                <div class="space-y-4">
-                    <x-number label='Mutation Rate (%)' name='mutation-rate' />
-                    <x-number label='Crossover Rate (%)' name='crossover-rate' />
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <x-time-picker id="start-time" label="Start Time" placeholder="22:30" military-time
-                            without-seconds />
-                        <x-time-picker id="end-time" label="End Time" placeholder="22:30" military-time
-                            without-seconds />
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <x-number label='Population Size' name='form.population_size'
+                            wire:model.live='form.population_size' />
+                        <x-number label='Number of Generations' name='form.number_of_generations'
+                            wire:model.live='form.number_of_generations' />
+                        <x-number label='Tournament Selection Size' name='form.tournament_size'
+                            wire:model.live='form.tournament_size' />
+                    </div>
+                    <div class="space-y-4">
+                        <x-number label='Mutation Rate (%)' name='form.mutation_rate' wire:model.live='form.mutation_rate' />
+                        <x-number label='Crossover Rate (%)' name='form.crossover_rate'
+                            wire:model.live='form.crossover_rate' />
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <x-time-picker id="start-time" label="Start Time" placeholder="22:30" military-time
+                                without-seconds />
+                            <x-time-picker id="end-time" label="End Time" placeholder="22:30" military-time
+                                without-seconds />
+                        </div>
                     </div>
                 </div>
-            </div>
+                <x-button type="submit" label="Update" class="mt-4" :disabled="!$this->hasChanges" wire:target="updateGAParameter"
+                    wire:loading.attr="disabled" />
+                @if ($lastUpdated)
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">
+                        Last updated: {{ \Illuminate\Support\Carbon::parse($lastUpdated)->format('Y-m-d H:i:s') }}
+                    </p>
+                @endif
+            </form>
+
         </div>
+
+
 
 
         <div x-data="{ progress: {{ $progress }} }" @if ($isPolling) wire:poll.500ms="pollProgress" @endif
@@ -50,7 +68,7 @@
                 <div>
                     <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300 mb-1">
                         <p>Progress: <span x-text="Math.round(progress)"></span>%</p>
-                        <p>Generation: {{ $currentGeneration }} / {{ $totalGenerations }}</p>
+                        <p>Generation: {{ $currentGeneration }} / {{ $form->number_of_generations }}</p>
                         <p>Fitness: {{ $currentFitness }}</p>
                     </div>
 

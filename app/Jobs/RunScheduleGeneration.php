@@ -2,10 +2,10 @@
 
 namespace App\Jobs;
 
+use App\DTO\GAParameterDTO;
 use App\Models\ScheduleEntry;
 use App\Services\GeneticAlgorithm\GADataLoaderService;
 use App\Services\GeneticAlgorithm\ScheduleService;
-use App\Services\GeneticAlgorithm\TimeSlotGenerator;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -13,17 +13,12 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class RunScheduleGeneration implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $totalGenerations;
-    public function __construct($totalGenerations)
-    {
-        $this->totalGenerations = $totalGenerations;
-    }
+    public function __construct() {}
 
     public function handle(): void
     {
@@ -34,15 +29,24 @@ class RunScheduleGeneration implements ShouldQueue
         $courses = $data['courses'];
         $timeslots = $data['timeslots'];
 
-        TimeSlotGenerator::generate(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']);
+        $parameters = GAParameterDTO::fromDb();
 
-        $service = new ScheduleService($courses, $venues, TimeSlotGenerator::generate(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']));
+        $service = new ScheduleService(
+            $parameters->populationSize,
+            $parameters->numberOfGenerations,
+            $parameters->tournamentSize,
+            $parameters->mutationRate,
+            $parameters->crossoverRate,
+            $courses,
+            $venues,
+            $timeslots
+        );
         $progress = 0;
         try {
-            for ($i = 1; $i <= $this->totalGenerations; $i++) {
+            for ($i = 1; $i <=  $parameters->numberOfGenerations; $i++) {
                 $service->evolvePopulation();
                 // Cache progress for polling
-                $progress = ($i / $this->totalGenerations) * 100;
+                $progress = ($i /  $parameters->numberOfGenerations) * 100;
                 Cache::forever('schedule_generation_progress', [
                     'generation' => $i,
                     'fitness' => $service->getBest()->fitness ?? 0,
@@ -75,7 +79,7 @@ class RunScheduleGeneration implements ShouldQueue
             }
 
             Cache::forever('schedule_generation_progress', [
-                'generation' => $this->totalGenerations,
+                'generation' =>  $parameters->numberOfGenerations,
                 'fitness' => $service->getBest()->fitness ?? 0,
                 'progress' => round($progress, 2)
             ]);

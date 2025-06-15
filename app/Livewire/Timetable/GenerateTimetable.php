@@ -3,17 +3,58 @@
 namespace App\Livewire\Timetable;
 
 use App\Jobs\RunScheduleGeneration;
+use App\Livewire\Forms\GAParametersForm;
+use App\Models\GAParameter;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
+use WireUi\Traits\WireUiActions;
 
 class GenerateTimetable extends Component
 {
+    use WireUiActions;
+
     public $progress = 0;
     public $currentGeneration = 0;
     public $currentFitness = 0.0;
-    public $totalGenerations = 100;
     public $isDone = false;
     public bool $isPolling = false;
+
+    public GAParametersForm $form;
+    public array $originalData = [];
+
+    public $lastUpdated = '';
+
+    public function mount()
+    {
+        $params = GAParameter::getOrCreate();
+        if ($params) {
+            $this->form->population_size       = $params->population_size;
+            $this->form->number_of_generations = $params->number_of_generations;
+            $this->form->tournament_size       = $params->tournament_size;
+            $this->form->mutation_rate         = $params->mutation_rate * 100;
+            $this->form->crossover_rate        = $params->crossover_rate * 100;
+            $this->lastUpdated = $params->last_updated;
+        }
+        // for tracking changes
+        $this->originalData = $this->getCurrentFormData();
+    }
+
+    public function getCurrentFormData(): array
+    {
+        return [
+            'population_size' => $this->form->population_size,
+            'number_of_generations' => $this->form->number_of_generations,
+            'tournament_size' => $this->form->tournament_size,
+            'mutation_rate' => $this->form->mutation_rate,
+            'crossover_rate' => $this->form->crossover_rate,
+        ];
+    }
+
+    // Check if form data has changed compared to original
+    public function getHasChangesProperty(): bool
+    {
+        return $this->getCurrentFormData() !== $this->originalData;
+    }
 
     public function startGeneration()
     {
@@ -22,10 +63,8 @@ class GenerateTimetable extends Component
         $this->currentFitness =  0;
         $this->progress = 0;
         $this->isDone = false;
-
-        RunScheduleGeneration::dispatch($this->totalGenerations);
-         $this->isPolling = true;
-
+        RunScheduleGeneration::dispatch();
+        $this->isPolling = true;
     }
     public function pollProgress()
     {
@@ -35,12 +74,23 @@ class GenerateTimetable extends Component
             $this->currentFitness = $scheduleGenerationProcess['fitness'] ?? 0.0;
             $this->progress = $scheduleGenerationProcess['progress'] ?? 0;
 
-             if ($this->progress >= 100) {
-            $this->isDone = true;
-            $this->isPolling = false;
+            if ($this->progress >= 100) {
+                $this->isDone = true;
+                $this->isPolling = false;
+            }
         }
-        }
+    }
 
+
+    public function updateGAParameter()
+    {
+        $this->form->save();
+        $this->lastUpdated = GAParameter::latest('last_updated')->value('last_updated');
+        $this->originalData = $this->getCurrentFormData();
+        $this->notification()->success(
+            'Updated',
+            'Algorithm parameters updated successfully.'
+        );
     }
     public function render()
     {

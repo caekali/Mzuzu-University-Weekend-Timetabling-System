@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Course;
-use App\Models\Venue;
+
 use App\Services\GeneticAlgorithm\GADataLoaderService;
-use App\Services\GeneticAlgorithm\GeneticAlgorithm;
 use App\Services\GeneticAlgorithm\ScheduleService;
 use App\Services\GeneticAlgorithm\TimeSlotGenerator;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class GAController extends Controller
