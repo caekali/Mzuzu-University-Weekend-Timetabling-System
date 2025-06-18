@@ -2,11 +2,11 @@
 
 namespace App\Services\GeneticAlgorithm;
 
-use App\Models\Course;
 use App\Models\Venue;
 use App\DTO\VenueDTO;
 use App\DTO\CourseDTO;
 use App\DTO\TimeSlotDTO;
+use App\Models\LecturerCourseAllocation;
 
 class GADataLoaderService
 {
@@ -30,17 +30,26 @@ class GADataLoaderService
 
     protected function getCourses(): array
     {
-        return Course::select('id', 'code', 'name', 'weekly_hours', 'num_of_students')
-            ->get()
-            ->map(fn($c) => new CourseDTO(
-                $c->id,
-                $c->code,
-                $c->name,
-                $c->weekly_hours,
-                $c->num_of_students,
-                rand(1, 5), // Simulated lecturer_id
-            ))
-            ->toArray();
+        $allocations = LecturerCourseAllocation::with([
+            'lecturer',
+            'course',
+            'programmes'
+        ])->get();
+        $courseData = $allocations->map(function ($allocation) {
+            $programmes = $allocation->programmes->map(function ($programme) use ($allocation) {
+                return $programme->code . $allocation->course->level . $allocation->course->semester;
+            })->toArray();
+
+            return new CourseDTO(
+                $allocation->course->id,
+                $allocation->course->code,
+                $allocation->course->weekly_hours,
+                $allocation->course->num_of_students,
+                $allocation->lecturer->id,
+                $programmes
+            );
+        })->toArray();
+        return $courseData;
     }
 
 

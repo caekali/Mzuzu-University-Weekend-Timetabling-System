@@ -18,6 +18,6 @@ class SetupSystem extends Command
 
         $this->call('db:seed', ['--class' => 'RoleSeeder']);
         $this->call('db:seed', ['--class' => 'AdminSeeder']);
-        $this->info('✅ System initialized with default roles and admin user.');
+        $this->info('System initialized with default roles and admin user.');
     }
 }

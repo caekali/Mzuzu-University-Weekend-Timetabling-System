@@ -22,6 +22,17 @@ class Course extends Model
         'department_id'
     ];
 
+
+    public function lecturerAllocations()
+    {
+        return $this->hasMany(LecturerCourseAllocation::class);
+    }
+
+    public function programmes()
+    {
+        return $this->belongsToMany(Programme::class, 'course_programme');
+    }
+
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);

@@ -12,6 +12,7 @@ class ScheduleEntry extends Model
     use HasFactory;
 
     protected $fillable = [
+        'level',
         'day',
         'start_time',
         'end_time',

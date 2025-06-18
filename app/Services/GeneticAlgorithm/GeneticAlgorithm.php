@@ -4,82 +4,102 @@ namespace App\Services\GeneticAlgorithm;
 
 class GeneticAlgorithm
 {
-    protected Population $population;
-
     public function __construct(
-        protected array $courses,
-        protected array $venues,
-        protected array $timeSlots,
-        protected int $populationSize = 50,
-        protected int $numberOfGenerations = 1000,
-        protected float $crossoverRate = 0.7,
-        protected float $mutationRate = 0.1,
-        protected float $tournamentSize = 3
-
+        protected int $populationSize,
+        protected int $eliteSchedules,
+        protected float $crossoverRate,
+        protected float $mutationRate,
+        protected int $tournamentSize,
+        protected $data
     ) {}
 
-    public function run(): Schedule
-    {
-        $this->population = $this->initializePopulation();
-        for ($generation = 0; $generation < $this->numberOfGenerations; $generation++) {
-            $this->population->setSchedules($this->evolvePopulation());
-        }
-        return $this->population->getFittest();
-    }
-
-    protected function initializePopulation(): Population
+    public function initializePopulation(): Population
     {
         $schedules = [];
         for ($i = 0; $i < $this->populationSize; $i++) {
-            $schedules[] = Schedule::generateRandomSchedule($this->courses, $this->venues, $this->timeSlots);
+            $schedules[] = Schedule::generateRandomSchedule($this->data);
         }
         return new Population($schedules);
     }
 
-
-    protected function evolvePopulation(): array
+    public function evolve(Population $population): Population
     {
-        $newSchedules = [];
-        while (count($newSchedules) < $this->populationSize) {
-            $parent1 = $this->tournamentSelection();
-            $parent2 = $this->tournamentSelection();
-
-            if (mt_rand() / mt_getrandmax() < $this->crossoverRate) {
-                [$child1, $child2] = $parent1->crossover($parent2);
-            } else {
-                $child1 = clone $parent1;
-                $child2 = clone $parent2;
-            }
-
-            if (mt_rand() / mt_getrandmax() < $this->mutationRate) {
-                $child1->mutate($this->venues, $this->timeSlots);
-            }
-            if (mt_rand() / mt_getrandmax() < $this->mutationRate) {
-                $child2->mutate($this->venues, $this->timeSlots);
-            }
-
-            $newSchedules[] = $child1;
-            $newSchedules[] = $child2;
-        }
-
-        return $newSchedules;
+        $crossover = $this->generateCrossoverPopulation($population);
+        return $this->applyMutation($crossover);
     }
 
-    protected function tournamentSelection(): Schedule
+    private function generateCrossoverPopulation(Population $pop): Population
+    {
+        $newPop = new Population();
+
+        for ($i = 0; $i < $this->eliteSchedules; $i++) {
+            $newPop->addSchedule(clone $pop->getSchedule($i));
+        }
+
+        // Fill remaining schedules using crossover
+        while ($newPop->count() < $this->populationSize) {
+            $parent1 = $this->tournamentSelection($pop);
+            $parent2 = $this->tournamentSelection($pop);
+            $child = $this->crossoverSchedules($parent1, $parent2);
+            $newPop->addSchedule($child);
+        }
+
+        return $newPop;
+    }
+
+    private function applyMutation(Population $population): Population
+    {
+        $schedules = $population->getSchedules();
+
+        for ($i = $this->eliteSchedules; $i < $this->populationSize; $i++) {
+            $this->mutateSchedule($schedules[$i]);
+        }
+
+        $population->setSchedules($schedules);
+        return $population;
+    }
+
+    private function crossoverSchedules(Schedule $s1, Schedule $s2): Schedule
+    {
+        $entries1 = $s1->getScheduleEntries();
+        $entries2 = $s2->getScheduleEntries();
+        $schedule = Schedule::generateRandomSchedule($this->data);
+        $newEntries = $schedule->getScheduleEntries();
+
+        foreach ($newEntries as $key => $_) {
+            $newEntries[$key] = rand(0, 1)
+                ? ($entries1[$key] ?? $entries2[$key])
+                : ($entries2[$key] ?? $entries1[$key]);
+        }
+
+        $schedule->setScheduleEntries($newEntries);
+        return $schedule;
+    }
+
+    private function mutateSchedule(Schedule $schedule): void
+    {
+        $original = $schedule->getScheduleEntries();
+        $mutated = Schedule::generateRandomSchedule($this->data)->getScheduleEntries();
+
+        foreach ($original as $key => $entry) {
+            if (mt_rand() / mt_getrandmax() < $this->mutationRate && isset($mutated[$key])) {
+                $original[$key] = $mutated[$key];
+            }
+        }
+
+        $schedule->setScheduleEntries($original);
+    }
+
+    private function tournamentSelection(Population $pop): Schedule
     {
         $contestants = [];
-        $pool = $this->population->getSchedules();
+        $schedules = $pop->getSchedules();
 
         for ($i = 0; $i < $this->tournamentSize; $i++) {
-            $contestants[] = $pool[array_rand($pool)];
+            $contestants[] = $schedules[array_rand($schedules)];
         }
 
-        usort($contestants, fn($a, $b) => $b->fitness <=> $a->fitness);
+        usort($contestants, fn($a, $b) => $b->getFitness() <=> $a->getFitness());
         return $contestants[0];
-    }
-
-    public function getBest(): Schedule
-    {
-        return $this->population->getFittest();
     }
 }

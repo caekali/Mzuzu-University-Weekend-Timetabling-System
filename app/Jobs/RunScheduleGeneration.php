@@ -5,7 +5,7 @@ namespace App\Jobs;
 use App\DTO\GAParameterDTO;
 use App\Models\ScheduleEntry;
 use App\Services\GeneticAlgorithm\GADataLoaderService;
-use App\Services\GeneticAlgorithm\ScheduleService;
+use App\Services\GeneticAlgorithm\GeneticAlgorithm;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -22,54 +22,52 @@ class RunScheduleGeneration implements ShouldQueue
 
     public function handle(): void
     {
-
         $data = app(GADataLoaderService::class)->loadGAData();
-
-        $venues = $data['venues'];
-        $courses = $data['courses'];
-        $timeslots = $data['timeslots'];
-
         $parameters = GAParameterDTO::fromDb();
-
-        $service = new ScheduleService(
-            $parameters->populationSize,
-            $parameters->numberOfGenerations,
-            $parameters->tournamentSize,
-            $parameters->mutationRate,
-            $parameters->crossoverRate,
-            $courses,
-            $venues,
-            $timeslots
+        $ga = new GeneticAlgorithm(
+            populationSize: 10,
+            eliteSchedules: 1,
+            crossoverRate: 0.8,
+            mutationRate: 0.05,
+            tournamentSize: 3,
+            data: $data
         );
+
+        $population = $ga->initializePopulation();
+        $bestSchedule = $population->getFittest();
         $progress = 0;
         try {
-            for ($i = 1; $i <=  $parameters->numberOfGenerations; $i++) {
-                $service->evolvePopulation();
+            for ($i = 0; $bestSchedule->getFitness() != 1.0 && $i < $parameters->numberOfGenerations; $i++) {
+                $population = $ga->evolve($population);
+                $bestSchedule = $population->getFittest();
+
                 // Cache progress for polling
                 $progress = ($i /  $parameters->numberOfGenerations) * 100;
                 Cache::forever('schedule_generation_progress', [
                     'generation' => $i,
-                    'fitness' => $service->getBest()->fitness ?? 0,
-                    'progress' => round($progress, 2)
+                    'fitness' => $bestSchedule->getFitness() ?? 0,
+                    'progress' => round($progress, 2),
+                    'isDone' => false
                 ]);
-                sleep(0.2);
             }
         } finally {
-            $entries = $service->getBest()->entries;
+            $entries = $bestSchedule->getScheduleEntries();
             DB::beginTransaction();
             try {
                 DB::table('schedule_entries')->truncate();
                 foreach ($entries as $entry) {
                     foreach ($entry->timeSlots as $slot) {
-                        ScheduleEntry::create([
-                            'course_id'    => $entry->course->id,
-                            'venue_id'     => $entry->venue->id,
-                            'lecturer_id'  => $entry->lecturer,
-                            'programme_id' => rand(1, 6),
-                            'day'          => $slot['day'],
-                            'start_time'   => $slot['start'],
-                            'end_time'     => $slot['end'],
-                        ]);
+                        foreach ($entry->programmes as $programme) {
+                            ScheduleEntry::create([
+                                'course_id'    => $entry->course->id,
+                                'venue_id'     => $entry->venue->id,
+                                'lecturer_id'  => $entry->lecturer,
+                                'level'        => $programme,
+                                'day'          => $slot['day'],
+                                'start_time'   => $slot['start'],
+                                'end_time'     => $slot['end'],
+                            ]);
+                        }
                     }
                 }
                 DB::commit();
@@ -77,11 +75,11 @@ class RunScheduleGeneration implements ShouldQueue
                 DB::rollBack();
                 report($e);
             }
-
             Cache::forever('schedule_generation_progress', [
-                'generation' =>  $parameters->numberOfGenerations,
-                'fitness' => $service->getBest()->fitness ?? 0,
-                'progress' => round($progress, 2)
+                'generation' => $i,
+                'fitness' => $bestSchedule->getFitness() ?? 0,
+                'progress' => round($progress, 2),
+                'isDone' => true
             ]);
         }
     }

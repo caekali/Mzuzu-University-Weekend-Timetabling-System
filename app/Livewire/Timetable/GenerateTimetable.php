@@ -73,9 +73,9 @@ class GenerateTimetable extends Component
             $this->currentGeneration = $scheduleGenerationProcess['generation'] ?? 0;
             $this->currentFitness = $scheduleGenerationProcess['fitness'] ?? 0.0;
             $this->progress = $scheduleGenerationProcess['progress'] ?? 0;
+            $this->isDone = $scheduleGenerationProcess['isDone'] ?? true;
 
-            if ($this->progress >= 100) {
-                $this->isDone = true;
+            if ($this->isDone) {
                 $this->isPolling = false;
             }
         }

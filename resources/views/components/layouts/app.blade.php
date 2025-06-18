@@ -23,7 +23,7 @@
         <div class="flex-1 flex-grow  overflow-y-auto">
             <x-nav.nav-bar />
             <main
-                class="mx-auto max-w-7xl px-4 sm:px-6 min-h-screen bg-gray-50 dark:bg-gray-900 p-4 transition-colors duration-200">
+                class=" mx-auto max-w-7xl px-4 sm:px-6  bg-gray-50 dark:bg-gray-900 p-4 transition-colors duration-200">
                 {{ $slot }}
             </main>
         </div>

@@ -19,6 +19,7 @@ class GAParameter extends Model
         'crossover_rate',
     ];
 
+    // get parameter from db or create default one and return them
     public static function getOrCreate(): self
     {
         return self::first() ?? self::create([

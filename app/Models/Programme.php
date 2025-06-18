@@ -27,4 +27,10 @@ class Programme extends Model
     {
         return $this->hasMany(Student::class);
     }
+
+    public function allocations()
+{
+    return $this->belongsToMany(LecturerCourseAllocation::class, 'allocation_programme', 'programme_id', 'allocation_id');
+}
+
 }

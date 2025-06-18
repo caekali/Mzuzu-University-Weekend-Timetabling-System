@@ -20,7 +20,8 @@
                             wire:model.live='form.tournament_size' />
                     </div>
                     <div class="space-y-4">
-                        <x-number label='Mutation Rate (%)' name='form.mutation_rate' wire:model.live='form.mutation_rate' />
+                        <x-number label='Mutation Rate (%)' name='form.mutation_rate'
+                            wire:model.live='form.mutation_rate' />
                         <x-number label='Crossover Rate (%)' name='form.crossover_rate'
                             wire:model.live='form.crossover_rate' />
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -41,10 +42,6 @@
             </form>
 
         </div>
-
-
-
-
         <div x-data="{ progress: {{ $progress }} }" @if ($isPolling) wire:poll.500ms="pollProgress" @endif
             x-effect="progress = {{ $progress }}"
             class="space-y-6 p-6 bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">

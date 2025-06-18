@@ -8,10 +8,10 @@
     $navLinks = match (session('current_role')) {
         'Admin' => [
             ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'lucide-layout-dashboard'],
-            ['href' => route('departments'), 'text' => 'Departments', 'icon' => 'lucide-database'],
-            ['href' => route('programmes'), 'text' => 'Programmes', 'icon' => 'lucide-book-open'],
+            ['href' => route('departments'), 'text' => 'Departments', 'icon' => 'lucide-building'],
+            ['href' => route('programmes'), 'text' => 'Programmes', 'icon' => 'lucide-graduation-cap'],
             ['href' => route('courses'), 'text' => 'Courses', 'icon' => 'lucide-book-open'],
-
+            ['href' => route('course-allocations'), 'text' => 'Course Allocations', 'icon' => 'lucide-link'],
             ['href' => route('venues'), 'text' => 'Venues', 'icon' => 'lucide-map-pin'],
             ['href' => route('timetable'), 'text' => 'Timetable', 'icon' => 'lucide-calendar'],
             ['href' => route('timetable.generate'), 'text' => 'Generate Timetable', 'icon' => 'lucide-cpu'],

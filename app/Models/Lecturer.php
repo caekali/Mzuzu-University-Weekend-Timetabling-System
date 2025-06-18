@@ -31,4 +31,9 @@ class Lecturer extends Model
     {
         return $this->hasMany(ScheduleEntry::class);
     }
+
+    public function allocation(): HasMany
+    {
+        return $this->hasMany(LecturerCourseAllocation::class);
+    }
 }

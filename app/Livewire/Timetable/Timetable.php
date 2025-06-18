@@ -7,6 +7,7 @@ use App\Models\Programme;
 use App\Models\ScheduleEntry;
 use App\Models\Venue;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -16,10 +17,12 @@ class Timetable extends Component
     public $entries;
     public $timeSlots = [];
     public $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    public $levels = [];
 
-    public $selectedProgramme = '';
+    public $selectedLevel = '';
     public $selectedLecturer = '';
     public $selectedVenue = '';
+    public $selectedDay = '';
 
     public $programmes;
     public $lecturers;
@@ -27,6 +30,11 @@ class Timetable extends Component
 
     public function mount()
     {
+        $this->levels = DB::table('schedule_entries')
+            ->whereNotNull('level')
+            ->distinct()
+            ->pluck('level');
+
         $this->programmes = Programme::all();
         $this->venues = Venue::all();
 
@@ -52,7 +60,7 @@ class Timetable extends Component
         $this->loadEntries();
     }
 
-    public function updatedSelectedProgramme()
+    public function updatedSelectedLevel()
     {
         $this->loadEntries();
     }
@@ -67,12 +75,17 @@ class Timetable extends Component
         $this->loadEntries();
     }
 
+    public function updatedSelectedDay()
+    {
+        $this->loadEntries();
+    }
+
     public function loadEntries()
     {
         $query = ScheduleEntry::with(['course', 'lecturer.user', 'venue']);
 
-        if ($this->selectedProgramme) {
-            $query->where('programme_id', $this->selectedProgramme);
+        if ($this->selectedLevel) {
+            $query->where('level', $this->selectedLevel);
         }
 
         if ($this->selectedLecturer) {
@@ -82,6 +95,9 @@ class Timetable extends Component
         if ($this->selectedVenue) {
             $query->where('venue_id', $this->selectedVenue);
         }
+
+        $query->where('day', $this->selectedDay ? $this->selectedDay : $this->days[0]);
+
 
         $this->entries = $query->get();
     }

@@ -16,7 +16,7 @@ class AdminSeeder extends Seeder
         $adminPassword = env('ADMIN_PASSWORD', 'password');
 
         if (User::where('email', $adminEmail)->exists()) {
-            $this->command->warn("⚠️ Admin user already exists.");
+            $this->command->warn("Admin user already exists.");
             return;
         }
 
@@ -30,6 +30,6 @@ class AdminSeeder extends Seeder
 
         $admin->assignRole('Admin');
 
-        $this->command->info("✅ Admin user created: $adminEmail");
+        $this->command->info("Admin user created: $adminEmail");
     }
 }
