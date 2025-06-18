@@ -15,6 +15,7 @@ use App\Livewire\Department\DepartmentList;
 use App\Livewire\Profile\Profile;
 use App\Livewire\Profile\ProfileSetup;
 use App\Livewire\Programme\ProgrammeList;
+use App\Livewire\Settings;
 use App\Livewire\Timetable\GenerateTimetable;
 use App\Livewire\Timetable\Timetable;
 use App\Livewire\User\UserList;
@@ -69,6 +70,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/venues', VenueList::class)->name('venues');
     Route::get('/users', UserList::class)->name('users');
     Route::get('/timetable', Timetable::class)->name('timetable');
+    Route::get('/settings', Settings::class)->name('settings');
     Route::get('/timetable/generate', GenerateTimetable::class)->name('timetable.generate');
     Route::get('/course-allocations', CourseAllocation::class)->name('course-allocations');
 });

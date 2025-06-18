@@ -17,6 +17,7 @@
             ['href' => route('timetable.generate'), 'text' => 'Generate Timetable', 'icon' => 'lucide-cpu'],
             ['href' => route('users'), 'text' => 'Users', 'icon' => 'lucide-users'],
             ['href' => route('profile'), 'text' => 'Profile', 'icon' => 'lucide-user'],
+            ['href' => route('settings'), 'text' => 'Settings', 'icon' => 'lucide-settings'],
         ],
         default => [
             ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'lucide-layout-dashboard'],
