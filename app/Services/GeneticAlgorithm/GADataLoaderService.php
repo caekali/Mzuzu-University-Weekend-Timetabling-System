@@ -56,7 +56,7 @@ class GADataLoaderService
 
     public static function generateTimeslots(): array
     {
-        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+        $days = ['Friday', 'Saturday', 'Sunday'];
         $start = '07:45';
         $end = '18:45';
         $slotMinutes = 60;

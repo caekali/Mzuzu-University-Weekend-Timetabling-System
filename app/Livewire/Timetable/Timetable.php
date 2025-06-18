@@ -16,9 +16,8 @@ class Timetable extends Component
 
     public $entries;
     public $timeSlots = [];
-    public $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    public $days = ['Friday', 'Saturday', 'Sunday'];
     public $levels = [];
-
     public $selectedLevel = '';
     public $selectedLecturer = '';
     public $selectedVenue = '';

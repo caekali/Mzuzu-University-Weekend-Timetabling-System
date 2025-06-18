@@ -5,7 +5,8 @@ namespace App\Services\GeneticAlgorithm;
 class Schedule
 {
     protected array $scheduleEntries = [];
-    private $numberOfConflicts = 0;
+    private $numberOfHardConflicts = 0;
+    private $numberOfSoftConflicts = 0;
     private $fitness = -1;
     private $isFitnessChanged = true;
 
@@ -72,9 +73,14 @@ class Schedule
         return $this->fitness;
     }
 
-    public function getNumOfConflicts()
+    public function getNumberOfSoftConflicts()
     {
-        return $this->numberOfConflicts;
+        return $this->numberOfSoftConflicts;
+    }
+
+    public function getNumberOfHardConflicts()
+    {
+        return $this->numberOfHardConflicts;
     }
 
     private function overlaps(array $slots1, array $slots2): bool
@@ -89,9 +95,18 @@ class Schedule
         return false;
     }
 
-    private function calculateFitness()
+    private function calculateFitness(): float
     {
-        $conflicts = 0;
+        $hardConflicts = 0;
+        $softConflicts = 0;
+
+        $weights = [
+            'lecturer_conflict' => 1.0,
+            'programme_conflict' => 1.0,
+            'venue_conflict' => 1.0,
+            'venue_overcapacity' => 0.5,
+            'tight_clustering_penalty' => 0.3,
+        ];
 
         foreach ($this->scheduleEntries as $i => $entry1) {
             foreach ($this->scheduleEntries as $j => $entry2) {
@@ -99,34 +114,35 @@ class Schedule
 
                 if ($this->overlaps($entry1->timeSlots, $entry2->timeSlots)) {
                     if ($entry1->course->lecturer_id === $entry2->course->lecturer_id) {
-                        $conflicts++;
+                        $hardConflicts += $weights['lecturer_conflict'];
                     }
 
-                    // if (count(array_intersect($entry1->programmeIds, $entry2->programmeIds)) > 0) {
-                    //     $conflicts++;
-                    // }
                     if (count(array_intersect($entry1->programmes, $entry2->programmes)) > 0) {
-                        $conflicts++;
+                        $hardConflicts += $weights['programme_conflict'];
                     }
-
                     if ($entry1->venue->id === $entry2->venue->id) {
-                        $conflicts++;
+                        $hardConflicts += $weights['venue_conflict'];
                     }
                 }
             }
 
-            // soft conflict
+            // Soft constraint: venue too small
             if ($entry1->course->expected_students > $entry1->venue->capacity) {
-                $conflicts += 0.5;
+                $softConflicts += $weights['venue_overcapacity'];
             }
 
-            if ($entry2->course->expected_students > $entry2->venue->capacity) {
-                $conflicts += 0.5;
-            }
+            // Optional soft constraint: discourage tight clustering of sessions
+            // You can implement logic to penalize if a lecturer has too many sessions close together
+            // or if students have more than X sessions in a day, etc.
         }
 
-        $this->numberOfConflicts = $conflicts;
-        return 1 / ($conflicts + 1);
+        $this->numberOfHardConflicts = $hardConflicts;
+        $this->numberOfSoftConflicts = $softConflicts;
+
+        $totalPenalty = $hardConflicts + $softConflicts;
+
+        // Fitness is inverse of penalty (higher is better)
+        return 1 / (1 + $totalPenalty);
     }
 
     public function getScheduleEntries()

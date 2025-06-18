@@ -51,6 +51,18 @@
                     Timetable Generation
                 </h2>
             </div>
+            <div>
+                <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300 mb-1">
+                    <p>Progress: <span x-text="Math.round(progress)"></span>%</p>
+                    <p>Generation: {{ $currentGeneration }} / {{ $form->number_of_generations }}</p>
+                    <p>Fitness: {{ $currentFitness }}</p>
+                </div>
+
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
+                    <div class="bg-green-500 h-2.5 transition-all duration-500" :style="`width: ${progress}%`">
+                    </div>
+                </div>
+            </div>
             @if ($isDone)
                 <div class="p-4 bg-green-50 border border-green-200 rounded-md flex items-start gap-3">
                     <x-icon name="check" class="w-5 h-5 text-green-600 mt-1" />
@@ -62,22 +74,11 @@
                     </div>
                 </div>
             @else
-                <div>
-                    <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300 mb-1">
-                        <p>Progress: <span x-text="Math.round(progress)"></span>%</p>
-                        <p>Generation: {{ $currentGeneration }} / {{ $form->number_of_generations }}</p>
-                        <p>Fitness: {{ $currentFitness }}</p>
-                    </div>
-
-                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
-                        <div class="bg-green-500 h-2.5 transition-all duration-500" :style="`width: ${progress}%`">
-                        </div>
-                    </div>
-                </div>
             @endif
             <div class="flex flex-col sm:flex-row gap-3 pt-4">
-                <x-button icon="cpu-chip" class="w-48" :label="$progress > 0 && $progress < 100 ? 'Generating...' : 'Generate Timetable'" :disabled="$progress > 0 && $progress < 100"
-                    wire:click="startGeneration" wire:loading.attr="disabled" />
+                <x-button icon="cpu-chip" class="w-48" :label="$progress > 0 && $progress < 100 && !$isDone ? 'Generating...' : 'Generate Timetable'"
+                    :disabled="$progress > 0 && $progress < 100 && !$isDone" wire:click="startGeneration"
+                    wire:loading.attr="disabled" />
                 <x-button href="{{ route('timetable') }}" outline icon="calendar" label="View Current Timetable" />
             </div>
         </div>

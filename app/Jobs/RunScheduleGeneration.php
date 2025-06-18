@@ -46,6 +46,8 @@ class RunScheduleGeneration implements ShouldQueue
                 Cache::forever('schedule_generation_progress', [
                     'generation' => $i,
                     'fitness' => $bestSchedule->getFitness() ?? 0,
+                    'num_of_hard_conflicts' => $bestSchedule->getNumberOfHardConflicts(),
+                    'num_of_soft_conflicts' => $bestSchedule->getNumberOfSoftConflicts(),
                     'progress' => round($progress, 2),
                     'isDone' => false
                 ]);
@@ -78,6 +80,8 @@ class RunScheduleGeneration implements ShouldQueue
             Cache::forever('schedule_generation_progress', [
                 'generation' => $i,
                 'fitness' => $bestSchedule->getFitness() ?? 0,
+                'num_of_hard_conflicts' => $bestSchedule->getNumberOfHardConflicts(),
+                'num_of_soft_conflicts' => $bestSchedule->getNumberOfSoftConflicts(),
                 'progress' => round($progress, 2),
                 'isDone' => true
             ]);
