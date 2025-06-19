@@ -13,15 +13,15 @@ class Constraint extends Model
 
     protected $fillable = [
         'type',
+        'day',
         'start_time',
         'end_time',
         'is_hard',
-        'note',
         'constrainable_id',
         'constrainable_type'
     ];
 
-    public function constrainable(): MorphTo
+    public function constraintable(): MorphTo
     {
         return $this->morphTo();
     }

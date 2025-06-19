@@ -25,6 +25,6 @@ class Venue extends Model
 
     public function constraints(): MorphMany
     {
-        return $this->morphMany(Constraint::class, 'constrainable');
+        return $this->morphMany(Constraint::class, 'constraintable');
     }
 }

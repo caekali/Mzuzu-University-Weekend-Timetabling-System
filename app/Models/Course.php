@@ -16,7 +16,7 @@ class Course extends Model
         'code',
         'name',
         'level',
-        'weekly_hours',
+        'lecture_hours',
         'semester',
         'num_of_students',
         'department_id'

@@ -101,7 +101,7 @@
                                         <label class="text-xs text-gray-600 dark:text-gray-400">Start:</label>
                                         <x-time-picker military-time
                                             wire:change="updateTime({{ $day['id'] }}, 'startTime', $event.target.value)"
-                                            value="{{ $day['start_time'] }}" />
+                                            value="{{ $day['start_time'] }}"  without-seconds />
                                     </div>
                                     <div class="flex items-center space-x-2">
                                         <label class="text-xs text-gray-600 dark:text-gray-400">End:</label>

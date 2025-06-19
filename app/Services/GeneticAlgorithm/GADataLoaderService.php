@@ -6,6 +6,8 @@ use App\Models\Venue;
 use App\DTO\VenueDTO;
 use App\DTO\CourseDTO;
 use App\DTO\TimeSlotDTO;
+use App\Models\Constraint;
+use App\Models\Lecturer;
 use App\Models\ScheduleDay;
 use App\Models\LecturerCourseAllocation;
 use Carbon\Carbon;
@@ -21,6 +23,7 @@ class GADataLoaderService
             'venues'    => $this->getVenues(),
             'courses'   => $this->getCourses(),
             'timeslots' => $this->generateTimeslots(),
+            'constraints' => $this->getConstraints()
         ];
     }
 
@@ -39,25 +42,25 @@ class GADataLoaderService
             'course',
             'programmes'
         ])->get();
-        $courseData = $allocations->map(function ($allocation) {
-            $programmes = $allocation->programmes->map(function ($programme) use ($allocation) {
-                return $programme->code . $allocation->course->level . $allocation->course->semester;
-            })->toArray();
 
+        $courseData = $allocations->map(function ($allocation) {
+            $programmes = $allocation->programmes->pluck('id')->toArray();
             return new CourseDTO(
                 $allocation->course->id,
                 $allocation->course->code,
-                $allocation->course->weekly_hours,
+                $allocation->course->lecture_hours,
                 $allocation->course->num_of_students,
                 $allocation->lecturer->id,
+                $allocation->course->level,
                 $programmes
             );
         })->toArray();
+
         return $courseData;
     }
 
 
-    public static function generateTimeslots(): array
+    protected  function generateTimeslots(): array
     {
         $slots = [];
         $days = ScheduleDay::where('enabled', true)->get();
@@ -80,5 +83,13 @@ class GADataLoaderService
             }
         }
         return $slots;
+    }
+
+    protected function getConstraints(): array
+    {
+        return [
+            'lecturers' => Constraint::where('constraintable_type', Lecturer::class)->get(),
+            'venues' => Constraint::where('constraintable_type', Venue::class)->get(),
+        ];
     }
 }

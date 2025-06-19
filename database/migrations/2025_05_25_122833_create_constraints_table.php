@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('constraints', function (Blueprint $table) {
             $table->id();
             $table->string('type');
+            $table->string('day');
             $table->time('start_time');
             $table->time('end_time');
             $table->boolean('is_hard');
-            $table->unsignedBigInteger('constrainable_id');
-            $table->string('constrainable_type');
-            // Index for faster polymorphic queries
-            $table->index(['constrainable_type', 'constrainable_id']);
+            $table->unsignedBigInteger('constraintable_id');
+            $table->string('constraintable_type');
+            $table->index(['constraintable_type', 'constraintable_id']);
             $table->timestamps();
         });
     }

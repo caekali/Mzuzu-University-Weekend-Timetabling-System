@@ -18,7 +18,7 @@ class CourseList extends Component
     public $headers = [
         'code' => 'Code',
         'name' => 'Name',
-        'weekly_hours' => 'Weekly Hours',
+        'lecture_hours' => 'Lecture Hours',
         'level' => 'Level',
         'semester' => 'Semester',
         'department' => 'Department',
@@ -87,7 +87,7 @@ class CourseList extends Component
                     'id' => $course->id,
                     'code' => $course->code,
                     'name' => $course->name,
-                    'weekly_hours' => $course->weekly_hours,
+                    'lecture_hours' => $course->lecture_hours,
                     'level' => $course->level,
                     'semester' => $course->semester,
                     'department' => $course->department->name ?? 'N/A',

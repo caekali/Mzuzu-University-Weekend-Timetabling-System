@@ -10,8 +10,8 @@
                      required />
              </div>
              <div class="col-span-1 sm:col-span-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                 <x-number label="Weekly Hours" placeholder="Weekly Hours" name="form.weekly_hours"
-                     wire:model="form.weekly_hours" required />
+                 <x-input label="Lecture Hours" placeholder="Lecture Hours" name="form.lecture_hours"
+                     wire:model="form.lecture_hours" required />
                  <x-number label="No. of Students" placeholder="No. of Students" name="form.num_of_students"
                      wire:model="form.num_of_students" required />
              </div>

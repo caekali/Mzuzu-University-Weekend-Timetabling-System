@@ -24,8 +24,8 @@ class CourseForm extends Form
     public $semester = null;
 
 
-    #[Validate('required|numeric|min:0')]
-    public $weekly_hours = null;
+    #[Validate('required|string')]
+    public $lecture_hours = null;
 
     #[Validate('required|integer|min:0')]
     public $num_of_students = null;

@@ -17,16 +17,25 @@ class Timetable extends Component
 {
 
     public $entries;
+
     public $timeSlots = [];
+
     public $days = [];
+
     public $levels = [];
+
     public $selectedLevel = '';
+
     public $selectedLecturer = '';
-    public $selectedVenue = '';
-    public $selectedDay = '';
+
+    public $selectedVenue;
+
+    public $selectedProgramme = '';
 
     public $programmes;
+
     public $lecturers;
+
     public $venues;
 
     public function mount()
@@ -50,7 +59,17 @@ class Timetable extends Component
             ->distinct()
             ->pluck('level');
 
-        $this->programmes = Programme::all();
+        $this->selectedLevel = $this->levels[0] ?? null;
+
+        $this->programmes = Programme::all()->map(function ($programme) {
+            return [
+                'id' => $programme->id,
+                'name' => $programme->name,
+            ];
+        });
+
+        $this->selectedProgramme = $this->programmes[0] ?? null;
+
         $this->venues = Venue::all();
 
         $this->lecturers = Lecturer::with('user')->get()->map(function ($lecturer) {
@@ -78,10 +97,12 @@ class Timetable extends Component
         $this->loadEntries();
     }
 
-    public function updatedSelectedDay()
+    public function updatedSelectedProgramme()
     {
         $this->loadEntries();
     }
+
+
 
     public function loadEntries()
     {
@@ -99,8 +120,7 @@ class Timetable extends Component
             $query->where('venue_id', $this->selectedVenue);
         }
 
-        $query->where('day', $this->selectedDay ? $this->selectedDay : $this->days[0]);
-
+        $query->where('programme_id', $this->selectedProgramme);
 
         $this->entries = $query->get();
     }

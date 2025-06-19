@@ -20,8 +20,9 @@
                 </button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <x-select label="Day" :placeholder="$days[0]" :options="$days" wire:model.live="selectedDay" />
-                <x-select label="Level" placeholder="Select level" :options="$levels" wire:model.live="selectedLevel" />
+                <x-select label="Programme" :placeholder="$programmes[0]['name']" :options="$programmes" wire:model.live="selectedProgramme"
+                    option-label="name" option-value="id" />
+                <x-select label="Level" :placeholder="$levels[0] ?? 'Select level'" :options="$levels" wire:model.live="selectedLevel" />
                 <x-select label="Lecturer" placeholder="Select lecturer" :options="$lecturers" option-label="name"
                     option-value="id" wire:model.live="selectedLecturer" />
                 <x-select label="Venue" placeholder="Select venue" :options="$venues" option-label="name"
@@ -43,7 +44,9 @@
                     <tr>
                         <th
                             class="px-2 py-3  text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-20">
-                            Level
+                            Time\
+                            <br />
+                            Day
                         </th>
                         @foreach ($timeSlots as $slot)
                             <th
@@ -56,18 +59,18 @@
                 </thead>
                 <tbody class="bg-white  dark:bg-gray-800 divide-y divide-gray-200 ">
 
-                    @foreach ($levels as $level)
+                    @foreach ($days as $day)
                         <tr>
                             <td
                                 class="border dark:border-gray-700 px-2 py-1 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-500 bg-gray-50 dark:bg-gray-800 font-medium">
-                                {{ $level }}
+                                {{ $day }}
                             </td>
                             @foreach ($timeSlots as $slot)
                                 <td
                                     class="border dark:border-gray-700 text-sm px-1 md:px-2 py-1 md:py-2 align-top cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
                                     @php
-                                        $cellEntries = $entries->filter(function ($entry) use ($level, $slot) {
-                                            return $entry->level === $level && $entry->start_time === $slot['start'];
+                                        $cellEntries = $entries->filter(function ($entry) use ($day, $slot) {
+                                            return $entry->day === $day && $entry->start_time === $slot['start'];
                                         });
 
                                     @endphp
@@ -76,7 +79,7 @@
                                     @if ($cellEntries->isNotEmpty())
                                         @foreach ($cellEntries as $entry)
                                             <div class="bg-green-100 rounded p-1 mb-1"
-                                                wire:click="openModal({{ $entry->id }}, '{{ $selectedDay }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')"
+                                                wire:click="openModal({{ $entry->id }}, '{{ $day }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')"
                                                 title="Edit Schedule">
                                                 <div class="font-bold flex items-center gap-2 ">
                                                     <x-lucide-book-open class="w-3 h-3" />
@@ -94,11 +97,11 @@
                                             </div>
                                         @endforeach
                                     @endif
-                                    <div class="h-8 w-full flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer"
+                                    {{-- <div class="h-8 w-full flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer"
                                         wire:click="openModal(null, '{{ $selectedDay }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')"
                                         title="Add Schedule">
                                         <x-lucide-plus class="h-4 w-4" />
-                                    </div>
+                                    </div> --}}
                                 </td>
                             @endforeach
                         </tr>

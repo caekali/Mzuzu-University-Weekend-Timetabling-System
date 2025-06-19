@@ -8,6 +8,7 @@ use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\RequestActivationLink;
 use App\Livewire\Auth\ResetPassword;
+use App\Livewire\ConstraintList;
 use App\Livewire\Course\CourseList;
 use App\Livewire\CourseAllocation\CourseAllocation;
 use App\Livewire\Dashboard;
@@ -20,7 +21,6 @@ use App\Livewire\Timetable\GenerateTimetable;
 use App\Livewire\Timetable\Timetable;
 use App\Livewire\User\UserList;
 use App\Livewire\Venue\VenueList;
-use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -73,4 +73,5 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/settings', Settings::class)->name('settings');
     Route::get('/timetable/generate', GenerateTimetable::class)->name('timetable.generate');
     Route::get('/course-allocations', CourseAllocation::class)->name('course-allocations');
+    Route::get('/constraints',ConstraintList::class)->name('constraints');
 });

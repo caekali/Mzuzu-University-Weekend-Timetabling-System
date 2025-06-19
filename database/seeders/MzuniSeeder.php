@@ -56,7 +56,7 @@ class MzuniSeeder extends Seeder
                 'code' => $data['code'],
                 'name' => $data['name'],
                 'num_of_students' => $data['students'],
-                'weekly_hours' => $data['hours'],
+                'lecture_hours' => ''.$data['hours'],
                 'level' => $data['level'],
                 'semester' => $data['sem'],
                 'department_id' => $data['dept'],

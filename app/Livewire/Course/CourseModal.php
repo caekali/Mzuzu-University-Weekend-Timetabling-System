@@ -34,7 +34,7 @@ class CourseModal extends Component
             $this->form->name = $course->name;
             $this->form->level = $course->level;
             $this->form->semester = $course->semester;
-            $this->form->weekly_hours = $course->weekly_hours;
+            $this->form->lecture_hours = $course->lecture_hours;
             $this->form->num_of_students = $course->num_of_students;
             $this->form->department_id = $course->department_id;
         }

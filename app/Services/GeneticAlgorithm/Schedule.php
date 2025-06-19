@@ -9,23 +9,44 @@ class Schedule
     private $numberOfSoftConflicts = 0;
     private $fitness = -1;
     private $isFitnessChanged = true;
+    protected array $constraints = [];
+
+    public function __construct(array $constraints = [])
+    {
+        $this->constraints = $constraints;
+    }
+
 
     public static function generateRandomSchedule($data): Schedule
     {
-        $schedule = new Schedule();
+        $schedule = new Schedule($data['constraints'] ?? []);
         $courses = $data['courses'];
         $venues = $data['venues'];
         $timeSlots = $data['timeslots'];
 
         foreach ($courses as $course) {
-            $sessions = self::parseLectureHours($course->weekly_hours);
+            $sessions = self::parseLectureHours($course->lecture_hours);
+            $usedDays = [];
 
             foreach ($sessions as $i => $hours) {
-                $slotSet = static::randomConsecutiveTimeSlots($timeSlots, $hours);
+                $slotSet = static::randomConsecutiveTimeSlotsAvoidingDays($timeSlots, $hours, $usedDays);
+
+                // Track used day
+                if (!empty($slotSet)) {
+                    $usedDays[] = $slotSet[0]['day'];
+                }
+
                 $venue = $venues[array_rand($venues)];
                 $key = "{$course->id}-$i";
 
-                $schedule->scheduleEntries[$key] = new ScheduleEntry($course, $course->lecturer_id, $venue, $slotSet, $course->programmes);
+                $schedule->scheduleEntries[$key] = new ScheduleEntry(
+                    $course,
+                    $course->lecturer_id,
+                    $venue,
+                    $slotSet,
+                    $course->level,
+                    $course->programmes
+                );
             }
         }
 
@@ -37,7 +58,7 @@ class Schedule
         return array_map('intval', explode(',', $lectureHours));
     }
 
-    private static function randomConsecutiveTimeSlots(array $timeSlots, int $length): array
+    private static function randomConsecutiveTimeSlotsAvoidingDays(array $timeSlots, int $length, array $usedDays): array
     {
         $max = max(0, count($timeSlots) - $length);
         $attempts = 10;
@@ -46,13 +67,25 @@ class Schedule
             $start = rand(0, $max);
             $slice = array_slice($timeSlots, $start, $length);
 
-            if (self::areConsecutive($slice)) {
+            if (
+                self::areConsecutive($slice) &&
+                !in_array($slice[0]['day'], $usedDays)
+            ) {
                 return $slice;
             }
         }
 
-        // fallback
-        return array_slice($timeSlots, 0, $length);
+        // Fallback
+        foreach ($timeSlots as $start => $slot) {
+            if (!in_array($slot['day'], $usedDays)) {
+                $slice = array_slice($timeSlots, $start, $length);
+                if (self::areConsecutive($slice)) {
+                    return $slice;
+                }
+            }
+        }
+
+        return array_slice($timeSlots, 0, $length); // Last resort fallback
     }
 
     private static function areConsecutive(array $slots): bool
@@ -105,10 +138,41 @@ class Schedule
             'programme_conflict' => 1.0,
             'venue_conflict' => 1.0,
             'venue_overcapacity' => 0.5,
-            'tight_clustering_penalty' => 0.3,
+            'same_day_sessions' => 1.0, // New: Penalty for same-day sessions
         ];
 
+        $courseDayMap = [];
+
         foreach ($this->scheduleEntries as $i => $entry1) {
+            $courseId = $entry1->course->id;
+            $day = $entry1->timeSlots[0]['day'] ?? null;
+
+            // Track course sessions by day
+            if ($day !== null) {
+                if (!isset($courseDayMap[$courseId])) {
+                    $courseDayMap[$courseId] = [];
+                }
+
+                if (in_array($day, $courseDayMap[$courseId])) {
+                    $hardConflicts += $weights['same_day_sessions'];
+                }
+
+                $courseDayMap[$courseId][] = $day;
+            }
+
+            // constraint checking for each slot
+            foreach ($entry1->timeSlots as $slot) {
+                $lecturerViolation = $this->getConstraintViolationType('lecturers', $entry1->lecturer, $slot);
+                $venueViolation = $this->getConstraintViolationType('venues', $entry1->venue->id, $slot);
+
+                if ($lecturerViolation === 'hard') $hardConflicts++;
+                if ($lecturerViolation === 'soft') $softConflicts += 0.5;
+
+                if ($venueViolation === 'hard') $hardConflicts++;
+                if ($venueViolation === 'soft') $softConflicts += 0.5;
+            }
+
+            // check overlapping
             foreach ($this->scheduleEntries as $j => $entry2) {
                 if ($i >= $j) continue;
 
@@ -117,9 +181,10 @@ class Schedule
                         $hardConflicts += $weights['lecturer_conflict'];
                     }
 
-                    if (count(array_intersect($entry1->programmes, $entry2->programmes)) > 0) {
+                    if (count(array_intersect($entry1->programmes, $entry2->programmes)) > 0 && ($entry1->level == $entry2->level)) {
                         $hardConflicts += $weights['programme_conflict'];
                     }
+
                     if ($entry1->venue->id === $entry2->venue->id) {
                         $hardConflicts += $weights['venue_conflict'];
                     }
@@ -130,10 +195,6 @@ class Schedule
             if ($entry1->course->expected_students > $entry1->venue->capacity) {
                 $softConflicts += $weights['venue_overcapacity'];
             }
-
-            // Optional soft constraint: discourage tight clustering of sessions
-            // You can implement logic to penalize if a lecturer has too many sessions close together
-            // or if students have more than X sessions in a day, etc.
         }
 
         $this->numberOfHardConflicts = $hardConflicts;
@@ -141,9 +202,27 @@ class Schedule
 
         $totalPenalty = $hardConflicts + $softConflicts;
 
-        // Fitness is inverse of penalty (higher is better)
         return 1 / (1 + $totalPenalty);
     }
+
+    private function getConstraintViolationType($type, $id, $slot): ?string
+    {
+        $constraints = $this->constraints[$type] ?? collect();
+
+        foreach ($constraints as $constraint) {
+            if (
+                $constraint->constraintable_id == $id &&
+                $constraint->day === $slot['day'] &&
+                strtotime($slot['start']) >= strtotime($constraint->start_time) &&
+                strtotime($slot['start']) < strtotime($constraint->end_time)
+            ) {
+                return $constraint->is_hard ? 'hard' : 'soft';
+            }
+        }
+
+        return null; // no constraint violated
+    }
+
 
     public function getScheduleEntries()
     {
