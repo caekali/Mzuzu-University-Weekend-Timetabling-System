@@ -1,13 +1,13 @@
 <div class="py-6">
-    <div x-data="{ showFilters: false }">
+    <div x-data="{ showFilters: true }">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Full Timetable</h1>
-            <x-button @click="showFilters = !showFilters">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Full Weekly Timetable</h1>
+            {{-- <x-button @click="showFilters = !showFilters">
                 <x-slot:prepend>
                     <x-lucide-filter class="h-4 w-4 mr-1" />
                 </x-slot:prepend>
                 Filters
-            </x-button>
+            </x-button> --}}
 
         </div>
         <div x-show="showFilters" x-cloak
@@ -20,9 +20,9 @@
                 </button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <x-select label="Programme" :placeholder="$programmes[0]['name']" :options="$programmes" wire:model.live="selectedProgramme"
-                    option-label="name" option-value="id" />
-                <x-select label="Level" :placeholder="$levels[0] ?? 'Select level'" :options="$levels" wire:model.live="selectedLevel" />
+                <x-select label="Programme" placeholder="Select programme" :options="$programmes"
+                    wire:model.live="selectedProgramme" option-label="name" option-value="id" />
+                <x-select label="Level" placeholder="Select level" :options="$levels" wire:model.live="selectedLevel" />
                 <x-select label="Lecturer" placeholder="Select lecturer" :options="$lecturers" option-label="name"
                     option-value="id" wire:model.live="selectedLecturer" />
                 <x-select label="Venue" placeholder="Select venue" :options="$venues" option-label="name"
@@ -35,9 +35,8 @@
         class="bg-white dark:bg-gray-800  border border-gray-200 dark:border-gray-700 transition-colors duration-200
  rounded-lg shadow-sm p-2 md:p-6 overflow-x-auto">
         <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4 px-2 ">
-            Weekly Schedule
-        </h2>
-        <div class="min-w-full overflow-x-auto print:min-w-0">
+            Timetable </h2>
+        <div class="min-w-full overflow-x-auto">
             <table
                 class="min-w-full divide-y divide-gray-200 border border-gray-200 dark:border-gray-700 dark:divide-gray-700">
                 <thead class="bg-gray-100 dark:bg-gray-900">
@@ -59,53 +58,51 @@
                 </thead>
                 <tbody class="bg-white  dark:bg-gray-800 divide-y divide-gray-200 ">
 
+
                     @foreach ($days as $day)
                         <tr>
                             <td
-                                class="border dark:border-gray-700 px-2 py-1 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-500 bg-gray-50 dark:bg-gray-800 font-medium">
+                                class="border dark:border-gray-700 px-2 py-1 md:py-2 text-xs md:text-sm text-gray-500 bg-gray-50 dark:bg-gray-800 font-medium w-20">
                                 {{ $day }}
                             </td>
+
                             @foreach ($timeSlots as $slot)
-                                <td
-                                    class="border dark:border-gray-700 text-sm px-1 md:px-2 py-1 md:py-2 align-top cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <td class="border dark:border-gray-700 px-1 md:px-2 py-1 md:py-2 align-top w-40">
                                     @php
                                         $cellEntries = $entries->filter(function ($entry) use ($day, $slot) {
                                             return $entry->day === $day && $entry->start_time === $slot['start'];
                                         });
-
                                     @endphp
-
 
                                     @if ($cellEntries->isNotEmpty())
                                         @foreach ($cellEntries as $entry)
-                                            <div class="bg-green-100 rounded p-1 mb-1"
-                                                wire:click="openModal({{ $entry->id }}, '{{ $day }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')"
-                                                title="Edit Schedule">
-                                                <div class="font-bold flex items-center gap-2 ">
-                                                    <x-lucide-book-open class="w-3 h-3" />
-                                                    <span> {{ $entry->course->code }}</span>
-                                                </div>
-                                                <div class=" text-gray-700  flex items-center gap-2">
-                                                    <x-lucide-user class="w-3 h-3" />
-                                                    <span>{{ $entry->lecturer->user->first_name . ' ' . $entry->lecturer->user->last_name }}</span>
-                                                </div>
-
-                                                <div class="text-gray-600 flex items-center gap-2">
-                                                    <x-lucide-map-pin class="w-3 h-3" />
-                                                    <span>{{ $entry->venue->name }}</span>
+                                            <div class="bg-green-100 rounded p-1 mb-1 w-full min-h-[80px]">
+                                                <div
+                                                    wire:click="openModal({{ $entry->id }}, '{{ $day }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')">
+                                                    <div class="font-bold flex items-center gap-2">
+                                                        <x-lucide-book-open class="w-3 h-3" />
+                                                        <span>{{ $entry->course->code }}</span>
+                                                    </div>
+                                                    <div class="text-gray-700 flex items-center gap-2">
+                                                        <x-lucide-user class="w-3 h-3" />
+                                                        <span>{{ $entry->lecturer->user->first_name . ' ' . $entry->lecturer->user->last_name }}</span>
+                                                    </div>
+                                                    <div class="text-gray-600 flex items-center gap-2">
+                                                        <x-lucide-map-pin class="w-3 h-3" />
+                                                        <span>{{ $entry->venue->name }}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         @endforeach
+                                    @else
+                                        {{-- Empty cell with fixed height to preserve spacing --}}
+                                        <div class="min-h-[80px] w-36"></div>
                                     @endif
-                                    {{-- <div class="h-8 w-full flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer"
-                                        wire:click="openModal(null, '{{ $selectedDay }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')"
-                                        title="Add Schedule">
-                                        <x-lucide-plus class="h-4 w-4" />
-                                    </div> --}}
                                 </td>
                             @endforeach
                         </tr>
                     @endforeach
+
                 </tbody>
             </table>
         </div>

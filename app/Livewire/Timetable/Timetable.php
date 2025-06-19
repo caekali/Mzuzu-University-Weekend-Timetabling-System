@@ -59,7 +59,7 @@ class Timetable extends Component
             ->distinct()
             ->pluck('level');
 
-        $this->selectedLevel = $this->levels[0] ?? null;
+        // $this->selectedLevel = $this->levels[0] ?? null;
 
         $this->programmes = Programme::all()->map(function ($programme) {
             return [
@@ -68,7 +68,7 @@ class Timetable extends Component
             ];
         });
 
-        $this->selectedProgramme = $this->programmes[0] ?? null;
+        // $this->selectedProgramme = $this->programmes[0] ?? null;
 
         $this->venues = Venue::all();
 
