@@ -2,7 +2,7 @@
 
 namespace App\Livewire;
 
-use App\Models\DaySchedule;
+use App\Models\ScheduleDay;
 use App\Models\Setting;
 use Livewire\Component;
 use WireUi\Traits\WireUiActions;
@@ -16,15 +16,15 @@ class Settings extends Component
 
     public $slot_duration;
     public $break_duration;
-    public $daySchedules = [];
-    public array $originalDaySchedules = [];
+    public $scheduleDays = [];
+    public array $originalScheduleDays = [];
     public $hasUnsavedChanges;
     public int $originalSlotDuration;
     public int $originalBreakDuration;
 
     public function mount()
     {
-        $this->daySchedules = DaySchedule::all()->map(function ($day) {
+        $this->scheduleDays = ScheduleDay::all()->map(function ($day) {
             return [
                 'id' => $day->id,
                 'name' => $day->name,
@@ -40,14 +40,14 @@ class Settings extends Component
         // original values
         $this->originalSlotDuration = $this->slot_duration;
         $this->originalBreakDuration = $this->break_duration;
-        $this->originalDaySchedules = $this->daySchedules;
+        $this->originalScheduleDays = $this->scheduleDays;
         $this->hasUnsavedChanges = false;
     }
 
     public function save()
     {
-        foreach ($this->daySchedules as $schedule) {
-            DaySchedule::where('id', $schedule['id'])->update([
+        foreach ($this->scheduleDays as $schedule) {
+            ScheduleDay::where('id', $schedule['id'])->update([
                 'enabled' => $schedule['enabled'],
                 'start_time' => $schedule['start_time'],
                 'end_time' => $schedule['end_time'],
@@ -59,7 +59,7 @@ class Settings extends Component
         Setting::updateOrCreate(['key' => 'break_duration'], ['value' => $this->break_duration]);
 
         // Sync originals
-        $this->originalDaySchedules = $this->daySchedules;
+        $this->originalScheduleDays = $this->scheduleDays;
         $this->originalSlotDuration = $this->slot_duration;
         $this->originalBreakDuration = $this->break_duration;
         $this->hasUnsavedChanges = false;
@@ -74,7 +74,7 @@ class Settings extends Component
     public function checkForChanges()
     {
         $this->hasUnsavedChanges =
-            $this->daySchedules !== $this->originalDaySchedules ||
+            $this->scheduleDays !== $this->originalScheduleDays ||
             $this->slot_duration !== $this->originalSlotDuration ||
             $this->break_duration !== $this->originalBreakDuration;
     }
@@ -128,9 +128,9 @@ class Settings extends Component
     }
     public function toggleDay($dayId)
     {
-        foreach ($this->daySchedules as $index => $day) {
+        foreach ($this->scheduleDays as $index => $day) {
             if ($day['id'] === $dayId) {
-                $this->daySchedules[$index]['enabled'] = !$day['enabled'];
+                $this->scheduleDays[$index]['enabled'] = !$day['enabled'];
                 break;
             }
         }
@@ -142,9 +142,9 @@ class Settings extends Component
     {
         if (!in_array($field, ['start_time', 'end_time'])) return;
 
-        foreach ($this->daySchedules as $index => $day) {
+        foreach ($this->scheduleDays as $index => $day) {
             if ($day['id'] === $dayId) {
-                $this->daySchedules[$index][$field] = $value;
+                $this->scheduleDays[$index][$field] = $value;
                 break;
             }
         }

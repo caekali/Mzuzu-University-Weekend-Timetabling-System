@@ -30,11 +30,6 @@
         </div>
     </div>
 
-    <div class="flex">
-        @foreach ($days as $day)
-            <p></p>
-        @endforeach
-    </div>
     <div
         class="bg-white dark:bg-gray-800  border border-gray-200 dark:border-gray-700 transition-colors duration-200
  rounded-lg shadow-sm p-2 md:p-6 overflow-x-auto">
@@ -72,10 +67,9 @@
                                     class="border dark:border-gray-700 text-sm px-1 md:px-2 py-1 md:py-2 align-top cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
                                     @php
                                         $cellEntries = $entries->filter(function ($entry) use ($level, $slot) {
-                                            return $entry->level === $level &&
-                                                $entry->start_time === $slot['start'];
+                                            return $entry->level === $level && $entry->start_time === $slot['start'];
                                         });
-                                  
+
                                     @endphp
 
 

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DaySchedule extends Model
+class ScheduleDay extends Model
 {
     public $timestamps = false;
     protected $fillable  = [

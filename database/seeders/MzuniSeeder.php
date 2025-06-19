@@ -63,30 +63,30 @@ class MzuniSeeder extends Seeder
             ]);
         }
 
-        // === Link Courses to Programmes ===
-        $links = [
-            'CS101' => [$csProg, $csWProg],
-            'CS201' => [$csProg],
-            'CS301' => [$csProg],
-            'CSW101' => [$csWProg],
-            'MA101' => [$mathProg, $statsProg],
-            'MA201' => [$mathProg],
-            'ST101' => [$statsProg],
-            'ST301' => [$statsProg],
-            'ED101' => [$eduSciProg],
-            'ED201' => [$eduSciProg],
-            'EDW101' => [$eduWProg],
-            'ED301' => [$eduSciProg, $eduWProg],
-        ];
+        // // === Link Courses to Programmes ===
+        // $links = [
+        //     'CS101' => [$csProg, $csWProg],
+        //     'CS201' => [$csProg],
+        //     'CS301' => [$csProg],
+        //     'CSW101' => [$csWProg],
+        //     'MA101' => [$mathProg, $statsProg],
+        //     'MA201' => [$mathProg],
+        //     'ST101' => [$statsProg],
+        //     'ST301' => [$statsProg],
+        //     'ED101' => [$eduSciProg],
+        //     'ED201' => [$eduSciProg],
+        //     'EDW101' => [$eduWProg],
+        //     'ED301' => [$eduSciProg, $eduWProg],
+        // ];
 
-        foreach ($links as $code => $programmes) {
-            foreach ($programmes as $prog) {
-                CourseProgramme::create([
-                    'course_id' => $courseModels[$code]->id,
-                    'programme_id' => $prog->id,
-                ]);
-            }
-        }
+        // foreach ($links as $code => $programmes) {
+        //     foreach ($programmes as $prog) {
+        //         CourseProgramme::create([
+        //             'course_id' => $courseModels[$code]->id,
+        //             'programme_id' => $prog->id,
+        //         ]);
+        //     }
+        // }
 
         // === Users and Lecturers ===
         $lecturers = [];

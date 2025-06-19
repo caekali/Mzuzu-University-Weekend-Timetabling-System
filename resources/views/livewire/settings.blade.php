@@ -74,12 +74,12 @@
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Working Days Schedule</h2>
                 <span class="text-sm text-gray-500 dark:text-gray-400">
-                    {{ count(array_filter($daySchedules, fn($d) => $d['enabled'])) }}
+                    {{ count(array_filter($scheduleDays, fn($d) => $d['enabled'])) }}
                 </span>
             </div>
 
             <div class="space-y-4">
-                @foreach ($daySchedules as $day)
+                @foreach ($scheduleDays as $day)
                     <div
                         class="p-4 rounded-lg border transition-all duration-200 {{ $day['enabled'] ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700' : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700' }}">
                         <div class="flex items-center justify-between">
@@ -132,13 +132,13 @@
                     <div>
                         <span class="text-gray-600 dark:text-gray-400">Working Days:</span>
                         <span class="ml-2 font-medium text-gray-900 dark:text-white">
-                            {{ count(array_filter($daySchedules, fn($d) => $d['enabled'])) }}
+                            {{ count(array_filter($scheduleDays, fn($d) => $d['enabled'])) }}
                         </span>
                     </div>
                     <div>
                         <span class="text-gray-600 dark:text-gray-400">Total Slots:</span>
                         <span class="ml-2 font-medium text-gray-900 dark:text-white">
-                            {{ array_reduce($daySchedules, fn($total, $day) => $total + $this->calculateTotalSlots($day), 0) }}
+                            {{ array_reduce($scheduleDays, fn($total, $day) => $total + $this->calculateTotalSlots($day), 0) }}
                         </span>
                     </div>
                     <div>

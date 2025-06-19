@@ -8,11 +8,11 @@ use Livewire\Component;
 
 class StudentOrLecturerPanel extends Component
 {
-    public $todayScheduleEntries = [];
+    public $toscheduleDayEntries = [];
 
     public function mount()
     {
-        $this->todayScheduleEntries = ScheduleEntry::with(['course', 'lecturer.user', 'venue'])
+        $this->toscheduleDayEntries = ScheduleEntry::with(['course', 'lecturer.user', 'venue'])
             ->when(
                 Auth::user()->lecturer,
                 fn($query) =>

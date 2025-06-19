@@ -6,7 +6,11 @@ use App\Models\Venue;
 use App\DTO\VenueDTO;
 use App\DTO\CourseDTO;
 use App\DTO\TimeSlotDTO;
+use App\Models\ScheduleDay;
 use App\Models\LecturerCourseAllocation;
+use Carbon\Carbon;
+
+use function App\Helpers\getSetting;
 
 class GADataLoaderService
 {
@@ -53,33 +57,24 @@ class GADataLoaderService
     }
 
 
-
     public static function generateTimeslots(): array
     {
-        $days = ['Friday', 'Saturday', 'Sunday'];
-        $start = '07:45';
-        $end = '18:45';
-        $slotMinutes = 60;
         $slots = [];
-
+        $days = ScheduleDay::where('enabled', true)->get();
+        $slotMinutes = getSetting('slot_duration');
         foreach ($days as $day) {
-            $current = strtotime($start);
-            $endTime = strtotime($end);
-
+            $current = strtotime($day->start_time);
+            $endTime = strtotime($day->end_time);
             while ($current < $endTime) {
-                $next = strtotime("+$slotMinutes minutes", $current);
-
+                $next = strtotime("+{$slotMinutes} minutes", $current);
+                if ($next > $endTime) {
+                    break;
+                }
                 $slots[] = [
-                    'day' => $day,
+                    'day' => $day->name,
                     'start' => date('H:i', $current),
                     'end' => date('H:i', $next),
                 ];
-
-                //  $slots[] = new TimeSlotDTO(
-                //     ($dayIndex * $slotsPerDay) + $i + 1,
-                //     $day,
-                //     $i + 1
-                // );
 
                 $current = $next;
             }

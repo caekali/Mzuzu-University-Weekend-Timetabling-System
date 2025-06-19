@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Timetable;
 
+use App\Models\ScheduleDay;
 use App\Models\Lecturer;
 use App\Models\Programme;
 use App\Models\ScheduleEntry;
 use App\Models\Venue;
+use App\Services\GeneticAlgorithm\GADataLoaderService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
@@ -16,7 +18,7 @@ class Timetable extends Component
 
     public $entries;
     public $timeSlots = [];
-    public $days = ['Friday', 'Saturday', 'Sunday'];
+    public $days = [];
     public $levels = [];
     public $selectedLevel = '';
     public $selectedLecturer = '';
@@ -29,6 +31,20 @@ class Timetable extends Component
 
     public function mount()
     {
+        $this->days = ScheduleDay::where('enabled', true)->pluck('name')->toArray();
+
+        $start = Carbon::createFromTime(7, 45);
+        $end = Carbon::createFromTime(18, 45);
+        while ($start < $end) {
+            $slotStart = $start->copy();
+            $slotEnd = $start->copy()->addHour();
+            $this->timeSlots[] = [
+                'start' => $slotStart->format('H:i:s'),
+                'end' => $slotEnd->format('H:i:s')
+            ];
+            $start->addHour();
+        }
+
         $this->levels = DB::table('schedule_entries')
             ->whereNotNull('level')
             ->distinct()
@@ -43,18 +59,6 @@ class Timetable extends Component
                 'name' => $lecturer->user->first_name . ' ' . $lecturer->user->last_name,
             ];
         });
-
-        $start = Carbon::createFromTime(7, 45);
-        $end = Carbon::createFromTime(18, 45);
-        while ($start < $end) {
-            $slotStart = $start->copy();
-            $slotEnd = $start->copy()->addHour();
-            $this->timeSlots[] = [
-                'start' => $slotStart->format('H:i:s'),
-                'end' => $slotEnd->format('H:i:s')
-            ];
-            $start->addHour();
-        }
 
         $this->loadEntries();
     }
