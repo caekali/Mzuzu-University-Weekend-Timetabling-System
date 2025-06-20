@@ -24,12 +24,8 @@
                             wire:model.live='form.mutation_rate' />
                         <x-number label='Crossover Rate (%)' name='form.crossover_rate'
                             wire:model.live='form.crossover_rate' />
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <x-time-picker id="start-time" label="Start Time" placeholder="22:30" military-time
-                                without-seconds />
-                            <x-time-picker id="end-time" label="End Time" placeholder="22:30" military-time
-                                without-seconds />
-                        </div>
+                        <x-number label='Elite Schedules' name='form.elite_schedules'
+                            wire:model.live='form.elite_schedules' />
                     </div>
                 </div>
                 <x-button type="submit" label="Update" class="mt-4" :disabled="!$this->hasChanges" wire:target="updateGAParameter"
@@ -79,7 +75,7 @@
                 <x-button icon="cpu-chip" class="w-48" :label="$progress > 0 && $progress < 100 && !$isDone ? 'Generating...' : 'Generate Timetable'"
                     :disabled="$progress > 0 && $progress < 100 && !$isDone" wire:click="startGeneration"
                     wire:loading.attr="disabled" />
-                <x-button href="{{ route('timetable') }}" outline icon="calendar" label="View Current Timetable" />
+                <x-button href="{{ route('full.timetable') }}" outline icon="calendar" label="View Current Timetable" />
             </div>
         </div>
 

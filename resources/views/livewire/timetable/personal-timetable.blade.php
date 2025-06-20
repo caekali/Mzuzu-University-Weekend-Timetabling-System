@@ -1,41 +1,11 @@
 <div class="py-6">
-    <div x-data="{ showFilters: true }">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Full Weekly Timetable</h1>
-            {{-- <x-button @click="showFilters = !showFilters">
-                <x-slot:prepend>
-                    <x-lucide-filter class="h-4 w-4 mr-1" />
-                </x-slot:prepend>
-                Filters
-            </x-button> --}}
-
-        </div>
-        <div x-show="showFilters" x-cloak
-            class="bg-white dark:bg-gray-800  border border-gray-200 dark:border-gray-700 transition-colors duration-200 rounded-lg shadow-sm p-6 mb-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-medium text-gray-900 dark:text-white">Filters</h2>
-                <button @click="showFilters = false">
-                    <x-lucide-x
-                        class="h-5 w-5 text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-600" />
-                </button>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <x-select label="Programme" placeholder="Select programme" :options="$programmes"
-                    wire:model.live="selectedProgramme" option-label="name" option-value="id" />
-                <x-select label="Level" placeholder="Select level" :options="$levels" wire:model.live="selectedLevel" />
-                <x-select label="Lecturer" placeholder="Select lecturer" :options="$lecturers" option-label="name"
-                    option-value="id" wire:model.live="selectedLecturer" />
-                <x-select label="Venue" placeholder="Select venue" :options="$venues" option-label="name"
-                    option-value="id" wire:model.live="selectedVenue" />
-            </div>
-        </div>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">My Timetable</h1>
     </div>
-
     <div
         class="bg-white dark:bg-gray-800  border border-gray-200 dark:border-gray-700 transition-colors duration-200
  rounded-lg shadow-sm p-2 md:p-6 overflow-x-auto">
-        <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4 px-2 ">
-            Timetable </h2>
+       
         <div class="min-w-full overflow-x-auto">
             <table
                 class="min-w-full divide-y divide-gray-200 border border-gray-200 dark:border-gray-700 dark:divide-gray-700">
@@ -107,5 +77,4 @@
             </table>
         </div>
     </div>
-    <livewire:timetable.schedule-modal />
 </div>

@@ -15,7 +15,7 @@
  <div>
      @if ($currentRole == 'Admin')
          @livewire('dashboard.admin-panel')
-     @elseif ($currentRole = 'HOD')
+     @elseif ($currentRole == 'HOD')
          @livewire('dashboard.department-head-panel')
      @else
          @livewire('dashboard.student-or-lecturer-panel')

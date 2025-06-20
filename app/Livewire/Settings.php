@@ -31,6 +31,10 @@ class Settings extends Component
 
     public int $originalBreakDuration;
 
+    public $standardStartTime;
+    
+    public $standardEndTime;
+
     public function mount()
     {
         $this->scheduleDays = ScheduleDay::all()->map(function ($day) {

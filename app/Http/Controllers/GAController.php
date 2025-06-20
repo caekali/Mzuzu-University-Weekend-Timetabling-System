@@ -269,4 +269,6 @@ class Data
       'timeslots' => $this->getTimeslots()
     ];
   }
+
+  
 }

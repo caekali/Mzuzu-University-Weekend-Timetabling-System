@@ -18,6 +18,7 @@ return new class extends Migration
             $table->float('mutation_rate');
             $table->float("crossover_rate");
             $table->integer("tournament_size");
+            $table->integer("elite_schedules");
             $table->timestamp('last_updated');
         });
     }

@@ -17,6 +17,7 @@ class GAParameter extends Model
         'tournament_size',
         'mutation_rate',
         'crossover_rate',
+        'elite_schedules'
     ];
 
     // get parameter from db or create default one and return them
@@ -28,6 +29,7 @@ class GAParameter extends Model
             'tournament_size'       => 5,
             'mutation_rate'         => 0.05,
             'crossover_rate'        => 0.8,
+            'elite_schedules' => 1
         ]);
     }
 }

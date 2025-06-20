@@ -11,24 +11,6 @@
     };
 
     $formattedDate = $now->format('l, F j, Y'); // Saturday, May 24, 2025
-
-    $schedules = collect([
-        (object) [
-            'day' => 'Tue',
-            'course' => (object) ['code' => 'BICT1202'],
-            'venue' => (object) ['name' => 'ICT LAB 2'],
-            'start_time' => '10:00',
-            'end_time' => '12:00',
-        ],
-        (object) [
-            'day' => 'Wed',
-            'course' => (object) ['code' => 'MATH1203'],
-            'venue' => (object) ['name' => 'ICT LAB 1'],
-            'start_time' => '13:00',
-            'end_time' => '15:00',
-        ],
-        // Add more mock entries as needed
-    ]);
 @endphp
 
 
@@ -41,7 +23,7 @@
         <p class="text-sm text-gray-600 dark:text-gray-100 mt-1">Here are your schedules for today.</p>
     </div>
 
-    <h3 class="text-lg font-semibold text-gray-800 mb-3 dark:text-white" >Today's Schedules</h3>
+    <h3 class="text-lg font-semibold text-gray-800 mb-3 dark:text-white">Today's Schedules</h3>
 
     @if ($toscheduleDayEntries && count($toscheduleDayEntries) > 0)
         <!-- Scrollable container takes remaining height -->
@@ -57,7 +39,7 @@
     @endif
 
     <div class=" bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mt-6">
-        <a href="{{ route('timetable') }}" class="text-green-600 font-medium hover:underline">
+        <a href="{{ route('my.timetable') }}" class="text-green-600 font-medium hover:underline">
             View Full Weekly Schedule →
         </a>
     </div>

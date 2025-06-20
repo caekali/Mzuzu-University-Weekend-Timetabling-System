@@ -33,6 +33,7 @@ class GenerateTimetable extends Component
             $this->form->tournament_size       = $params->tournament_size;
             $this->form->mutation_rate         = $params->mutation_rate * 100;
             $this->form->crossover_rate        = $params->crossover_rate * 100;
+            $this->form->elite_schedules = $params->elite_schedules;
             $this->lastUpdated = $params->last_updated;
         }
         // for tracking changes
@@ -47,6 +48,7 @@ class GenerateTimetable extends Component
             'tournament_size' => $this->form->tournament_size,
             'mutation_rate' => $this->form->mutation_rate,
             'crossover_rate' => $this->form->crossover_rate,
+            'elite_schedules' => $this->form->elite_schedules,
         ];
     }
 

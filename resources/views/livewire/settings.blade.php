@@ -50,6 +50,14 @@
             </div>
         </div>
 
+
+        {{-- <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <x-time-picker id="start-time" label="Start Time" placeholder="22:30" military-time
+                                without-seconds />
+                            <x-time-picker id="end-time" label="End Time" placeholder="22:30" military-time
+                                without-seconds />
+                        </div> --}}
+
         {{-- Working days --}}
         <div
             class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200 p-6">
@@ -67,7 +75,6 @@
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-4">
                                 <label class="flex items-center">
-
                                     <input type="checkbox" wire:change="toggleDay({{ $day['id'] }})"
                                         @checked($day['enabled'])
                                         class="rounded border-gray-300 dark:border-gray-600 text-green-600 dark:text-green-400 focus:ring-green-500 dark:focus:ring-green-400 bg-white dark:bg-gray-800" />

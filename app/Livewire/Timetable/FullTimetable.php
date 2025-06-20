@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class Timetable extends Component
+class FullTimetable extends Component
 {
 
-    public $entries;
+    public $entries = [];
 
     public $timeSlots = [];
 
@@ -24,13 +24,13 @@ class Timetable extends Component
 
     public $levels = [];
 
-    public $selectedLevel = '';
+    public $selectedLevel;
 
-    public $selectedLecturer = '';
+    public $selectedLecturer;
 
     public $selectedVenue;
 
-    public $selectedProgramme = '';
+    public $selectedProgramme;
 
     public $programmes;
 
@@ -59,7 +59,6 @@ class Timetable extends Component
             ->distinct()
             ->pluck('level');
 
-        // $this->selectedLevel = $this->levels[0] ?? null;
 
         $this->programmes = Programme::all()->map(function ($programme) {
             return [
@@ -68,7 +67,6 @@ class Timetable extends Component
             ];
         });
 
-        // $this->selectedProgramme = $this->programmes[0] ?? null;
 
         $this->venues = Venue::all();
 
@@ -103,27 +101,40 @@ class Timetable extends Component
     }
 
 
-
-    public function loadEntries()
-    {
-        $query = ScheduleEntry::with(['course', 'lecturer.user', 'venue']);
-
-        if ($this->selectedLevel) {
-            $query->where('level', $this->selectedLevel);
-        }
-
-        if ($this->selectedLecturer) {
-            $query->where('lecturer_id', $this->selectedLecturer);
-        }
-
-        if ($this->selectedVenue) {
-            $query->where('venue_id', $this->selectedVenue);
-        }
-
-        $query->where('programme_id', $this->selectedProgramme);
-
-        $this->entries = $query->get();
+public function loadEntries()
+{
+    // Exit early if no filters are selected
+    if (
+        !$this->selectedLevel &&
+        !$this->selectedLecturer &&
+        !$this->selectedVenue &&
+        !$this->selectedProgramme
+    ) {
+        $this->entries = collect(); // empty collection
+        return;
     }
+
+    $query = ScheduleEntry::with(['course', 'lecturer.user', 'venue']);
+
+    if ($this->selectedLevel) {
+        $query->where('level', $this->selectedLevel);
+    }
+
+    if ($this->selectedLecturer) {
+        $query->where('lecturer_id', $this->selectedLecturer);
+    }
+
+    if ($this->selectedVenue) {
+        $query->where('venue_id', $this->selectedVenue);
+    }
+
+    if ($this->selectedProgramme) {
+        $query->where('programme_id', $this->selectedProgramme);
+    }
+
+    $this->entries = $query->get();
+}
+
 
     #[On('refresh-list')]
     public function refresh()
@@ -137,6 +148,6 @@ class Timetable extends Component
     }
     public function render()
     {
-        return view('livewire.timetable.timetable');
+        return view('livewire.timetable.full-timetable');
     }
 }

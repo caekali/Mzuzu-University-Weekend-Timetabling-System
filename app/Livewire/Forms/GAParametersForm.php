@@ -23,6 +23,10 @@ class GAParametersForm extends Form
     #[Validate('required|numeric|min:0|max:100')]
     public $crossover_rate = '';
 
+    #[Validate('required|integer|min:1')]
+    public  $elite_schedules;
+
+
     public function save()
     {
         $this->validate();
@@ -34,6 +38,7 @@ class GAParametersForm extends Form
             'tournament_size'       => $this->tournament_size,
             'mutation_rate'         => $mutationRateFloat,
             'crossover_rate'        => $crossoverRateFloat,
+            'elite_schedules' => $this->elite_schedules
         ]);
     }
 }

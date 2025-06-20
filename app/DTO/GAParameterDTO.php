@@ -11,6 +11,7 @@ class GAParameterDTO
     public int $tournamentSize;
     public float $mutationRate;
     public float $crossoverRate;
+    public int $eliteSchedules;
 
     public function __construct(GAParameter $param)
     {
@@ -19,6 +20,7 @@ class GAParameterDTO
         $this->tournamentSize       = max(1, (int)$param->tournament_size);
         $this->mutationRate         = max(0.0, min(1.0, (float)$param->mutation_rate));
         $this->crossoverRate        = max(0.0, min(1.0, (float)$param->crossover_rate));
+        $this->eliteSchedules       = max(1, (int)$param->elite_schedules);
     }
 
     public static function fromDb(): self

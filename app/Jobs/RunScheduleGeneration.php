@@ -22,22 +22,24 @@ class RunScheduleGeneration implements ShouldQueue
 
     public function handle(): void
     {
+
         $data = app(GADataLoaderService::class)->loadGAData();
         $parameters = GAParameterDTO::fromDb();
         $ga = new GeneticAlgorithm(
-            populationSize: 10,
-            eliteSchedules: 1,
-            crossoverRate: 0.8,
-            mutationRate: 0.05,
-            tournamentSize: 3,
+            populationSize: $parameters->populationSize,
+            eliteSchedules: $parameters->eliteSchedules,
+            crossoverRate: $parameters->crossoverRate,
+            mutationRate: $parameters->mutationRate,
+            tournamentSize: $parameters->tournamentSize,
             data: $data
         );
 
         $population = $ga->initializePopulation();
         $bestSchedule = $population->getFittest();
         $progress = 0;
+        $i = 1;
         try {
-            for ($i = 0; $bestSchedule->getFitness() != 1.0 && $i < $parameters->numberOfGenerations; $i++) {
+            for (; $bestSchedule->getFitness() != 1.0 && $i <= $parameters->numberOfGenerations; $i++) {
                 $population = $ga->evolve($population);
                 $bestSchedule = $population->getFittest();
 

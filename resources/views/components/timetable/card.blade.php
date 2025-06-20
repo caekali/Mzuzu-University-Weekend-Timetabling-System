@@ -11,21 +11,30 @@
         'Sunday' => 'border-gray-500',
     ];
 
-    $borderColor = $dayColors[$scheduleEntry->day] ?? 'border-gray-300';
+    $borderColor = $dayColors[$scheduleEntry['day']] ?? 'border-gray-300';
 @endphp
 
 <div
     class=" bg-amber-700 p-4 rounded-lg shadow-md flex flex-col gap-2 w-full border-l-8 {{ $borderColor }} transition hover:shadow-md bg-white dark:bg-gray-800">
     <div class="flex gap-2 items-center">
         <x-lucide-notebook class="h-5 w-5 text-gray-900 dark:text-white" />
-        <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $scheduleEntry->course->code}} - {{ $scheduleEntry->course->name}}</p>
+        <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $scheduleEntry['course_code'] }} -
+            {{ $scheduleEntry['course_name'] }}</p>
     </div>
+    @if (session('current_role') == 'Student')
+        <div class="flex gap-2 items-center">
+            <x-lucide-user class="h-5 w-5 text-gray-900 dark:text-white" />
+            <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $scheduleEntry['lecturer'] }}</p>
+        </div>
+    @endif
+
     <div class="flex gap-2 items-center">
         <x-lucide-map-pin class="h-5 w-5 text-gray-900 dark:text-white" />
-        <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $scheduleEntry->venue->name }}</p>
+        <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $scheduleEntry['venue'] }}</p>
     </div>
     <div class="flex gap-2 items-center">
         <x-lucide-clock class="h-5 w-5 text-gray-900 dark:text-white" />
-        <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $scheduleEntry->start_time }} - {{ $scheduleEntry->end_time }}</p>
+        <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $scheduleEntry['start_time'] }} -
+            {{ $scheduleEntry['end_time'] }}</p>
     </div>
 </div>

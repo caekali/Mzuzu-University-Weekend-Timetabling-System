@@ -15,7 +15,7 @@
     @livewireStyles
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
     <div class="flex h-screen" x-data="{ sidebarOpen: false }">
         <div x-show="sidebarOpen" @click="sidebarOpen = false"
             class="fixed inset-0 z-20 bg-black bg-opacity-50 transition-opacity md:hidden" x-cloak></div>
