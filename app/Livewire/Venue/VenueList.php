@@ -17,7 +17,6 @@ class VenueList extends Component
     public $headers  = [
         'name' => 'Name',
         'capacity' => 'Capacity',
-        'is_lab' => 'Type',
     ];
 
     public function openModal($id = null)

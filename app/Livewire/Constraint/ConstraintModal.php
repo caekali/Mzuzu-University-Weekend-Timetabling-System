@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Constraint;
 
 use App\Livewire\Forms\ConstraintForm;
 use App\Models\Constraint;
@@ -17,12 +17,12 @@ class ConstraintModal extends Component
     public $constraintable_type = 'lecturer';
     public $constraintable_resources = [];
 
-    public function openModal($id = null)
+    public function openModal($id = null, $type)
     {
         // reset prev form
         $this->form->reset();
         $this->form->resetErrorBag();
-
+        $this->constraintable_type = $type;
         if ($this->constraintable_type == 'lecturer') {
             $this->constraintable_resources = Lecturer::with('user')->get()->map(function ($lecturer) {
                 return [
@@ -32,7 +32,7 @@ class ConstraintModal extends Component
             });
             $this->form->constraintable_type = 'lecturer';
         }
-
+        
         if ($this->constraintable_type == 'venue') {
             $this->constraintable_resources = Venue::all()->map(function ($venue) {
                 return [
@@ -69,6 +69,6 @@ class ConstraintModal extends Component
 
     public function render()
     {
-        return view('livewire.constraint-modal');
+        return view('livewire.constraint.constraint-modal');
     }
 }

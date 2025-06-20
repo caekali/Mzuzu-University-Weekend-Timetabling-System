@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\ScheduleDay;
 use App\Models\Setting;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use WireUi\Traits\WireUiActions;
 
@@ -14,12 +15,20 @@ class Settings extends Component
 {
     use WireUiActions;
 
+    #[Validate('required|integer|min:0')]
     public $slot_duration;
+
+    #[Validate('required|integer|min:0')]
     public $break_duration;
+
     public $scheduleDays = [];
+
     public array $originalScheduleDays = [];
+
     public $hasUnsavedChanges;
+
     public int $originalSlotDuration;
+
     public int $originalBreakDuration;
 
     public function mount()
@@ -89,15 +98,14 @@ class Settings extends Component
         $this->checkForChanges();
     }
 
-    public function formatDuration(int $minutes): string
+    public function formatDuration($minutes): string
     {
-        $hours = intdiv($minutes, 60);
+        $hours = intdiv(intval($minutes) ?? 0, 60);
         $mins = $minutes % 60;
 
         if ($hours > 0) {
             return $mins > 0 ? "{$hours}h {$mins}m" : "{$hours}h";
         }
-
         return "{$mins}m";
     }
 

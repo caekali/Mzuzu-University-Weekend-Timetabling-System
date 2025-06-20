@@ -6,10 +6,9 @@ use App\Models\Course;
 use App\Models\Department;
 use App\Models\Programme;
 use App\Models\Student;
-use App\Models\User;
 use Livewire\Component;
 
-class AdminPanel extends Component
+class DepartmentHeadPanel extends Component
 {
     public  $stats = [];
 
@@ -17,19 +16,14 @@ class AdminPanel extends Component
     {
         $this->stats = [
             [
-                'title' => 'Total Users',
-                'value' => User::count(),
+                'title' => 'Total Students',
+                'value' => Student::count(),
                 'icon' => 'users',
             ],
             [
                 'title' => 'Total Courses',
                 'value' => Course::count(),
                 'icon' => 'book-open',
-            ],
-            [
-                'title' => 'Departments',
-                'value' => Department::count(),
-                'icon' => 'building',
             ],
             [
                 'title' => 'Programmes',
@@ -39,8 +33,9 @@ class AdminPanel extends Component
         ];
     }
 
+
     public function render()
     {
-        return view('livewire.dashboard.admin-panel');
+        return view('livewire.dashboard.department-head-panel');
     }
 }

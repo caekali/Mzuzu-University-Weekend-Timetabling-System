@@ -3,24 +3,6 @@
         <div class="flex items-center">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
         </div>
-
-
-        @if ($hasUnsavedChanges)
-            <div class="flex items-center space-x-3">
-                <span class="text-sm text-amber-600 dark:text-amber-400 font-medium">
-                    You have unsaved changes
-                </span>
-                <button onClick={handleReset}
-                    class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200">
-                    <RotateCcw class="h-4 w-4 mr-2" />
-                    Reset
-                </button>
-                <button onClick={handleSave} class="btn-primary">
-                    <Save class="h-4 w-4 mr-2" />
-                    Save Changes
-                </button>
-            </div>
-        @endif
     </div>
 
     <div class="space-y-6 ">
@@ -85,6 +67,7 @@
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-4">
                                 <label class="flex items-center">
+
                                     <input type="checkbox" wire:change="toggleDay({{ $day['id'] }})"
                                         @checked($day['enabled'])
                                         class="rounded border-gray-300 dark:border-gray-600 text-green-600 dark:text-green-400 focus:ring-green-500 dark:focus:ring-green-400 bg-white dark:bg-gray-800" />
@@ -101,13 +84,13 @@
                                         <label class="text-xs text-gray-600 dark:text-gray-400">Start:</label>
                                         <x-time-picker military-time
                                             wire:change="updateTime({{ $day['id'] }}, 'startTime', $event.target.value)"
-                                            value="{{ $day['start_time'] }}"  without-seconds />
+                                            value="{{ $day['start_time'] }}" without-seconds />
                                     </div>
                                     <div class="flex items-center space-x-2">
                                         <label class="text-xs text-gray-600 dark:text-gray-400">End:</label>
                                         <x-time-picker military-time
                                             wire:change="updateTime({{ $day['id'] }}, 'endTime', $event.target.value)"
-                                            value="{{ $day['end_time'] }}" class="max-w-[140px]" without-seconds  />
+                                            value="{{ $day['end_time'] }}" class="max-w-[140px]" without-seconds />
                                     </div>
                                     <div class="text-xs text-gray-600 dark:text-gray-400 min-w-[80px] text-right">
                                         {{ $this->calculateTotalSlots($day) }} slots

@@ -13,19 +13,25 @@ class LecturerPanel extends Component
 
     public function mount()
     {
-        $this->toscheduleDayEntries = ScheduleEntry::with(['course', 'lecturer.user', 'venue'])
-            ->when(
-                Auth::user()->lecturer,
-                fn($query) =>
-                $query->where('lecturer_id', Auth::user()->lecturer->id)
-            )
-            ->when(
-                Auth::user()->student,
-                fn($query) =>
-                $query->where('programme_id', Auth::user()->student->programme_id)
-            )
+        $entries = ScheduleEntry::with(['course', 'lecturer.user', 'venue'])
+            ->when(Auth::user()->lecturer, function ($query) {
+                return $query->where('lecturer_id', Auth::user()->lecturer->id);
+            })
+            ->when(Auth::user()->student, function ($query) {
+                return $query->where('programme_id', Auth::user()->student->programme_id);
+            })
             ->where('day', now()->format('l'))
             ->get();
+
+        $this->toscheduleDayEntries = $entries->groupBy(function ($entry) {
+            return implode('-', [
+                $entry->lecturer_id,
+                $entry->level,
+                $entry->course_id,
+                $entry->start_time,
+                $entry->end_time,
+            ]);
+        })->first();
     }
 
     public function render()

@@ -122,39 +122,39 @@
 
     {{-- quick actions --}}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <a href="{{ route('departments') }}"
+        <a href="{{ route('programmes') }}"
             class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm hover:shadow-md dark:hover:shadow-lg transition-all duration-200 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center mb-2">
                 <div class="p-2 bg-green-50 dark:bg-green-900/50 rounded-lg">
                     <x-lucide-building class="h-6 w-6 text-green-900 dark:text-green-400" />
                 </div>
-                <h3 class="ml-3 text-lg font-medium text-gray-900 dark:text-white">Departments</h3>
+                <h3 class="ml-3 text-lg font-medium text-gray-900 dark:text-white">Programmes</h3>
             </div>
-            <p class="text-gray-600 dark:text-gray-400 text-sm">Manage academic departments</p>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Manage academic programmes</p>
         </a>
 
 
-        <a href="{{ route('users') }}"
+        <a href="{{ route('courses') }}"
             class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm hover:shadow-md dark:hover:shadow-lg transition-all duration-200 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center mb-2">
                 <div class="p-2 bg-green-50 dark:bg-green-900/50 rounded-lg">
                     <x-lucide-users class="h-6 w-6 text-green-900 dark:text-green-400" />
                 </div>
-                <h3 class="ml-3 text-lg font-medium text-gray-900 dark:text-white">User Management</h3>
+                <h3 class="ml-3 text-lg font-medium text-gray-900 dark:text-white">Courses</h3>
             </div>
-            <p class="text-gray-600 dark:text-gray-400 text-sm">Manage system users and roles</p>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Manage department courses</p>
         </a>
 
 
-        <a href="{{ route('venues') }}"
+        <a href="{{ route('course-allocations') }}"
             class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm hover:shadow-md dark:hover:shadow-lg transition-all duration-200 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center mb-2">
                 <div class="p-2 bg-green-50 dark:bg-green-900/50 rounded-lg">
                     <x-lucide-map-pin class="h-6 w-6 text-green-900 dark:text-green-400" />
                 </div>
-                <h3 class="ml-3 text-lg font-medium text-gray-900 dark:text-white">Venues</h3>
+                <h3 class="ml-3 text-lg font-medium text-gray-900 dark:text-white">Course Allocation</h3>
             </div>
-            <p class="text-gray-600 dark:text-gray-400 text-sm">Manage teaching venues and facilities</p>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Allocate course to lecturer</p>
         </a>
     </div>
 </div>

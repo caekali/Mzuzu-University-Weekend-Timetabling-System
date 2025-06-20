@@ -8,6 +8,8 @@ use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\RequestActivationLink;
 use App\Livewire\Auth\ResetPassword;
+use App\Livewire\Constraint\LecturerConstraints;
+use App\Livewire\Constraint\VenueConstraints;
 use App\Livewire\ConstraintList;
 use App\Livewire\Course\CourseList;
 use App\Livewire\CourseAllocation\CourseAllocation;
@@ -46,7 +48,11 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/profile/setup', ProfileSetup::class)->name('profile.setup');
+});
 
+
+Route::middleware(['auth', 'profile.setup'])->group(function () {
     Route::post('/logout', function (Request $request) {
         Auth::logout();
         $request->session()->invalidate();
@@ -54,24 +60,23 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('login');
     })->name('logout');
 
-    Route::get('/profile/setup', ProfileSetup::class)->name('profile.setup');
-});
-
-
-Route::middleware(['auth', 'profile.setup'])->group(function () {
     Route::get('/profile', Profile::class)->name('profile');
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    Route::get('/timetable', Timetable::class)->name('timetable');
+});
+
+Route::middleware(['auth', 'role:HOD'])->group(function () {
+    Route::get('/courses', CourseList::class)->name('courses');
+    Route::get('/programmes', ProgrammeList::class)->name('programmes');
+    Route::get('/course-allocations', CourseAllocation::class)->name('course-allocations');
+    Route::get('/lecturers/constraints', LecturerConstraints::class)->name('lecturer.constraints');
 });
 
 Route::middleware(['auth', 'role:Admin'])->group(function () {
-    Route::get('/courses', CourseList::class)->name('courses');
     Route::get('/departments', DepartmentList::class)->name('departments');
-    Route::get('/programmes', ProgrammeList::class)->name('programmes');
     Route::get('/venues', VenueList::class)->name('venues');
     Route::get('/users', UserList::class)->name('users');
-    Route::get('/timetable', Timetable::class)->name('timetable');
     Route::get('/settings', Settings::class)->name('settings');
     Route::get('/timetable/generate', GenerateTimetable::class)->name('timetable.generate');
-    Route::get('/course-allocations', CourseAllocation::class)->name('course-allocations');
-    Route::get('/constraints',ConstraintList::class)->name('constraints');
+    Route::get('/venues/constraints', VenueConstraints::class)->name('venue.constraints');
 });

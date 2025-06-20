@@ -1,23 +1,21 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Constraint;
 
 use App\Models\Constraint;
-use App\Models\Venue;
+use App\Models\Lecturer;
 use Carbon\Carbon;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use WireUi\Traits\WireUiActions;
 
-class ConstraintList extends Component
+class LecturerConstraints extends Component
 {
-
     use WireUiActions;
     public $constraints = [];
-
     public $headers = [
         'id' => 'ID',
-        'name' => 'name',
+        'lecturer' => 'Lecturer',
         'day' => 'Day',
         'time' => 'time',
         'type' => 'Type',
@@ -26,10 +24,13 @@ class ConstraintList extends Component
 
     public function mount()
     {
+
         $this->constraints = Constraint::with('constraintable')
-            ->where('constraintable_type', Venue::class)
+            ->where('constraintable_type', Lecturer::class)
             ->get()
             ->map(function ($constraint) {
+
+
                 return [
                     'id' => $constraint->id,
                     'day' => $constraint->day,
@@ -37,14 +38,14 @@ class ConstraintList extends Component
                         Carbon::parse($constraint->end_time)->format('H:i'),
                     'type' => $constraint->type,
                     'is_hard' => $constraint->is_hard ? 'Yes' : 'No',
-                    'name' => optional($constraint->constraintable)->name, // safeguard
+                    'lecturer' => $constraint->constraintable->user->first_name . ' ' . $constraint->constraintable->user->last_name,
                 ];
             });
     }
 
     public function openModal($id = null)
     {
-        $this->dispatch('openModal', $id)->to('constraint-modal');
+        $this->dispatch('openModal', $id, 'lecturer')->to('constraint.constraint-modal');
     }
 
     public function confirmDelete($id)
@@ -81,6 +82,6 @@ class ConstraintList extends Component
 
     public function render()
     {
-        return view('livewire.constraint-list');
+        return view('livewire.constraint.lecturer-constraints');
     }
 }
