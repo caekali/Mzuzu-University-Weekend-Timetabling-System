@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\DTO\GAParameterDTO;
 use App\Models\ScheduleEntry;
+use App\Models\ScheduleVersion;
 use App\Services\GeneticAlgorithm\GADataLoaderService;
 use App\Services\GeneticAlgorithm\GeneticAlgorithm;
 use Illuminate\Bus\Queueable;
@@ -17,8 +18,11 @@ use Illuminate\Support\Facades\DB;
 class RunScheduleGeneration implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    public function __construct() {}
+    private $versionLabel;
+    public function __construct($versionLabel)
+    {
+        $this->versionLabel = $versionLabel;
+    }
 
     public function handle(): void
     {
@@ -58,23 +62,29 @@ class RunScheduleGeneration implements ShouldQueue
             $entries = $bestSchedule->getScheduleEntries();
             DB::beginTransaction();
             try {
-                DB::table('schedule_entries')->truncate();
+                $scheduleVersion = ScheduleVersion::create([
+                    'label' => $this->versionLabel,
+                    'generated_at' => now(),
+                ]);
+                
                 foreach ($entries as $entry) {
                     foreach ($entry->timeSlots as $slot) {
                         foreach ($entry->programmes as $programme) {
                             ScheduleEntry::create([
-                                'course_id'    => $entry->course->id,
-                                'venue_id'     => $entry->venue->id,
-                                'lecturer_id'  => $entry->lecturer,
-                                'level'        => $entry->level,
-                                'programme_id' => $programme,
-                                'day'          => $slot['day'],
-                                'start_time'   => $slot['start'],
-                                'end_time'     => $slot['end'],
+                                'schedule_version_id' => $scheduleVersion->id,
+                                'course_id'           => $entry->course->id,
+                                'venue_id'            => $entry->venue->id,
+                                'lecturer_id'         => $entry->lecturer,
+                                'level'               => $entry->level,
+                                'programme_id'        => $programme,
+                                'day'                 => $slot['day'],
+                                'start_time'          => $slot['start'],
+                                'end_time'            => $slot['end'],
                             ]);
                         }
                     }
                 }
+
                 DB::commit();
             } catch (\Throwable $e) {
                 DB::rollBack();

@@ -1,23 +1,30 @@
 <div class="py-6">
     <div x-data="{ showFilters: true }">
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Full Weekly Timetable</h1>
-            {{-- <x-button @click="showFilters = !showFilters">
-                <x-slot:prepend>
-                    <x-lucide-filter class="h-4 w-4 mr-1" />
-                </x-slot:prepend>
-                Filters
-            </x-button> --}}
 
+            @if (session('current_role') === 'Admin')
+                <div class="flex flex-col sm:flex-row   gap-2 sm:items-end">
+                    <x-select label="Version" placeholder="Select version" :options="$scheduleVersions" option-label="label"
+                        option-value="id" wire:model.live="selectedVersionId" class="min-w-[200px]" />
+                    <x-button label="Publish" wire:click="publishSelectedVersion" :disabled="!$selectedVersionId"
+                        class="whitespace-nowrap">
+                        <x-slot:prepend>
+                            <x-lucide-upload class="h-4 w-4 mr-2" />
+                        </x-slot:prepend>
+                    </x-button>
+                </div>
+            @endif
         </div>
+
+        {{-- <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Full Weekly Timetable</h1>
+        </div> --}}
         <div x-show="showFilters" x-cloak
             class="bg-white dark:bg-gray-800  border border-gray-200 dark:border-gray-700 transition-colors duration-200 rounded-lg shadow-sm p-6 mb-6">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-medium text-gray-900 dark:text-white">Filters</h2>
-                {{-- <button @click="showFilters = false">
-                    <x-lucide-x
-                        class="h-5 w-5 text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-600" />
-                </button> --}}
+
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <x-select label="Programme" placeholder="Select programme" :options="$programmes"

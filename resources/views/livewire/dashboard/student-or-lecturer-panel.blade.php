@@ -24,23 +24,30 @@
     </div>
 
     <h3 class="text-lg font-semibold text-gray-800 mb-3 dark:text-white">Today's Schedules</h3>
+    @if ($publishedVersion)
+        @if ($toscheduleDayEntries && count($toscheduleDayEntries) > 0)
+            <!-- Scrollable container takes remaining height -->
+            <div class="flex-1 overflow-y-auto space-y-4">
+                @foreach ($toscheduleDayEntries as $scheduleEntry)
+                    <x-timetable.card :scheduleEntry="$scheduleEntry" />
+                @endforeach
+            </div>
+        @else
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-4">
+                <p class="text-gray-600 dark:text-white">You have no scheduled classes today.</p>
+            </div>
+        @endif
 
-    @if ($toscheduleDayEntries && count($toscheduleDayEntries) > 0)
-        <!-- Scrollable container takes remaining height -->
-        <div class="flex-1 overflow-y-auto space-y-4">
-            @foreach ($toscheduleDayEntries as $scheduleEntry)
-                <x-timetable.card :scheduleEntry="$scheduleEntry" />
-            @endforeach
+        <div class=" bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mt-6">
+            <a href="{{ route('my.timetable') }}" class="text-green-600 font-medium hover:underline">
+                View Full Weekly Schedule →
+            </a>
         </div>
     @else
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-4">
-            <p class="text-gray-600 dark:text-white">You have no scheduled classes today.</p>
+            <p class="text-gray-600 dark:text-white">Timetable has not been published yet.</p>
         </div>
     @endif
 
-    <div class=" bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mt-6">
-        <a href="{{ route('my.timetable') }}" class="text-green-600 font-medium hover:underline">
-            View Full Weekly Schedule →
-        </a>
-    </div>
+
 </div>

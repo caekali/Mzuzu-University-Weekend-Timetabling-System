@@ -73,11 +73,22 @@
             @endif
             <div class="flex flex-col sm:flex-row gap-3 pt-4">
                 <x-button icon="cpu-chip" class="w-48" :label="$progress > 0 && $progress < 100 && !$isDone ? 'Generating...' : 'Generate Timetable'"
-                    :disabled="$progress > 0 && $progress < 100 && !$isDone" wire:click="startGeneration"
+                    :disabled="$progress > 0 && $progress < 100 && !$isDone" x-on:click="$openModal('showVersionModal')"
                     wire:loading.attr="disabled" />
                 <x-button href="{{ route('full.timetable') }}" outline icon="calendar" label="View Current Timetable" />
             </div>
         </div>
-
     </div>
+
+    <x-modal-card title="Label Your Timetable Version" name="showVersionModal">
+        <div class="space-y-4">
+            <x-input label="Version Label" wire:model.live="versionLabel" placeholder="e.g. First Draft" />
+        </div>
+        <x-slot name="footer" class="flex justify-end gap-x-4">
+            <div class="flex gap-x-4">
+                <x-button flat label="Cancel" x-on:click="close" />
+                <x-button primary label="Save" wire:click="confirmGeneration" />
+            </div>
+        </x-slot>
+    </x-modal-card>
 </div>

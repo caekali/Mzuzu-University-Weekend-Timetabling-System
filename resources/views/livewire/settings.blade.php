@@ -86,18 +86,18 @@
                             </div>
 
                             @if ($day['enabled'])
-                                <div class="flex items-center space-x-4">
+                                <div class="flex items-center space-x-4 ">
                                     <div class="flex items-center space-x-2">
                                         <label class="text-xs text-gray-600 dark:text-gray-400">Start:</label>
                                         <x-time-picker military-time
                                             wire:change="updateTime({{ $day['id'] }}, 'startTime', $event.target.value)"
-                                            value="{{ $day['start_time'] }}" without-seconds />
+                                            value="{{ $day['start_time'] }}" without-seconds  class="min-w-[180px]"/>
                                     </div>
                                     <div class="flex items-center space-x-2">
                                         <label class="text-xs text-gray-600 dark:text-gray-400">End:</label>
                                         <x-time-picker military-time
                                             wire:change="updateTime({{ $day['id'] }}, 'endTime', $event.target.value)"
-                                            value="{{ $day['end_time'] }}" class="max-w-[140px]" without-seconds />
+                                            value="{{ $day['end_time'] }}"  without-seconds />
                                     </div>
                                     <div class="text-xs text-gray-600 dark:text-gray-400 min-w-[80px] text-right">
                                         {{ $this->calculateTotalSlots($day) }} slots

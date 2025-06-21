@@ -12,6 +12,7 @@ class ScheduleEntry extends Model
     use HasFactory;
 
     protected $fillable = [
+        'schedule_version_id',
         'level',
         'day',
         'start_time',
@@ -23,6 +24,11 @@ class ScheduleEntry extends Model
         'venue_id'
     ];
 
+    
+public function scheduleVersion()
+{
+    return $this->belongsTo(ScheduleVersion::class);
+}
     public function course() : BelongsTo
     {
         return $this->belongsTo(Course::class);

@@ -6,6 +6,7 @@ use App\Jobs\RunScheduleGeneration;
 use App\Livewire\Forms\GAParametersForm;
 use App\Models\GAParameter;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use WireUi\Traits\WireUiActions;
 
@@ -18,6 +19,11 @@ class GenerateTimetable extends Component
     public $currentFitness = 0.0;
     public $isDone = false;
     public bool $isPolling = false;
+
+    public bool $showVersionDialog = false;
+
+    #[Validate('required|string|unique:schedule_versions,label')]
+    public string $versionLabel = '';
 
     public GAParametersForm $form;
     public array $originalData = [];
@@ -58,6 +64,23 @@ class GenerateTimetable extends Component
         return $this->getCurrentFormData() !== $this->originalData;
     }
 
+    public function confirmGeneration()
+    {
+        if (trim($this->versionLabel) === '') {
+            $this->modal()->close('showVersionModal');
+
+            $this->notification()->error(
+                'Label',
+                'Schedule version label is missing'
+            );
+            return;
+        }
+
+        $this->modal()->close('showVersionModal');
+        $this->startGeneration();
+    }
+
+
     public function startGeneration()
     {
         Cache::forget('schedule_generation_progress');
@@ -65,7 +88,7 @@ class GenerateTimetable extends Component
         $this->currentFitness =  0;
         $this->progress = 0;
         $this->isDone = false;
-        RunScheduleGeneration::dispatch();
+        RunScheduleGeneration::dispatch($this->versionLabel);
         $this->isPolling = true;
     }
     public function pollProgress()

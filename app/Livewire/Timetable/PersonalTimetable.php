@@ -4,6 +4,7 @@ namespace App\Livewire\Timetable;
 
 use App\Models\ScheduleDay;
 use App\Models\ScheduleEntry;
+use App\Models\ScheduleVersion;
 use Carbon\Carbon;
 use Livewire\Component;
 
@@ -12,6 +13,7 @@ class PersonalTimetable extends Component
     public $days = [];
     public $entries = [];
     public $timeSlots = [];
+    public $publishedVersion = null;
 
     public function mount()
     {
@@ -28,27 +30,32 @@ class PersonalTimetable extends Component
             ];
             $start->addHour();
         }
+
+        $this->publishedVersion = ScheduleVersion::published()->first();
         $this->loadEntries();
     }
 
     public function loadEntries()
     {
-        $query = ScheduleEntry::with(['course', 'lecturer.user', 'venue']);
+        if ($this->publishedVersion) { // only load when there is timetable published
+            $query = $this->publishedVersion->entries()->with(['course', 'venue', 'lecturer']);
+            $current_role = session('current_role');
 
-        $current_role = session('current_role');
-       
-        if ($current_role == 'Student') {
-            $student = auth()->user()->student;
-            $query->where('level', $student->level);
-            $query->where('programme_id', $student->programme_id);
-        } elseif ($current_role == 'Lecturer') {
-            $lecturer = auth()->user()->lecturer;
-            $query->where('lecturer_id', $lecturer->id);
+            if ($current_role == 'Student') {
+                $student = auth()->user()->student;
+                $query->where('level', $student->level)
+                    ->where('programme_id', $student->programme_id);
+            } elseif ($current_role == 'Lecturer') {
+                $lecturer = auth()->user()->lecturer;
+                $query->where('lecturer_id', $lecturer->id);
+            } else {
+                abort(401);
+            }
+
+            $this->entries = $query->get();
         } else {
-            abort(401);
+            $this->entries = collect();
         }
-        $this->entries = $query->get();
-
     }
 
     public function render()

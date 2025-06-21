@@ -5,16 +5,20 @@ namespace App\Livewire\Timetable;
 use App\Models\ScheduleDay;
 use App\Models\Lecturer;
 use App\Models\Programme;
-use App\Models\ScheduleEntry;
+use App\Models\ScheduleVersion;
+use App\Models\User;
 use App\Models\Venue;
-use App\Services\GeneticAlgorithm\GADataLoaderService;
+use App\Notifications\TimetablePublished;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use WireUi\Traits\WireUiActions;
 
 class FullTimetable extends Component
 {
+
+    use WireUiActions;
 
     public $entries = [];
 
@@ -38,8 +42,16 @@ class FullTimetable extends Component
 
     public $venues;
 
+    public $publishedVersion;
+
+    public int|null $selectedVersionId = null;
+
+    public $scheduleVersions = [];
+
     public function mount()
     {
+        $this->scheduleVersions = ScheduleVersion::all();
+
         $this->days = ScheduleDay::where('enabled', true)->pluck('name')->toArray();
 
         $start = Carbon::createFromTime(7, 45);
@@ -77,6 +89,8 @@ class FullTimetable extends Component
             ];
         });
 
+        $this->publishedVersion = ScheduleVersion::published()->first();
+
         $this->loadEntries();
     }
 
@@ -100,40 +114,76 @@ class FullTimetable extends Component
         $this->loadEntries();
     }
 
-
-public function loadEntries()
-{
-    // Exit early if no filters are selected
-    if (
-        !$this->selectedLevel &&
-        !$this->selectedLecturer &&
-        !$this->selectedVenue &&
-        !$this->selectedProgramme
-    ) {
-        $this->entries = collect(); // empty collection
-        return;
+    public function updatedSelectedVersionId()
+    {
+        $this->loadEntries();
     }
 
-    $query = ScheduleEntry::with(['course', 'lecturer.user', 'venue']);
+    // public function loadEntries()
+    // {
+    //     // Exit early if no filters are selected
+    //     if (
+    //         !$this->selectedLevel &&
+    //         !$this->selectedLecturer &&
+    //         !$this->selectedVenue &&
+    //         !$this->selectedProgramme
+    //     ) {
+    //         $this->entries = collect();
+    //         return;
+    //     }
 
-    if ($this->selectedLevel) {
-        $query->where('level', $this->selectedLevel);
+    //     $query = ScheduleEntry::with(['course', 'lecturer.user', 'venue']);
+
+    //     if ($this->selectedLevel) {
+    //         $query->where('level', $this->selectedLevel);
+    //     }
+
+    //     if ($this->selectedLecturer) {
+    //         $query->where('lecturer_id', $this->selectedLecturer);
+    //     }
+
+    //     if ($this->selectedVenue) {
+    //         $query->where('venue_id', $this->selectedVenue);
+    //     }
+
+    //     if ($this->selectedProgramme) {
+    //         $query->where('programme_id', $this->selectedProgramme);
+    //     }
+
+    //     $this->entries = $query->get();
+    // }
+    public function loadEntries()
+    {
+        // If no version is selected, fallback to published version
+        $version = $this->selectedVersionId
+            ? ScheduleVersion::find($this->selectedVersionId)
+            : $this->publishedVersion;
+
+        if (!$version) {
+            $this->entries = collect();
+            return;
+        }
+
+        $query = $version->entries()->with(['course', 'lecturer.user', 'venue']);
+
+        if ($this->selectedLevel) {
+            $query->where('level', $this->selectedLevel);
+        }
+
+        if ($this->selectedLecturer) {
+            $query->where('lecturer_id', $this->selectedLecturer);
+        }
+
+        if ($this->selectedVenue) {
+            $query->where('venue_id', $this->selectedVenue);
+        }
+
+        if ($this->selectedProgramme) {
+            $query->where('programme_id', $this->selectedProgramme);
+        }
+
+        $this->entries = $query->get();
     }
-
-    if ($this->selectedLecturer) {
-        $query->where('lecturer_id', $this->selectedLecturer);
-    }
-
-    if ($this->selectedVenue) {
-        $query->where('venue_id', $this->selectedVenue);
-    }
-
-    if ($this->selectedProgramme) {
-        $query->where('programme_id', $this->selectedProgramme);
-    }
-
-    $this->entries = $query->get();
-}
 
 
     #[On('refresh-list')]
@@ -145,6 +195,37 @@ public function loadEntries()
     public function openModal($id = null, $day = null, $startTime = null, $endTime = null)
     {
         $this->dispatch('openModal', $id, $day, $startTime, $endTime)->to('timetable.schedule-modal');
+    }
+
+
+    public function publishSelectedVersion()
+    {
+        $this->validate([
+            'selectedVersionId' => 'required|exists:schedule_versions,id',
+        ]);
+
+        DB::transaction(function () {
+            // ScheduleVersion::where('is_published', true)->update(['is_published' => false]);
+            // ScheduleVersion::where('id', $this->selectedVersionId)->update(['is_published' => true]);
+
+            ScheduleVersion::where('is_published', true)->update(['is_published' => false]);
+            $version = ScheduleVersion::find($this->selectedVersionId);
+            $version->is_published = true;
+            $version->save();
+
+
+            $users = User::all();
+            foreach ($users as $user) {
+                $user->notify(new TimetablePublished($version->label));
+            }
+        });
+
+
+        $this->notification()->success(
+            'Version Published',
+            'The selected version has been published successfully.',
+            'check'
+        );
     }
     public function render()
     {

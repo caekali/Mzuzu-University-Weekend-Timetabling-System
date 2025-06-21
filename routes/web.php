@@ -29,7 +29,6 @@ use App\Models\ScheduleEntry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-Route::get('/switch-role/{role}', [RoleSwitchController::class, 'switch'])->name('auth.switch-role');
 Route::get('/test', function () {
     $entries = ScheduleEntry::with(['course', 'venue', 'lecturer.user'])
         ->orderBy('start_time')
