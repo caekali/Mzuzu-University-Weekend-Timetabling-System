@@ -38,7 +38,6 @@ class PersonalTimetable extends Component
         $current_role = session('current_role');
        
         if ($current_role == 'Student') {
-         
             $student = auth()->user()->student;
             $query->where('level', $student->level);
             $query->where('programme_id', $student->programme_id);
@@ -49,6 +48,7 @@ class PersonalTimetable extends Component
             abort(401);
         }
         $this->entries = $query->get();
+
     }
 
     public function render()

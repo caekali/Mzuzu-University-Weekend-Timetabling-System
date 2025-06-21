@@ -22,6 +22,9 @@ class StudentOrLecturerPanel extends Component
                 Auth::user()->student,
                 fn($query) =>
                 $query->where('programme_id', Auth::user()->student->programme_id)
+                    ->where('level', Auth::user()->student->level)
+
+
             )
             ->where('day', now()->format('l'))
             ->orderBy('start_time')
