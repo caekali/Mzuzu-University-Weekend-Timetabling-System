@@ -25,7 +25,10 @@ module.exports = {
       colors: {
         primary: colors.green,
         secondary: colors.slate,
-      }
+      },
+  maxHeight: {
+        'screen-minus-header': 'calc(100vh - 5rem)',
+    }
     },
   },
 

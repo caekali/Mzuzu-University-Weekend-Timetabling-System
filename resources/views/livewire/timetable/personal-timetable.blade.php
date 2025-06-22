@@ -11,7 +11,6 @@
     <div
         class="bg-white dark:bg-gray-800  border border-gray-200 dark:border-gray-700 transition-colors duration-200
  rounded-lg shadow-sm p-2 md:p-6 overflow-x-auto">
-
         <div class="min-w-full overflow-x-auto">
             <table
                 class="min-w-full divide-y divide-gray-200 border border-gray-200 dark:border-gray-700 dark:divide-gray-700">
@@ -46,26 +45,26 @@
                                 <td class="border dark:border-gray-700 px-1 md:px-2 py-1 md:py-2 align-top w-40">
                                     @php
                                         $cellEntries = $entries->filter(function ($entry) use ($day, $slot) {
-                                            return $entry->day === $day && $entry->start_time === $slot['start'];
+                                            return $entry['day'] === $day && $entry['start_time'] === $slot['start'];
                                         });
                                     @endphp
 
                                     @if ($cellEntries->isNotEmpty())
                                         @foreach ($cellEntries as $entry)
                                             <div class="bg-green-100 rounded p-1 mb-1 w-full min-h-[80px]">
-                                                <div
-                                                    wire:click="openModal({{ $entry->id }}, '{{ $day }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')">
+                                                <div>
                                                     <div class="font-bold flex items-center gap-2">
                                                         <x-lucide-book-open class="w-3 h-3" />
-                                                        <span>{{ $entry->course->code }}</span>
+                                                        <span>{{ $entry['course_code'] }} - {{ $entry['course_name'] }}
+                                                        </span>
                                                     </div>
                                                     <div class="text-gray-700 flex items-center gap-2">
                                                         <x-lucide-user class="w-3 h-3" />
-                                                        <span>{{ $entry->lecturer->user->first_name . ' ' . $entry->lecturer->user->last_name }}</span>
+                                                        <span>{{ $entry['lecturer'] }}</span>
                                                     </div>
                                                     <div class="text-gray-600 flex items-center gap-2">
                                                         <x-lucide-map-pin class="w-3 h-3" />
-                                                        <span>{{ $entry->venue->name }}</span>
+                                                        <span>{{ $entry['venue'] }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -78,7 +77,6 @@
                             @endforeach
                         </tr>
                     @endforeach
-
                 </tbody>
             </table>
         </div>

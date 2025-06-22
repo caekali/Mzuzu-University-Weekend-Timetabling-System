@@ -1,48 +1,47 @@
 <div class="py-6">
-    <div x-data="{ showFilters: true }">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Full Weekly Timetable</h1>
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Full Weekly Timetable</h1>
+        @if (session('current_role') === 'Admin')
+            <div class="flex items-center gap-4">
+                @if ($selectedVersionId)
+                    <div class="text-sm text-gray-700 dark:text-gray-300">
+                        Viewing version:
+                        <span
+                            class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                            {{ \App\Models\ScheduleVersion::find($selectedVersionId)?->label ?? 'N/A' }}
+                        </span>
+                    </div>
+                @endif
+                <x-button label="Manage Versions" wire:click="$dispatch('open-version-drawer')" />
+                <livewire:timetable.version-manager-drawer />
+            </div>
 
-            @if (session('current_role') === 'Admin')
-                <div class="flex flex-col sm:flex-row   gap-2 sm:items-end">
-                    <x-select label="Version" placeholder="Select version" :options="$scheduleVersions" option-label="label"
-                        option-value="id" wire:model.live="selectedVersionId" class="min-w-[200px]" />
-                    <x-button label="Publish" wire:click="publishSelectedVersion" :disabled="!$selectedVersionId"
-                        class="whitespace-nowrap">
-                        <x-slot:prepend>
-                            <x-lucide-upload class="h-4 w-4 mr-2" />
-                        </x-slot:prepend>
-                    </x-button>
-                </div>
-            @endif
+        @endif
+
+    </div>
+
+    <div
+        class="bg-white dark:bg-gray-800  border border-gray-200 dark:border-gray-700 transition-colors duration-200 rounded-lg shadow-sm p-6 mb-6">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-medium text-gray-900 dark:text-white">Filters</h2>
         </div>
-
-        {{-- <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Full Weekly Timetable</h1>
-        </div> --}}
-        <div x-show="showFilters" x-cloak
-            class="bg-white dark:bg-gray-800  border border-gray-200 dark:border-gray-700 transition-colors duration-200 rounded-lg shadow-sm p-6 mb-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-medium text-gray-900 dark:text-white">Filters</h2>
-
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <x-select label="Programme" placeholder="Select programme" :options="$programmes"
-                    wire:model.live="selectedProgramme" option-label="name" option-value="id" />
-                <x-select label="Level" placeholder="Select level" :options="$levels" wire:model.live="selectedLevel" />
-                <x-select label="Lecturer" placeholder="Select lecturer" :options="$lecturers" option-label="name"
-                    option-value="id" wire:model.live="selectedLecturer" />
-                <x-select label="Venue" placeholder="Select venue" :options="$venues" option-label="name"
-                    option-value="id" wire:model.live="selectedVenue" />
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <x-select label="Programme" placeholder="Select programme" :options="$programmes"
+                wire:model.live="selectedProgramme" option-label="name" option-value="id" />
+            <x-select label="Level" placeholder="Select level" :options="$levels" wire:model.live="selectedLevel" />
+            <x-select label="Lecturer" placeholder="Select lecturer" :options="$lecturers" option-label="name"
+                option-value="id" wire:model.live="selectedLecturer" />
+            <x-select label="Venue" placeholder="Select venue" :options="$venues" option-label="name" option-value="id"
+                wire:model.live="selectedVenue" />
         </div>
     </div>
+
 
     <div
         class="bg-white dark:bg-gray-800  border border-gray-200 dark:border-gray-700 transition-colors duration-200
  rounded-lg shadow-sm p-2 md:p-6 overflow-x-auto">
         <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4 px-2 ">
-            Timetable - Use the filters to view timetable entries. </h2>
+            Timetable - (Compacted) </h2>
         <div class="min-w-full overflow-x-auto">
             <table
                 class="min-w-full divide-y divide-gray-200 border border-gray-200 dark:border-gray-700 dark:divide-gray-700">
@@ -88,15 +87,16 @@
                                                     wire:click="openModal({{ $entry->id }}, '{{ $day }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')">
                                                     <div class="font-bold flex items-center gap-2">
                                                         <x-lucide-book-open class="w-3 h-3" />
-                                                        <span>{{ $entry->course->code }}</span>
+                                                        <span>{{ $entry->course_code }} -
+                                                            {{ $entry->course_name }}</span>
                                                     </div>
                                                     <div class="text-gray-700 flex items-center gap-2">
                                                         <x-lucide-user class="w-3 h-3" />
-                                                        <span>{{ $entry->lecturer->user->first_name . ' ' . $entry->lecturer->user->last_name }}</span>
+                                                        <span>{{ $entry->lecturer }}</span>
                                                     </div>
                                                     <div class="text-gray-600 flex items-center gap-2">
                                                         <x-lucide-map-pin class="w-3 h-3" />
-                                                        <span>{{ $entry->venue->name }}</span>
+                                                        <span>{{ $entry->venue }}</span>
                                                     </div>
                                                 </div>
                                             </div>

@@ -3,7 +3,6 @@
 namespace App\Livewire\Timetable;
 
 use App\Models\ScheduleDay;
-use App\Models\ScheduleEntry;
 use App\Models\ScheduleVersion;
 use Carbon\Carbon;
 use Livewire\Component;
@@ -25,8 +24,8 @@ class PersonalTimetable extends Component
             $slotStart = $start->copy();
             $slotEnd = $start->copy()->addHour();
             $this->timeSlots[] = [
-                'start' => $slotStart->format('H:i:s'),
-                'end' => $slotEnd->format('H:i:s')
+                'start' => $slotStart->format('H:i'),
+                'end' => $slotEnd->format('H:i')
             ];
             $start->addHour();
         }
@@ -37,8 +36,8 @@ class PersonalTimetable extends Component
 
     public function loadEntries()
     {
-        if ($this->publishedVersion) { // only load when there is timetable published
-            $query = $this->publishedVersion->entries()->with(['course', 'venue', 'lecturer']);
+        if ($this->publishedVersion) {
+            $query = $this->publishedVersion->entries()->with(['course', 'venue', 'lecturer.user']);
             $current_role = session('current_role');
 
             if ($current_role == 'Student') {
@@ -52,7 +51,28 @@ class PersonalTimetable extends Component
                 abort(401);
             }
 
-            $this->entries = $query->get();
+            $entries = $query->get();
+
+            // group to get unique dat + lecturer_id + course +id + start_time + end_time
+            $grouped = $entries->groupBy(function ($entry) {
+                return "{$entry->day}-{$entry->lecturer_id}-{$entry->course_id}-{$entry->start_time}-{$entry->end_time}";
+            });
+
+            $filteredEntries = [];
+            foreach ($grouped as $group) {
+                $first = $group->first();
+                $filteredEntries[] = [
+                    'day' => $first->day,
+                    'start_time' => date('H:i', strtotime($first->start_time)),
+                    'end_time' => date('H:i', strtotime($first->end_time)),
+                    'level' => $first->level,
+                    'course_code' => $first->course->code ?? '',
+                    'course_name' => $first->course->name ?? '',
+                    'lecturer' => optional($first->lecturer?->user)->first_name . ' ' . optional($first->lecturer?->user)->last_name,
+                    'venue' => $first->venue->name ?? '',
+                ];
+            }
+            $this->entries = collect($filteredEntries);
         } else {
             $this->entries = collect();
         }

@@ -22,13 +22,11 @@
         <x-nav.sidebar />
         <div class="flex-1 flex-grow  overflow-y-auto">
             <x-nav.nav-bar />
-            <main
-                class=" mx-auto max-w-7xl px-4 sm:px-6  bg-gray-50 dark:bg-gray-900 p-4 transition-colors duration-200">
+            <main class=" mx-auto max-w-7xl px-4 sm:px-6  bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
                 {{ $slot }}
             </main>
         </div>
     </div>
-
     <x-modal />
     <x-notifications />
     <x-dialog />

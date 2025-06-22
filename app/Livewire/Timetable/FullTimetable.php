@@ -6,9 +6,7 @@ use App\Models\ScheduleDay;
 use App\Models\Lecturer;
 use App\Models\Programme;
 use App\Models\ScheduleVersion;
-use App\Models\User;
 use App\Models\Venue;
-use App\Notifications\TimetablePublished;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
@@ -46,12 +44,9 @@ class FullTimetable extends Component
 
     public int|null $selectedVersionId = null;
 
-    public $scheduleVersions = [];
 
     public function mount()
     {
-        $this->scheduleVersions = ScheduleVersion::all();
-
         $this->days = ScheduleDay::where('enabled', true)->pluck('name')->toArray();
 
         $start = Carbon::createFromTime(7, 45);
@@ -60,8 +55,8 @@ class FullTimetable extends Component
             $slotStart = $start->copy();
             $slotEnd = $start->copy()->addHour();
             $this->timeSlots[] = [
-                'start' => $slotStart->format('H:i:s'),
-                'end' => $slotEnd->format('H:i:s')
+                'start' => $slotStart->format('H:i'),
+                'end' => $slotEnd->format('H:i')
             ];
             $start->addHour();
         }
@@ -90,9 +85,19 @@ class FullTimetable extends Component
         });
 
         $this->publishedVersion = ScheduleVersion::published()->first();
+        $this->selectedVersionId = optional(ScheduleVersion::published()->first())->id;
+
 
         $this->loadEntries();
     }
+
+    #[On('version-selected')]
+    public function setSelectedVersion($id)
+    {
+        $this->selectedVersionId = $id;
+        $this->loadEntries();
+    }
+
 
     public function updatedSelectedLevel()
     {
@@ -154,7 +159,6 @@ class FullTimetable extends Component
     // }
     public function loadEntries()
     {
-        // If no version is selected, fallback to published version
         $version = $this->selectedVersionId
             ? ScheduleVersion::find($this->selectedVersionId)
             : $this->publishedVersion;
@@ -182,7 +186,29 @@ class FullTimetable extends Component
             $query->where('programme_id', $this->selectedProgramme);
         }
 
-        $this->entries = $query->get();
+        $entries = $query->get();
+
+        // group to get unique dat + lecturer_id + course +id + start_time + end_time
+        $grouped = $entries->groupBy(function ($entry) {
+            return "{$entry->day}-{$entry->lecturer_id}-{$entry->course_id}-{$entry->start_time}-{$entry->end_time}";
+        });
+
+        $filteredEntries = [];
+        foreach ($grouped as $group) {
+            $first = $group->first();
+            $filteredEntries[] = (object)[
+                'id' => $first->id,
+                'day' => $first->day,
+                'start_time' => date('H:i', strtotime($first->start_time)),
+                'end_time' => date('H:i', strtotime($first->end_time)),
+                'level' => $first->level,
+                'course_code' => $first->course->code ?? '',
+                'course_name' => $first->course->name ?? '',
+                'lecturer' => optional($first->lecturer?->user)->first_name . ' ' . optional($first->lecturer?->user)->last_name,
+                'venue' => $first->venue->name ?? '',
+            ];
+        }
+        $this->entries = collect($filteredEntries);
     }
 
 
@@ -197,36 +223,6 @@ class FullTimetable extends Component
         $this->dispatch('openModal', $id, $day, $startTime, $endTime)->to('timetable.schedule-modal');
     }
 
-
-    public function publishSelectedVersion()
-    {
-        $this->validate([
-            'selectedVersionId' => 'required|exists:schedule_versions,id',
-        ]);
-
-        DB::transaction(function () {
-            // ScheduleVersion::where('is_published', true)->update(['is_published' => false]);
-            // ScheduleVersion::where('id', $this->selectedVersionId)->update(['is_published' => true]);
-
-            ScheduleVersion::where('is_published', true)->update(['is_published' => false]);
-            $version = ScheduleVersion::find($this->selectedVersionId);
-            $version->is_published = true;
-            $version->save();
-
-
-            $users = User::all();
-            foreach ($users as $user) {
-                $user->notify(new TimetablePublished($version->label));
-            }
-        });
-
-
-        $this->notification()->success(
-            'Version Published',
-            'The selected version has been published successfully.',
-            'check'
-        );
-    }
     public function render()
     {
         return view('livewire.timetable.full-timetable');

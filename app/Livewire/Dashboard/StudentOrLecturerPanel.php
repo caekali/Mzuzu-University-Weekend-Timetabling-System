@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Dashboard;
 
-use App\Models\ScheduleEntry;
 use App\Models\ScheduleVersion;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -19,7 +18,7 @@ class StudentOrLecturerPanel extends Component
         $this->publishedVersion = ScheduleVersion::published()->first();
 
         if ($this->publishedVersion) {
-            $entries = ScheduleEntry::with(['course', 'lecturer.user', 'venue'])
+            $entries = $this->publishedVersion->entries()->with(['course', 'lecturer.user', 'venue'])
                 ->when(
                     Auth::user()->lecturer,
                     fn($query) =>
@@ -67,7 +66,7 @@ class StudentOrLecturerPanel extends Component
                     }
                 }
 
-                // Push last one
+                // add the last one
                 $this->toscheduleDayEntries[] = [
                     'day' => $current->day,
                     'start_time' => date('H:i', strtotime($current->start_time)),
