@@ -6,10 +6,16 @@
                 @if ($selectedVersionId)
                     <div class="text-sm text-gray-700 dark:text-gray-300">
                         Viewing version:
-                        <span
-                            class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
-                            {{ \App\Models\ScheduleVersion::find($selectedVersionId)?->label ?? 'N/A' }}
-                        </span>
+                        <x-badge primary :label="\App\Models\ScheduleVersion::find($selectedVersionId)?->label ?? 'N/A'" />
+                    </div>
+
+                    <div class="text-sm text-gray-700 dark:text-gray-300">
+                        Status:
+                        @if (\App\Models\ScheduleVersion::find($selectedVersionId)?->is_published)
+                            <x-badge primary label="Published" />
+                        @else
+                            <x-badge secondary label="Not Published" />
+                        @endif
                     </div>
                 @endif
                 <x-button label="Manage Versions" wire:click="$dispatch('open-version-drawer')" />
@@ -102,7 +108,7 @@
                                             </div>
                                         @endforeach
                                     @else
-                                        {{-- Empty cell with fixed height to preserve spacing --}}
+                                        {{-- Empty cell  to preserve spacing --}}
                                         <div class="min-h-[80px] w-36"></div>
                                     @endif
                                 </td>

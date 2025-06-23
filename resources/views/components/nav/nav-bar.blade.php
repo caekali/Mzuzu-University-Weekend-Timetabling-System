@@ -16,24 +16,21 @@
                     {{ session('current_role') }}
                 </div>
             </div>
-            <div x-data="{ open: false }" @close-dropdown.window="open = false" class="relative">
-                <button @click="open = !open"
-                    class="h-8 w-8 rounded-full bg-blue-900 text-white font-medium flex items-center justify-center focus:outline-none">
-                    {{ strtoupper(substr(Auth::user()->first_name, 0, 1)) }}
-                </button>
-                <div x-show="open"  @click.outside="open = false" x-cloak
-                    class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50"
-                    x-transition>
-                    <livewire:role-switcher />
+            <x-dropdown>
+                <x-slot name="trigger">
+                    <x-avatar sm :label="strtoupper(substr(Auth::user()->first_name, 0, 1)) .
+                        strtoupper(substr(Auth::user()->last_name, 0, 1))" primary class='hover:cursor-pointer' />
+                </x-slot>
+                <livewire:role-switcher />
+                <x-dropdown.item>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit"
-                            class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 hover:dark:bg-gray-700">
+                        <button type="submit">
                             Logout
                         </button>
                     </form>
-                </div>
-            </div>
+                </x-dropdown.item>
+            </x-dropdown>
         </div>
     </div>
 </header>

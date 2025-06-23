@@ -75,7 +75,7 @@
                 <x-button icon="cpu-chip" class="w-48" :label="$progress > 0 && $progress < 100 && !$isDone ? 'Generating...' : 'Generate Timetable'"
                     :disabled="$progress > 0 && $progress < 100 && !$isDone" x-on:click="$openModal('showVersionModal')"
                     wire:loading.attr="disabled" />
-                <x-button href="{{ route('full.timetable') }}" outline icon="calendar" label="View Current Timetable" />
+                <x-button href="{{ route('full.timetable') }}" outline icon="calendar" label="View Timetable" />
             </div>
         </div>
     </div>

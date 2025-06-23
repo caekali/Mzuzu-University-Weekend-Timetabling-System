@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->boolean('enabled')->default(false);
-            $table->time('start_time')->default('07:45');
-            $table->time('end_time')->default('18:45');
+            $table->time('start_time')->default('07:00');
+            $table->time('end_time')->default('18:00');
         });
     }
 

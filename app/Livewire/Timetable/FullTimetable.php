@@ -49,8 +49,8 @@ class FullTimetable extends Component
     {
         $this->days = ScheduleDay::where('enabled', true)->pluck('name')->toArray();
 
-        $start = Carbon::createFromTime(7, 45);
-        $end = Carbon::createFromTime(18, 45);
+        $start = Carbon::createFromTime(7, 00);
+        $end = Carbon::createFromTime(18, 00);
         while ($start < $end) {
             $slotStart = $start->copy();
             $slotEnd = $start->copy()->addHour();

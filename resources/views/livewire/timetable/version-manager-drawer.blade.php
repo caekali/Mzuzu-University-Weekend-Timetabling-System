@@ -51,7 +51,7 @@
                                 wire:click="startEditing({{ $version->id }}, '{{ $version->label }}')" primary />
                         @endif
 
-                        <x-mini-button rounded flat icon="eye" wire:click="viewVersion({{ $version->id }})"
+                        <x-mini-button rounded flat icon="eye" wire:click="viewVersion({{ $version->id }})" x-on:click="open = false; document.body.classList.remove('overflow-hidden')"
                             primary />
 
                         @if ($version->is_published)
