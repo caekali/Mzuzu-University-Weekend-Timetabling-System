@@ -3,7 +3,7 @@
          <x-input label="Venue Name" placeholder="Venue name" name="name" wire:model.defer="form.name" required />
          <x-number label="Capacity" placeholder="Capacity" name="capacity" wire:model.defer="form.capacity" required />
 
-         <x-checkbox label="Is this a lab?" name="is_lab" wire:model="form.is_lab" />
+         {{-- <x-checkbox label="Is this a lab?" name="is_lab" wire:model="form.is_lab" /> --}}
      </form>
 
      <x-slot name="footer" class="flex justify-end gap-x-4">

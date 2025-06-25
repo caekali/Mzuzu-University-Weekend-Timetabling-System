@@ -17,41 +17,6 @@ class Schedule
     }
 
 
-    // public static function generateRandomSchedule($data): Schedule
-    // {
-    //     $schedule = new Schedule($data['constraints'] ?? []);
-    //     $courses = $data['courses'];
-    //     $venues = $data['venues'];
-    //     $timeSlots = $data['timeslots'];
-
-    //     foreach ($courses as $course) {
-    //         $sessions = self::parseLectureHours($course->lecture_hours);
-    //         $usedDays = [];
-
-    //         foreach ($sessions as $i => $hours) {
-    //             $slotSet = static::randomConsecutiveTimeSlotsAvoidingDays($timeSlots, $hours, $usedDays);
-
-    //             // Track used day
-    //             if (!empty($slotSet)) {
-    //                 $usedDays[] = $slotSet[0]['day'];
-    //             }
-
-    //             $venue = $venues[array_rand($venues)];
-    //             $key = "{$course->id}-$i";
-
-    //             $schedule->scheduleEntries[$key] = new ScheduleEntry(
-    //                 $course,
-    //                 $course->lecturer_id,
-    //                 $venue,
-    //                 $slotSet,
-    //                 $course->level,
-    //                 $course->programmes
-    //             );
-    //         }
-    //     }
-
-    //     return $schedule;
-    // }
     public static function generateRandomSchedule($data): Schedule
     {
         $schedule = new Schedule($data['constraints'] ?? []);
@@ -59,67 +24,109 @@ class Schedule
         $venues = $data['venues'];
         $timeSlots = $data['timeslots'];
 
-        // Keep track of last end times per programme+day
-        $programmeLastEnd = [];
-
         foreach ($courses as $course) {
             $sessions = self::parseLectureHours($course->lecture_hours);
             $usedDays = [];
 
             foreach ($sessions as $i => $hours) {
-                $attempts = 0;
-                $maxAttempts = 100;
+                $slotSet = static::randomConsecutiveTimeSlots($timeSlots, $hours);
 
-                do {
-                    $slotSet = static::randomConsecutiveTimeSlotsAvoidingDays($timeSlots, $hours, $usedDays);
-                    $valid = true;
+                // Track used day
+                // if (!empty($slotSet)) {
+                //     $usedDays[] = $slotSet[0]['day'];
+                // }
 
-                    if (!empty($slotSet)) {
-                        $day = $slotSet[0]['day'];
-                        $start = $slotSet[0]['start'];
+                $venue = $venues[array_rand($venues)];
+                $key = "{$course->id}-$i";
 
-                        foreach ($course->programmes as $programmeId) {
-                            $lastEnd = $programmeLastEnd[$programmeId][$day] ?? null;
-
-                            if ($lastEnd && strtotime($start) < strtotime($lastEnd) + 30 * 60) {
-                                $valid = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    $attempts++;
-                } while (!$valid && $attempts < $maxAttempts);
-
-                if (!empty($slotSet)) {
-                    $usedDays[] = $slotSet[0]['day'];
-
-                    foreach ($course->programmes as $programmeId) {
-                        $programmeLastEnd[$programmeId][$slotSet[0]['day']] = end($slotSet)['end'];
-                    }
-
-                    $venue = $venues[array_rand($venues)];
-                    $key = "{$course->id}-$i";
-
-                    $schedule->scheduleEntries[$key] = new ScheduleEntry(
-                        $course,
-                        $course->lecturer_id,
-                        $venue,
-                        $slotSet,
-                        $course->level,
-                        $course->programmes
-                    );
-                }
+                $schedule->scheduleEntries[$key] = new ScheduleEntry(
+                    $course,
+                    $course->lecturer_id,
+                    $venue,
+                    $slotSet,
+                    $course->level,
+                    $course->programmes
+                );
             }
         }
 
         return $schedule;
     }
+    // public static function generateRandomSchedule($data): Schedule
+    // {
+    //     $schedule = new Schedule($data['constraints'] ?? []);
+    //     $courses = $data['courses'];
+    //     $venues = $data['venues'];
+    //     $timeSlots = $data['timeslots'];
+
+    //     // Keep track of last end times per programme+day
+    //     $programmeLastEnd = [];
+
+    //     foreach ($courses as $course) {
+    //         $sessions = self::parseLectureHours($course->lecture_hours);
+    //         $usedDays = [];
+
+    //         foreach ($sessions as $i => $hours) {
+    //             $attempts = 0;
+    //             $maxAttempts = 100;
+
+    //             do {
+    //                 $slotSet = static::randomConsecutiveTimeSlotsAvoidingDays($timeSlots, $hours, $usedDays);
+    //                 $valid = true;
+
+    //                 if (!empty($slotSet)) {
+    //                     $day = $slotSet[0]['day'];
+    //                     $start = $slotSet[0]['start'];
+
+    //                     foreach ($course->programmes as $programmeId) {
+    //                         $lastEnd = $programmeLastEnd[$programmeId][$day] ?? null;
+
+    //                         if ($lastEnd && strtotime($start) < strtotime($lastEnd) + 30 * 60) {
+    //                             $valid = false;
+    //                             break;
+    //                         }
+    //                     }
+    //                 }
+
+    //                 $attempts++;
+    //             } while (!$valid && $attempts < $maxAttempts);
+
+    //             if (!empty($slotSet)) {
+    //                 $usedDays[] = $slotSet[0]['day'];
+
+    //                 foreach ($course->programmes as $programmeId) {
+    //                     $programmeLastEnd[$programmeId][$slotSet[0]['day']] = end($slotSet)['end'];
+    //                 }
+
+    //                 $venue = $venues[array_rand($venues)];
+    //                 $key = "{$course->id}-$i";
+
+    //                 $schedule->scheduleEntries[$key] = new ScheduleEntry(
+    //                     $course,
+    //                     $course->lecturer_id,
+    //                     $venue,
+    //                     $slotSet,
+    //                     $course->level,
+    //                     $course->programmes
+    //                 );
+    //             }
+    //         }
+    //     }
+
+    //     return $schedule;
+    // }
 
 
     private static function parseLectureHours(string $lectureHours): array
     {
         return array_map('intval', explode(',', $lectureHours));
+    }
+
+    private static function randomConsecutiveTimeSlots(array $timeSlots, int $length): array
+    {
+        $max = count($timeSlots) - $length;
+        $start = rand(0, $max);
+        return array_slice($timeSlots, $start, $length);
     }
 
     private static function randomConsecutiveTimeSlotsAvoidingDays(array $timeSlots, int $length, array $usedDays): array

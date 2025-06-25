@@ -19,6 +19,9 @@ class CourseAllocationForm extends Form
     #[Validate('required|array|min:1')]
     public array $programme_ids = [];
 
+    #[Validate('required')]
+    public  $level;
+
     public function store(): void
     {
         $validated = $this->validate();
@@ -28,12 +31,14 @@ class CourseAllocationForm extends Form
             $allocation->update([
                 'lecturer_id' => $validated['lecturer_id'],
                 'course_id' => $validated['course_id'],
+                'level' => $validated['level']
             ]);
             $allocation->programmes()->sync($validated['programme_ids']);
         } else {
             $allocation = LecturerCourseAllocation::create([
                 'lecturer_id' => $validated['lecturer_id'],
                 'course_id' => $validated['course_id'],
+                'level' => $validated['level']
             ]);
             $allocation->programmes()->sync($validated['programme_ids']);
         }

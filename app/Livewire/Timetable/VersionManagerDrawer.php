@@ -29,6 +29,7 @@ class VersionManagerDrawer extends Component
     public function refreshVersions()
     {
         $this->scheduleVersions = ScheduleVersion::all();
+        $this->dispatch('refresh-list');
     }
 
     public function startEditing($id, $label)

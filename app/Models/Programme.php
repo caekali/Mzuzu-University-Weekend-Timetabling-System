@@ -29,8 +29,7 @@ class Programme extends Model
     }
 
     public function allocations()
-{
-    return $this->belongsToMany(LecturerCourseAllocation::class, 'allocation_programme', 'programme_id', 'allocation_id');
-}
-
+    {
+        return $this->belongsToMany(LecturerCourseAllocation::class, 'allocation_programme', 'programme_id', 'allocation_id');
+    }
 }

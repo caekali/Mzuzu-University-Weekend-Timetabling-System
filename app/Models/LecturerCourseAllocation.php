@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class LecturerCourseAllocation extends Model
 {
 
-    protected $fillable = ['lecturer_id', 'course_id'];
+    protected $fillable = ['lecturer_id', 'course_id', 'level'];
 
     public function lecturer()
     {

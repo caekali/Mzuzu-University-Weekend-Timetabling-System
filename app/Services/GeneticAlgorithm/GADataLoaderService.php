@@ -51,7 +51,7 @@ class GADataLoaderService
                 $allocation->course->lecture_hours,
                 $allocation->course->num_of_students,
                 $allocation->lecturer->id,
-                $allocation->course->level,
+                $allocation->level,
                 $programmes
             );
         })->toArray();

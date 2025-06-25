@@ -50,6 +50,7 @@ class CourseAllocationModal extends Component
             $this->form->lecturer_id = $lecturerCourseAllocation->lecturer_id;
             $this->form->course_id = $lecturerCourseAllocation->course_id;
             $this->form->programme_ids = $lecturerCourseAllocation->programmes->pluck('id')->toArray();
+            $this->form->level = $lecturerCourseAllocation->level;
         }
 
         $this->modal()->open('course-allocation-modal');
