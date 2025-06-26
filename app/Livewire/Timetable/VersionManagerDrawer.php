@@ -29,7 +29,6 @@ class VersionManagerDrawer extends Component
     public function refreshVersions()
     {
         $this->scheduleVersions = ScheduleVersion::all();
-        $this->dispatch('refresh-list');
     }
 
     public function startEditing($id, $label)
@@ -84,10 +83,10 @@ class VersionManagerDrawer extends Component
             $version->is_published = true;
             $version->save();
 
-            // $users = User::all();
-            // foreach ($users as $user) {
-            //     $user->notify(new TimetablePublished($version->label));
-            // }
+            $users = User::all();
+            foreach ($users as $user) {
+                $user->notify(new TimetablePublished($version->label));
+            }
         });
 
 

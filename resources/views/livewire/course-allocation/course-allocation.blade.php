@@ -12,7 +12,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <x-select label="Programme" placeholder="Select programme" :options="$programmes"
                 wire:model.live="selectedProgramme" option-label="name" option-value="id" />
-            <x-select label="Level" placeholder="Select level" :options="[1,2,3,4,5]" wire:model.live="selectedLevel" />
+            <x-select label="Level" placeholder="Select level" :options="config('mzuni-config.levels')" wire:model.live="selectedLevel" />
             <x-select label="Lecturer" placeholder="Select lecturer" :options="$lecturers" option-label="name"
                 option-value="id" wire:model.live="selectedLecturer" />
         </div>

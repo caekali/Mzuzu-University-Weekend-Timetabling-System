@@ -5,8 +5,8 @@
              <x-input label="Course Name" placeholder="Course Name" name="form.name" wire:model="form.name" required />
 
              <div class="col-span-1 sm:col-span-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                 <x-select label="Level" placeholder="Level" name="form.level" wire:model="form.level" :options="[1,2,3,4,5]" required />
-                 <x-select label="Semester" placeholder="Semester" name="form.semester" wire:model="form.semester" :options="[1,2,3,4,5,6,7,8]"
+                 <x-select label="Level" placeholder="Level" name="form.level" wire:model="form.level" :options="config('mzuni-config.levels')" required />
+                 <x-select label="Semester" placeholder="Semester" name="form.semester" wire:model="form.semester" :options="config('mzuni-config.semesters')"
                      required />
              </div>
              <div class="col-span-1 sm:col-span-2 grid grid-cols-1 gap-4 sm:grid-cols-2">

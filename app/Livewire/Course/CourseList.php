@@ -22,7 +22,6 @@ class CourseList extends Component
         'level' => 'Level',
         'semester' => 'Semester',
         'department' => 'Department',
-        'num_of_students' => 'No. of Students',
     ];
 
     public function updatedSearch()

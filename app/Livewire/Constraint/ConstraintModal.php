@@ -32,7 +32,7 @@ class ConstraintModal extends Component
             });
             $this->form->constraintable_type = 'lecturer';
         }
-        
+
         if ($this->constraintable_type == 'venue') {
             $this->constraintable_resources = Venue::all()->map(function ($venue) {
                 return [
@@ -47,8 +47,9 @@ class ConstraintModal extends Component
             $constraint = Constraint::findOrFail($id);
             $this->form->id = $constraint->id;
             $this->form->day = $constraint->day;
-            $this->form->start_time = $constraint->start_time;
-            $this->form->end_time = $constraint->end_time;
+            $this->form->constraintable_id = $constraint->constraintable_id;
+            $this->form->start_time = date('H:i', strtotime($constraint->start_time));
+            $this->form->end_time =  date('H:i', strtotime($constraint->end_time));
             $this->form->type = $constraint->type;
             $this->form->is_hard = $constraint->is_hard;
         }

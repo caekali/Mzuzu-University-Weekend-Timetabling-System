@@ -15,7 +15,7 @@
 @endphp
 
 <div
-    class=" bg-amber-700 p-4 rounded-lg shadow-md flex flex-col gap-2 w-full border-l-8 {{ $borderColor }} transition hover:shadow-md bg-white dark:bg-gray-800">
+    class=" bg-amber-700 p-2 rounded-lg shadow-md flex flex-col gap-2 w-full border-l-8 {{ $borderColor }} transition hover:shadow-md bg-white dark:bg-gray-800">
     <div class="flex gap-2 items-center">
         <x-lucide-notebook class="h-5 w-5 text-gray-900 dark:text-white" />
         <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $scheduleEntry['course_code'] }} -

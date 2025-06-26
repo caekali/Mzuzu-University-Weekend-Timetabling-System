@@ -13,7 +13,7 @@
             </div>
 
             @if ($activeTab === 'users')
-                <div class="p-6">
+                <div class="p-6" wire:key="users-tab">
                     <div class="mb-6 space-y-4">
                         <div class="flex flex-col sm:flex-row gap-4">
                             <div class="relative flex-1 ">
@@ -80,9 +80,13 @@
                     </div>
                 </div>
             @else
-                @livewire('user.user-csv-import')
+                <div wire:key="import-tab">
+                    <livewire:user.user-csv-import />
+                </div>
+      
+            @endif
         </div>
-        @endif
-    </div>
-    <livewire:user.user-modal />
+
+
+        <livewire:user.user-modal />
     </div>

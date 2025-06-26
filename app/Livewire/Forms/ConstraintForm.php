@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms;
 
+use App\Models\Constraint;
 use App\Models\Lecturer;
 use App\Models\Venue;
 use Illuminate\Validation\Rule;
@@ -22,16 +23,20 @@ class ConstraintForm extends Form
     {
         $validated = $this->validate($this->rules());
 
-        if ($this->constraintable_type === 'lecturer') {
-            $model = Lecturer::findOrFail($this->constraintable_id);
-        } elseif ($this->constraintable_type === 'venue') {
-            $model = Venue::findOrFail($this->constraintable_id);
+        if ($this->id) {
+            $constraint = Constraint::findOrFail($this->id);
+            $constraint->update($validated);
         } else {
-            throw new \Exception("Unsupported constraintable type: {$this->constraintable_type}");
+            if ($this->constraintable_type === 'lecturer') {
+                $model = Lecturer::findOrFail($this->constraintable_id);
+            } elseif ($this->constraintable_type === 'venue') {
+                $model = Venue::findOrFail($this->constraintable_id);
+            } else {
+                throw new \Exception("Unsupported constraintable type: {$this->constraintable_type}");
+            }
+
+            $model->constraints()->create($validated);
         }
-
-       $model->constraints()->create($validated);
-
         $this->reset(['day', 'start_time', 'end_time', 'type', 'is_hard']);
     }
 

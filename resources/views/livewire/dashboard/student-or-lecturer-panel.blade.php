@@ -14,7 +14,7 @@
 @endphp
 
 
-<div class="flex flex-col h-full">
+<div class="flex flex-col h-full py-6">
     <div class="mb-6">
         <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
             {{ $greeting }}, {{ Auth::user()->first_name }}!
