@@ -19,6 +19,7 @@ class RunScheduleGeneration implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     private $versionLabel;
+
     public function __construct($versionLabel)
     {
         $this->versionLabel = $versionLabel;

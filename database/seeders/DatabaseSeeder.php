@@ -11,8 +11,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            MzuniSeeder::class,
-            ScheduleDaySeeder::class
+            // MzuniSeeder::class,
+            // ScheduleDaySeeder::class
         ]);
     }
 }

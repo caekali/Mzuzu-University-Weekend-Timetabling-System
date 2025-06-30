@@ -6,17 +6,28 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use Livewire\Attributes\Validate;
 
 class Login extends Component
 {
-    #[Validate('required|email|exists:users,email')]
-    public $email = '';
+    public $email;
 
-    #[Validate('required')]
-    public $password = '';
+    public $password;
 
     public $remember = false;
+
+    protected $rules = [
+        'email' => 'required|email',
+        'password' => 'required'
+    ];
+
+    protected $messages = [
+        'email.required' => 'The Email cannot be empty.',
+        'email.email' => 'The Email format is not valid.',
+        'password.required' => 'The Password cannot be empty.',
+    ];
+
+   
+
 
     public function login()
     {
@@ -24,7 +35,7 @@ class Login extends Component
 
         $user = User::where('email', $this->email)->first();
 
-        if (! $user->is_active) {
+        if (!$user || ! $user->is_active) {
             session()->flash('status', 'Your account is not activated. Activate now.');
             return;
         }
@@ -56,18 +67,6 @@ class Login extends Component
     {
         $this->validateOnly($propertyName);
     }
-
-    protected $messages = [
-        'email.required' => 'The Email cannot be empty.',
-        'email.email' => 'The Email format is not valid.',
-        'password.required' => 'The Password cannot be empty.',
-
-    ];
-
-    protected $validationAttributes = [
-        // 'email' => 'email address'
-    ];
-
 
     public function render()
     {

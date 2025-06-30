@@ -154,7 +154,7 @@
                 </div>
                 <h3 class="ml-3 text-lg font-medium text-gray-900 dark:text-white">Venues</h3>
             </div>
-            <p class="text-gray-600 dark:text-gray-400 text-sm">Manage teaching venues and facilities</p>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Manage teaching venues</p>
         </a>
     </div>
 </div>

@@ -13,7 +13,19 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div class="space-y-4">
                         <x-number label='Population Size' name='form.population_size'
-                            wire:model.live='form.population_size' />
+                            wire:model.live='form.population_size'/>
+
+                        {{-- <x-number name='form.population_size' wire:model.live='form.population_size'>
+                            <x-slot:label>
+                                <div class="flex gap-2 items-center">
+                                    <span>Population Size</span>
+                                    <x-icon name="information-circle" class="w-5 h-5 cursor-pointer" x-data
+                                        x-tooltip.placement.top-start="'Total number of schedules evaluated per generation in the genetic algorithm.'" />
+                                </div>
+                            </x-slot:label>
+                        </x-number> --}}
+
+                      
                         <x-number label='Number of Generations' name='form.number_of_generations'
                             wire:model.live='form.number_of_generations' />
                         <x-number label='Tournament Selection Size' name='form.tournament_size'
