@@ -30,10 +30,12 @@
                     {{ $subheader }}
                 </p>
             </div>
-            <div class="mt-4 bg-white dark:bg-gray-800 py-8 px-4 transition-colors duration-200 shadow-lg rounded-2xl border border-gray-200 dark:border-gray-800">
+            <div
+                class="mt-4 bg-white dark:bg-gray-800 py-8 px-4 transition-colors duration-200 shadow-lg rounded-2xl border border-gray-200 dark:border-gray-800">
                 {{ $slot }}
             </div>
         </div>
     </div>
 </body>
+
 </html>

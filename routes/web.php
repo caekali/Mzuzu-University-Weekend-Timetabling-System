@@ -106,6 +106,7 @@ Route::middleware('auth')->group(function () {
 
 
 Route::middleware(['auth', 'profile.setup'])->group(function () {
+    
     Route::post('/logout', function (Request $request) {
         Auth::logout();
         $request->session()->invalidate();

@@ -2,7 +2,7 @@
 
 <form wire:submit.prevent="save" class="space-y-4">
     @if ($form->profileType === 'student')
-        <x-select label="Level" placeholder="Level" name="form.level" wire:model="form.level" :options="[1, 2, 3, 4, 5]" required />
+        <x-select label="Level" placeholder="Level" name="form.level" wire:model="form.level" :options="config('mzuni-config.levels')" required />
         <x-select label="Programme" name="form.programme_id" wire:model="form.programme_id" placeholder="Select Programme"
             :options="$programmes" option-label="name" option-value="id" required />
     @elseif ($form->profileType === 'lecturer')

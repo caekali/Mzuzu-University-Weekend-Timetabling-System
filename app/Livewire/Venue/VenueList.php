@@ -5,12 +5,13 @@ namespace App\Livewire\Venue;
 use App\Models\Venue;
 use Livewire\Component;
 use Livewire\Attributes\On;
-
+use Livewire\Features\SupportPagination\WithoutUrlPagination;
+use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
 
 class VenueList extends Component
 {
-    use WireUiActions;
+    use WireUiActions, WithPagination, WithoutUrlPagination;
 
     public $search = '';
 
@@ -50,10 +51,10 @@ class VenueList extends Component
             'Venue deleted successfully.'
         );
 
-        $this->dispatch('refresh-list');
+        $this->dispatch('refresh');
     }
 
-    #[On('refresh-list')]
+    #[On('refresh')]
     public function refresh() {}
 
     public function render()

@@ -20,7 +20,7 @@
          @endif
 
       
-         @if ($this->hasRole('lecturer') || $this->hasRole('hod'))
+         @if ($this->hasRole('lecturer'))
              <x-select label="Department" placeholder="Select department" :options="$departments" option-label="name"
                  option-value="id" wire:model.defer="form.department_id" />
          @endif

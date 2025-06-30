@@ -13,6 +13,8 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use WireUi\Traits\WireUiActions;
 
+use function App\Helpers\getSetting;
+
 class FullTimetable extends Component
 {
 
@@ -49,17 +51,23 @@ class FullTimetable extends Component
     {
         $this->days = ScheduleDay::where('enabled', true)->pluck('name')->toArray();
 
-        $start = Carbon::createFromTime(7, 00);
-        $end = Carbon::createFromTime(18, 00);
+        // HH:MM
+        [$sh, $sm] = explode(':', getSetting('start_time', '07:00'));
+        [$eh, $em] = explode(':', getSetting('end_time', '18:00'));
+
+        $start = Carbon::createFromTime($sh, $sm);
+        $end = Carbon::createFromTime($eh, $em);
         while ($start < $end) {
             $slotStart = $start->copy();
-            $slotEnd = $start->copy()->addHour();
+            $slotEnd = $start->copy()->addMinutes(intval(getSetting('slot_duration', 60)));
             $this->timeSlots[] = [
                 'start' => $slotStart->format('H:i'),
                 'end' => $slotEnd->format('H:i')
             ];
-            $start->addHour();
+            $start->addMinutes(intval(getSetting('slot_duration', 60)));
         }
+
+
 
         $this->levels = DB::table('schedule_entries')
             ->whereNotNull('level')
@@ -85,6 +93,7 @@ class FullTimetable extends Component
         });
 
         $this->publishedVersion = ScheduleVersion::published()->first();
+
         $this->selectedVersionId = optional(ScheduleVersion::published()->first())->id;
 
 
@@ -124,39 +133,6 @@ class FullTimetable extends Component
         $this->loadEntries();
     }
 
-    // public function loadEntries()
-    // {
-    //     // Exit early if no filters are selected
-    //     if (
-    //         !$this->selectedLevel &&
-    //         !$this->selectedLecturer &&
-    //         !$this->selectedVenue &&
-    //         !$this->selectedProgramme
-    //     ) {
-    //         $this->entries = collect();
-    //         return;
-    //     }
-
-    //     $query = ScheduleEntry::with(['course', 'lecturer.user', 'venue']);
-
-    //     if ($this->selectedLevel) {
-    //         $query->where('level', $this->selectedLevel);
-    //     }
-
-    //     if ($this->selectedLecturer) {
-    //         $query->where('lecturer_id', $this->selectedLecturer);
-    //     }
-
-    //     if ($this->selectedVenue) {
-    //         $query->where('venue_id', $this->selectedVenue);
-    //     }
-
-    //     if ($this->selectedProgramme) {
-    //         $query->where('programme_id', $this->selectedProgramme);
-    //     }
-
-    //     $this->entries = $query->get();
-    // }
     public function loadEntries()
     {
         $version = $this->selectedVersionId

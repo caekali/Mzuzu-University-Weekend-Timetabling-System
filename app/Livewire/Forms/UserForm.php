@@ -109,7 +109,7 @@ class UserForm extends Form
             $rules['level'] = 'required|int';
         }
 
-        if ($roles->contains('lecturer') || $roles->contains('hod')) {
+        if ($roles->contains('lecturer')) {
             $rules['department_id'] = 'required|exists:departments,id';
         }
 

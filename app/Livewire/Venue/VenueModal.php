@@ -38,7 +38,7 @@ class VenueModal extends Component
             'Venue saved successfully.'
         );
         $this->modal()->close('venue-modal');
-        $this->dispatch('refresh-list');
+        $this->dispatch('refresh');
     }
     public function render()
     {

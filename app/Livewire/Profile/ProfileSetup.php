@@ -14,7 +14,7 @@ class ProfileSetup extends Component
     use WireUiActions;
 
     public ProfileSetupForm $form;
-    public $departements;
+    public $departments;
     public $programmes;
 
     public function mount()
@@ -32,7 +32,7 @@ class ProfileSetup extends Component
             $this->form->profileType = 'student';
             $this->programmes = Programme::all();
         } elseif ($user->hasRole('Lecturer')) {
-            $this->departements =  Department::all();
+            $this->departments =  Department::all();
             $this->form->profileType = 'lecturer';
         } else {
             abort(403, 'Invalid role for setup.');
@@ -44,16 +44,6 @@ class ProfileSetup extends Component
         $this->notification()->success(
             title: 'Profile Setup Complete',
             description: 'Your profile has been set up.'
-        );
-
-        // $this->dispatch('notify', [
-        //     'title' => 'Setup Complete',
-        //     'description' => 'Your profile has been saved.',
-        //     'icon' => 'success',
-        // ]);
-        $this->notification()->success(
-            title: 'Setup Complete',
-            description: 'Your profile has been saved.'
         );
 
         return redirect()->to(session('setup_redirect_url', route('dashboard')));

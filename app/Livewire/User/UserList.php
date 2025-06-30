@@ -19,6 +19,18 @@ class UserList extends Component
 
     public $userRoleFilter = '';
 
+    public $roles;
+
+    public function mount()
+    {
+        $this->roles = Role::all()->pluck('name');
+    }
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
     public function setActiveTab($tab)
     {
         $this->activeTab = $tab;
@@ -59,9 +71,7 @@ class UserList extends Component
     }
 
     #[On('refresh-list')]
-    public function refresh() {
-        
-    }
+    public function refresh() {}
 
     public function render()
     {
@@ -101,8 +111,6 @@ class UserList extends Component
             }
             return $data;
         });
-
-        $roles = Role::all()->pluck('name');
-        return view('livewire.user.user-list', compact('users', 'roles'));
+        return view('livewire.user.user-list', compact('users'));
     }
 }

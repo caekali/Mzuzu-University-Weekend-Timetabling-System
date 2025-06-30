@@ -88,24 +88,45 @@
 
                                     @if ($cellEntries->isNotEmpty())
                                         @foreach ($cellEntries as $entry)
-                                            <div class="bg-green-100 rounded p-1 mb-1 w-full min-h-[80px]">
+                                            @if (session('current_role') == 'Admin')
                                                 <div
-                                                    wire:click="openModal({{ $entry->id }}, '{{ $day }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')">
-                                                    <div class="font-bold flex items-center gap-2">
-                                                        <x-lucide-book-open class="w-3 h-3" />
-                                                        <span>{{ $entry->course_code }} -
-                                                            {{ $entry->course_name }}</span>
-                                                    </div>
-                                                    <div class="text-gray-700 flex items-center gap-2">
-                                                        <x-lucide-user class="w-3 h-3" />
-                                                        <span>{{ $entry->lecturer }}</span>
-                                                    </div>
-                                                    <div class="text-gray-600 flex items-center gap-2">
-                                                        <x-lucide-map-pin class="w-3 h-3" />
-                                                        <span>{{ $entry->venue }}</span>
+                                                    class="bg-green-100 rounded p-1 mb-1 w-full min-h-[80px] hover:cursor-pointer">
+                                                    <div
+                                                        wire:click="openModal({{ $entry->id }}, '{{ $day }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')">
+                                                        <div class="font-bold flex items-center gap-2">
+                                                            <x-lucide-book-open class="w-3 h-3" />
+                                                            <span>{{ $entry->course_code }} -
+                                                                {{ $entry->course_name }}</span>
+                                                        </div>
+                                                        <div class="text-gray-700 flex items-center gap-2">
+                                                            <x-lucide-user class="w-3 h-3" />
+                                                            <span>{{ $entry->lecturer }}</span>
+                                                        </div>
+                                                        <div class="text-gray-600 flex items-center gap-2">
+                                                            <x-lucide-map-pin class="w-3 h-3" />
+                                                            <span>{{ $entry->venue }}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            @else
+                                                <div class="bg-green-100 rounded p-1 mb-1 w-full min-h-[80px]">
+                                                    <div>
+                                                        <div class="font-bold flex items-center gap-2">
+                                                            <x-lucide-book-open class="w-3 h-3" />
+                                                            <span>{{ $entry->course_code }} -
+                                                                {{ $entry->course_name }}</span>
+                                                        </div>
+                                                        <div class="text-gray-700 flex items-center gap-2">
+                                                            <x-lucide-user class="w-3 h-3" />
+                                                            <span>{{ $entry->lecturer }}</span>
+                                                        </div>
+                                                        <div class="text-gray-600 flex items-center gap-2">
+                                                            <x-lucide-map-pin class="w-3 h-3" />
+                                                            <span>{{ $entry->venue }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         @endforeach
                                     @else
                                         {{-- Empty cell  to preserve spacing --}}

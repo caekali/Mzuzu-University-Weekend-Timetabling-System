@@ -23,13 +23,19 @@ class UserModal extends Component
     #[Validate('required|array|min:1')]
     public array $userRoleIds = [];
 
-
+    public $roles = [];
+    public $departments = [];
+    public $programmes = [];
 
     public function mount()
     {
         $this->roleSlugMap = Role::pluck('name', 'id')->mapWithKeys(function ($name, $id) {
             return [$id => strtolower($name)];
         })->toArray();
+
+        $this->roles = Role::all()->toArray();
+        $this->departments = Department::all()->toArray();
+        $this->programmes = Programme::all()->toArray();
     }
 
     public function hasRole(string $slug): bool
@@ -72,21 +78,9 @@ class UserModal extends Component
         $this->modal()->open('user-modal');
     }
 
-    // public function updatedUserRoleIds()
-    // {
-    //     if ($this->hasRole('student')) {
-    //         $this->form->department_id = null;
-    //     }
-
-    //     if ($this->hasRole('lecturer') || $this->hasRole('hod')) {
-    //         $this->form->programme_id = null;
-    //     }
-    // }
-
     public function save()
     {
         $this->form->userRoleIds = $this->userRoleIds;
-
         $this->form->store();
         $this->notification()->success(
             'Saved',
@@ -98,9 +92,6 @@ class UserModal extends Component
 
     public function render()
     {
-        $roles = Role::all()->toArray();
-        $departments = Department::all()->toArray();
-        $programmes = Programme::all()->toArray();
-        return view('livewire.user.user-modal', compact('roles', 'departments', 'programmes'));
+        return view('livewire.user.user-modal');
     }
 }

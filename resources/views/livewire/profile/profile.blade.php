@@ -19,7 +19,7 @@
 
              <div class="space-y-4">
                  <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                     <x-lucide-mail class="h-5 w-5 mr-3" />
+                     <x-lucide-mail class="h-5 w-5 mr-3 text-gray-500" />
                      <span>{{ auth()->user()->email }}</span>
                  </div>
 
@@ -31,11 +31,12 @@
                          <button x-show='!editBtnClicked' type="submit" @click="editBtnClicked = true"
                              class="ml-4 text-sm text-green-600 hover:text-green-700 hover:underline">Edit</button>
 
-                         <form action="{{ route('profile') }}" method="POST" x-cloak
+                         <form wire:submit.prevent="updateStudentLevel" x-cloak
                              :class="editBtnClicked ? 'flex' : 'hidden'" class="ml-4 items-center space-x-2">
                              @csrf
                              @method('PUT')
-                             <select name="year" class="rounded-md border-gray-300 text-sm">
+                             <select name="year" class="rounded-md border-gray-300 text-sm"
+                                 wire:model='studentLevel'>
                                  @for ($i = 1; $i <= 4; $i++)
                                      <option value="{{ $i }}"
                                          {{ isset($yearOfStudy) && $yearOfStudy == $i ? 'selected' : '' }}>

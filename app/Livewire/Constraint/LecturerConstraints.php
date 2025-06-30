@@ -7,41 +7,21 @@ use App\Models\Lecturer;
 use Carbon\Carbon;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\Features\SupportPagination\WithoutUrlPagination;
+use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
 
 class LecturerConstraints extends Component
 {
-    use WireUiActions;
-    public $constraints = [];
+    use WireUiActions, WithPagination, WithoutUrlPagination;
+
     public $headers = [
-        'id' => 'ID',
         'lecturer' => 'Lecturer',
         'day' => 'Day',
         'time' => 'time',
         'type' => 'Type',
         'is_hard' => 'Hard?'
     ];
-
-    public function mount()
-    {
-
-        $this->constraints = Constraint::with('constraintable')
-            ->where('constraintable_type', Lecturer::class)
-            ->get()
-            ->map(function ($constraint) {
-
-
-                return [
-                    'id' => $constraint->id,
-                    'day' => $constraint->day,
-                    'time' => Carbon::parse($constraint->start_time)->format('H:i') . ' - ' .
-                        Carbon::parse($constraint->end_time)->format('H:i'),
-                    'type' => $constraint->type,
-                    'is_hard' => $constraint->is_hard ? 'Yes' : 'No',
-                    'lecturer' => $constraint->constraintable->user->first_name . ' ' . $constraint->constraintable->user->last_name,
-                ];
-            });
-    }
 
     public function openModal($id = null)
     {
@@ -74,14 +54,28 @@ class LecturerConstraints extends Component
             'Constraint deleted successfully.'
         );
 
-        $this->dispatch('refresh-list');
+        $this->dispatch('refresh');
     }
 
-    #[On('refresh-list')]
+    #[On('refresh')]
     public function refresh() {}
 
     public function render()
     {
-        return view('livewire.constraint.lecturer-constraints');
+        $constraints = Constraint::with('constraintable')
+            ->where('constraintable_type', Lecturer::class)
+            ->get()
+            ->map(function ($constraint) {
+                return [
+                    'id' => $constraint->id,
+                    'day' => $constraint->day,
+                    'time' => Carbon::parse($constraint->start_time)->format('H:i') . ' - ' .
+                        Carbon::parse($constraint->end_time)->format('H:i'),
+                    'type' => $constraint->type,
+                    'is_hard' => $constraint->is_hard ? 'Yes' : 'No',
+                    'lecturer' => $constraint->constraintable->user->first_name . ' ' . $constraint->constraintable->user->last_name,
+                ];
+            });
+        return view('livewire.constraint.lecturer-constraints', compact('constraints'));
     }
 }

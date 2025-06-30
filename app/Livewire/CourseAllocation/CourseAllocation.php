@@ -16,9 +16,7 @@ class CourseAllocation extends Component
 {
     use WireUiActions, WithPagination, WithoutUrlPagination;
 
-
     public  $headers = [
-        'id' => 'ID',
         'lecturer' => 'Lecturer',
         'course' => 'Course',
         'level' => 'Level',
@@ -26,6 +24,7 @@ class CourseAllocation extends Component
     ];
 
     public $programmes = [];
+
     public $lecturers = [];
 
     public $selectedLevel;
@@ -115,8 +114,6 @@ class CourseAllocation extends Component
                 'level' => $allocation->level
             ];
         }));
-
-
         return view('livewire.course-allocation.course-allocation', compact('allocations'));
     }
 }

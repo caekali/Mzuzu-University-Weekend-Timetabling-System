@@ -21,6 +21,11 @@ class ProgrammeList extends Component
         'department' => 'Department',
     ];
 
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
     public function openModal($id = null)
     {
         $this->dispatch('openModal', $id)->to('programme.programme-modal');

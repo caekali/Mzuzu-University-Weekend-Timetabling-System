@@ -6,7 +6,7 @@
     </div>
 
     <div class="space-y-6 ">
-        <div
+        {{-- <div
             class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200 p-6">
             <div class="flex items-center mb-4">
                 <x-lucide-calendar class="h-5 w-5 text-green-600 dark:text-green-400 mr-2" />
@@ -17,7 +17,7 @@
                 <x-input label='Academic Year' wire:model.live='academic_year' />
                 <x-input label='Semester' wire:model.live='semester' />
             </div>
-        </div>
+        </div> --}}
 
 
         <div
@@ -26,37 +26,21 @@
                 <x-lucide-clock class="h-5 w-5 text-green-600 dark:text-green-400 mr-2" />
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Time Slot Configuration</h2>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <x-number label='Slot Duration (minutes)' wire:model.live='slot_duration'
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-4">
+                <x-time-picker label="Standard Start Time" wire:model.live='standardStartTime' military-time
+                    without-seconds />
+                <x-time-picker label="Standard End Time" wire:model.live='standardEndTime' military-time
+                    without-seconds />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <x-number label='Slot Duration (minutes)' wire:model.live='slotDuration'
                     description='Duration of each teaching slot (15-180 minutes)' />
-                <x-number label='Break Duration (minutes)' wire:model.live='break_duration'
+                <x-number label='Break Duration (minutes)' wire:model.live='breakDuration'
                     description=' Break time between slots (0-60 minutes)' />
             </div>
-
-            <div
-                class="mt-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700">
-                <div class="flex items-center mb-2">
-                    <x-lucide-clock class="h-4 w-4 text-green-600 dark:text-green-400 mr-2" />
-                    <span class="text-sm font-medium text-green-800 dark:text-green-300">
-                        Slot Configuration Summary
-                    </span>
-                </div>
-                <div class="text-sm text-green-700 dark:text-green-300">
-                    <p>Each slot: {{ $this->formatDuration($slot_duration) }}</p>
-                    <p>Break between slots: {{ $this->formatDuration($break_duration) }}</p>
-                    <p>Total time per slot (including break):
-                        {{ $this->formatDuration($slot_duration + $break_duration) }}</p>
-                </div>
-            </div>
         </div>
-
-
-        {{-- <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <x-time-picker id="start-time" label="Start Time" placeholder="22:30" military-time
-                                without-seconds />
-                            <x-time-picker id="end-time" label="End Time" placeholder="22:30" military-time
-                                without-seconds />
-                        </div> --}}
 
         {{-- Working days --}}
         <div
@@ -91,13 +75,13 @@
                                         <label class="text-xs text-gray-600 dark:text-gray-400">Start:</label>
                                         <x-time-picker military-time
                                             wire:change="updateTime({{ $day['id'] }}, 'startTime', $event.target.value)"
-                                            value="{{ $day['start_time'] }}" without-seconds  class="min-w-[180px]"/>
+                                            value="{{ $day['start_time'] }}" without-seconds class="min-w-[180px]" />
                                     </div>
                                     <div class="flex items-center space-x-2">
                                         <label class="text-xs text-gray-600 dark:text-gray-400">End:</label>
                                         <x-time-picker military-time
                                             wire:change="updateTime({{ $day['id'] }}, 'endTime', $event.target.value)"
-                                            value="{{ $day['end_time'] }}"  without-seconds />
+                                            value="{{ $day['end_time'] }}" without-seconds />
                                     </div>
                                     <div class="text-xs text-gray-600 dark:text-gray-400 min-w-[80px] text-right">
                                         {{ $this->calculateTotalSlots($day) }} slots
@@ -134,13 +118,13 @@
                     <div>
                         <span class="text-gray-600 dark:text-gray-400">Slot Duration:</span>
                         <span class="ml-2 font-medium text-gray-900 dark:text-white">
-                            {{ $this->formatDuration($slot_duration) }}
+                            {{ $this->formatDuration($slotDuration) }}
                         </span>
                     </div>
                     <div>
                         <span class="text-gray-600 dark:text-gray-400">Break Duration:</span>
                         <span class="ml-2 font-medium text-gray-900 dark:text-white">
-                            {{ $this->formatDuration($break_duration) }}
+                            {{ $this->formatDuration($breakDuration) }}
                         </span>
                     </div>
                 </div>

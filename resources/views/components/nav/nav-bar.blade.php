@@ -23,9 +23,9 @@
                 </x-slot>
                 <livewire:role-switcher />
                 <x-dropdown.item>
-                    <form method="POST" action="{{ route('logout') }}">
+                    <form method="POST" action="{{ route('logout') }}" class="w-full">
                         @csrf
-                        <button type="submit">
+                        <button type="submit" class="w-full text-left">
                             Logout
                         </button>
                     </form>

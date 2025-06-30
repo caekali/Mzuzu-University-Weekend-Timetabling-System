@@ -52,6 +52,23 @@ class Login extends Component
         return redirect()->intended('/dashboard');
     }
 
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
+    protected $messages = [
+        'email.required' => 'The Email cannot be empty.',
+        'email.email' => 'The Email format is not valid.',
+        'password.required' => 'The Password cannot be empty.',
+
+    ];
+
+    protected $validationAttributes = [
+        // 'email' => 'email address'
+    ];
+
+
     public function render()
     {
         return view('livewire.auth.login')->layout('components.layouts.guest');

@@ -27,7 +27,6 @@ class CourseList extends Component
     public function updatedSearch()
     {
         $this->resetPage();
-        // $this->refresh();
     }
 
     public function openModal($id = null)

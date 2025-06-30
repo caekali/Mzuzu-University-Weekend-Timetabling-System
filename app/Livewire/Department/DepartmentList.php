@@ -12,7 +12,16 @@ class DepartmentList extends Component
     use WireUiActions;
 
     public string $search = '';
-    public  $headers = ['code' => 'Code', 'name' => 'Name'];
+
+    public  $headers = [
+        'code' => 'Code',
+        'name' => 'Name'
+    ];
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
 
     public function openModal($id = null)
     {
@@ -65,6 +74,7 @@ class DepartmentList extends Component
             )
             ->latest()
             ->paginate(6);
+
         return view('livewire.department.department-list', compact('departments'));
     }
 }

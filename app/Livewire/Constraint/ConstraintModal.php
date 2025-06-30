@@ -65,7 +65,7 @@ class ConstraintModal extends Component
             'Constraint saved successfully.'
         );
         $this->modal()->close('constraint-modal');
-        $this->dispatch('refresh-list');
+        $this->dispatch('refresh');
     }
 
     public function render()

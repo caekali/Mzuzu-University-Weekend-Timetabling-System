@@ -5,12 +5,11 @@ namespace App\Services\GeneticAlgorithm;
 use App\Models\Venue;
 use App\DTO\VenueDTO;
 use App\DTO\CourseDTO;
-use App\DTO\TimeSlotDTO;
 use App\Models\Constraint;
 use App\Models\Lecturer;
 use App\Models\ScheduleDay;
 use App\Models\LecturerCourseAllocation;
-use Carbon\Carbon;
+
 
 use function App\Helpers\getSetting;
 

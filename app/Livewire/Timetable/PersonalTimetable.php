@@ -7,6 +7,8 @@ use App\Models\ScheduleVersion;
 use Carbon\Carbon;
 use Livewire\Component;
 
+use function App\Helpers\getSetting;
+
 class PersonalTimetable extends Component
 {
     public $days = [];
@@ -18,16 +20,20 @@ class PersonalTimetable extends Component
     {
         $this->days = ScheduleDay::where('enabled', true)->pluck('name')->toArray();
 
-        $start = Carbon::createFromTime(7, 00);
-        $end = Carbon::createFromTime(18, 00);
+        // HH:MM
+        [$sh, $sm] = explode(':', getSetting('start_time', '07:00'));
+        [$eh, $em] = explode(':', getSetting('end_time', '07:00'));
+
+        $start = Carbon::createFromTime($sh, $sm);
+        $end = Carbon::createFromTime($eh, $em);
         while ($start < $end) {
             $slotStart = $start->copy();
-            $slotEnd = $start->copy()->addHour();
+            $slotEnd = $start->copy()->addMinutes(intval(getSetting('slot_duration', 60)));
             $this->timeSlots[] = [
                 'start' => $slotStart->format('H:i'),
                 'end' => $slotEnd->format('H:i')
             ];
-            $start->addHour();
+            $start->addMinutes(intval(getSetting('slot_duration', 60)));
         }
 
         $this->publishedVersion = ScheduleVersion::published()->first();
