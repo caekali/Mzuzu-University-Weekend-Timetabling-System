@@ -6,6 +6,8 @@ use App\Models\ScheduleDay;
 use App\Models\ScheduleVersion;
 use Carbon\Carbon;
 use Livewire\Component;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 use function App\Helpers\getSetting;
 
@@ -84,6 +86,20 @@ class PersonalTimetable extends Component
         }
     }
 
+    public function exportToPdf()
+    {
+       $data = [
+        'entries' => $this->entries,
+        'timeSlots' => $this->timeSlots,
+        'days' => $this->days,
+    ];
+
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('exports.timetable', $data)->setPaper('A4', 'landscape');
+
+    return response()->streamDownload(function () use ($pdf) {
+        echo $pdf->stream();
+    }, 'timetable.pdf');
+    }
     public function render()
     {
         return view('livewire.timetable.personal-timetable');
