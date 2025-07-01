@@ -27,8 +27,8 @@
                         </th>
                         @foreach ($timeSlots as $slot)
                             <th
-                                class="px-2 py-3  text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                {{ \Carbon\Carbon::parse($slot['start'])->format('H:i') }} -
+                                class="px-2 py-3  text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                {{ \Carbon\Carbon::parse($slot['start'])->format('H:i') }} <br/> - <br/>
                                 {{ \Carbon\Carbon::parse($slot['end'])->format('H:i') }}
                             </th>
                         @endforeach

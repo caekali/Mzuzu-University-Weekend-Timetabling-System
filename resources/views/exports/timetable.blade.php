@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Weekly Timetable</title>
@@ -24,7 +25,8 @@
             table-layout: fixed;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #e5e7eb;
             padding: 6px;
             vertical-align: top;
@@ -40,6 +42,12 @@
         .time-slot {
             width: 100px;
         }
+
+        .time-slot .slot {
+            text-align: center;
+        }
+
+
 
         .entry-card {
             background-color: #d1fae5;
@@ -70,6 +78,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <h2>Weekly Timetable</h2>
@@ -79,8 +88,8 @@
             <tr>
                 <th class="time-slot">Day / Time</th>
                 @foreach ($timeSlots as $slot)
-                    <th>
-                        {{ \Carbon\Carbon::parse($slot['start'])->format('H:i') }} -
+                    <th class='slot'>
+                        {{ \Carbon\Carbon::parse($slot['start'])->format('H:i') }} <br /> - <br />
                         {{ \Carbon\Carbon::parse($slot['end'])->format('H:i') }}
                     </th>
                 @endforeach
@@ -100,10 +109,11 @@
                             @if ($cellEntries->isNotEmpty())
                                 @foreach ($cellEntries as $entry)
                                     <div class="entry-card">
-                                        <div class="course">{{ $entry['course_code'] }} - {{ $entry['course_name'] }}</div>
-                                        <div class="meta">Lecturer: {{ $entry['lecturer'] }}</div>
-                                        <div class="meta">Venue: {{ $entry['venue'] }}</div>
-                                        <div class="meta">Time: {{ $entry['start_time'] }} - {{ $entry['end_time'] }}</div>
+                                        <div class="course">{{ $entry['course_code'] }}
+                                        </div>
+                                        {{-- <div class="meta">{{ $entry['lecturer'] }}</div> --}}
+                                        <div class="meta">{{ $entry['venue'] }}</div>
+                                        </div>
                                     </div>
                                 @endforeach
                             @else
@@ -121,4 +131,5 @@
     </div>
 
 </body>
+
 </html>

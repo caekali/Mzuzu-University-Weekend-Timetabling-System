@@ -15,6 +15,9 @@
         x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
         @click.away="open = false; document.body.classList.remove('overflow-hidden')"
         class="fixed inset-y-0 right-0 bg-white dark:bg-gray-800 w-full max-w-md z-50 shadow-lg  text-gray-900 dark:text-gray-100 border-l border-gray-200 dark:border-gray-700 transition transform">
+
+
+        
         <div class="h-16 px-6 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Timetable Versions</h2>
             <button x-on:click="open = false; document.body.classList.remove('overflow-hidden')"
