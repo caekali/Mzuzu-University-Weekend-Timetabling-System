@@ -94,7 +94,7 @@ class PersonalTimetable extends Component
         'days' => $this->days,
     ];
 
-    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('exports.timetable', $data)->setPaper('A4', 'landscape');
+    $pdf =  Pdf::loadView('exports.timetable', $data)->setPaper('A4', 'landscape');
 
     return response()->streamDownload(function () use ($pdf) {
         echo $pdf->stream();
