@@ -16,8 +16,8 @@ class SetupSystem extends Command
             return;
         }
 
-        $this->call('db:seed', ['--force','--class' => 'RoleSeeder']);
-        $this->call('db:seed', ['--force','--class' => 'AdminSeeder']);
+        $this->call('db:seed', ['--class' => 'RoleSeeder'.'--force']);
+        $this->call('db:seed', ['--class' => 'AdminSeeder','--force']);
         $this->info('System initialized with default roles and admin user.');
     }
 }
