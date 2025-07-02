@@ -80,7 +80,9 @@
 </head>
 
 <body>
-
+    <div style="text-align: center; margin-bottom: 10px;">
+        <img src="{{ public_path('assets/mzunilogo.webp') }}" alt="Mzuni Logo" style="height: 80px; display: inline-block;" />
+    </div>
     <h2>Weekly Timetable</h2>
 
     <table>
