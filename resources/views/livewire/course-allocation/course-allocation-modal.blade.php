@@ -6,12 +6,11 @@
          <x-select label="Lecturer" placeholder="Select lecturer" :options="$lecturers" option-label="name"
              option-value="id" wire:model.defer="form.lecturer_id" />
          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-             <x-select class="w-56" label="Programmes" placeholder="Select programmes" :options="$programmes" option-label="name"
+             <x-select label="Programmes" placeholder="Select programmes" :options="$programmes" option-label="name"
                  option-value="id" wire:model.defer="form.programme_ids" multiselect />
-             <x-select label="Level" placeholder="Level" name="form.level" wire:model="form.level" :options="[1, 2, 3, 4, 5]" />
+             <x-select class="w-10!" label="Level" placeholder="Level" name="form.level" wire:model="form.level"
+                 :options="config('mzuni-config.levels')" />
          </div>
-
-
      </form>
      <x-slot name="footer" class="flex justify-end gap-x-4">
          <div class="flex gap-x-4">

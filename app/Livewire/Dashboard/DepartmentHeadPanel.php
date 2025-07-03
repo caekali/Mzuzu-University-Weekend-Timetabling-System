@@ -16,38 +16,38 @@ class DepartmentHeadPanel extends Component
     {
         $this->cards = [
             [
-                'to' => '/programmes',
+                'to' => route('programmes'),
                 'icon' => 'school',
                 'title' => 'Programmes',
-                'description' => 'Manage academic programmes and degree structures',
+                'description' => 'Manage academic programmes',
                 'color' => 'blue',
             ],
             [
-                'to' => '/courses',
+                'to' => route('courses'),
                 'icon' => 'book-open',
                 'title' => 'Courses',
                 'description' => 'Manage course offerings and curriculum',
                 'color' => 'green',
             ],
             [
-                'to' => '/course-allocations',
+                'to' => route('course-allocations'),
                 'icon' => 'briefcase',
                 'title' => 'Course Allocations',
-                'description' => 'Assign lecturers to courses and manage workload',
+                'description' => 'Assign lecturers to courses',
                 'color' => 'purple',
             ],
             [
-                'to' => '/lecturer-constraints',
+                'to' => route('lecturer.constraints'),
                 'icon' => 'clock',
                 'title' => 'Lecturer Constraints',
                 'description' => 'Set availability and teaching preferences',
                 'color' => 'orange',
             ],
             [
-                'to' => '/full-timetable',
+                'to' => route('full.timetable'),
                 'icon' => 'calendar',
                 'title' => 'Full Timetable',
-                'description' => 'View department schedule and monitor classes',
+                'description' => 'View full schedule',
                 'color' => 'indigo',
             ],
         ];

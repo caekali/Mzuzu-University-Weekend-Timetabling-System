@@ -16,69 +16,69 @@ class AdminPanel extends Component
 
     public function mount()
     {
-        $this->stats = [
-            [
-                'to' => 'departments',
-                'title' => 'Departments',
-                'icon' => 'building',
-                'description' => 'Manage academic departments and organizational structure',
-                'color' => 'blue'
-            ],
-            [
-                'title' => 'Total Courses',
-                'value' => Course::count(),
-                'icon' => 'book-open',
-            ],
-            [
-                'title' => 'Departments',
-                'value' => Department::count(),
-                'icon' => 'building',
-            ],
-            [
-                'title' => 'Programmes',
-                'value' => Programme::count(),
-                'icon' => 'school',
-            ],
-        ];
+        // $this->stats = [
+        //     [
+        //         'to' => 'departments',
+        //         'title' => 'Departments',
+        //         'icon' => 'building',
+        //         'description' => 'Manage academic departments and organizational structure',
+        //         'color' => 'blue'
+        //     ],
+        //     [
+        //         'title' => 'Total Courses',
+        //         'value' => Course::count(),
+        //         'icon' => 'book-open',
+        //     ],
+        //     [
+        //         'title' => 'Departments',
+        //         'value' => Department::count(),
+        //         'icon' => 'building',
+        //     ],
+        //     [
+        //         'title' => 'Programmes',
+        //         'value' => Programme::count(),
+        //         'icon' => 'school',
+        //     ],
+        // ];
 
         $this->cards = [
                 [
-                    'to' => '/departments',
+                    'to' => route('departments'),
                     'icon' => 'building',
                     'title' => 'Departments',
-                    'description' => 'Manage academic departments and organizational structure',
+                    'description' => 'Manage academic departments',
                     'color' => 'blue',
                 ],
                 [
-                    'to' => '/venues',
+                    'to' => route('venues'),
                     'icon' => 'map-pin',
                     'title' => 'Venues',
-                    'description' => 'Manage classrooms, labs, and teaching facilities',
+                    'description' => 'Manage classrooms',
                     'color' => 'green',
                 ],
                 [
-                    'to' => '/settings',
+                    'to' => route('venue.constraints'),
                     'icon' => 'settings',
                     'title' => 'Venue Constraints',
                     'description' => 'Set availability and restrictions for venues',
                     'color' => 'purple',
                 ],
                 [
-                    'to' => '/timetable',
+                    'to' => route('full.timetable'),
                     'icon' => 'calendar',
                     'title' => 'Full Timetable',
-                    'description' => 'View and manage the complete university schedule',
+                    'description' => 'View and manage the complete schedule',
                     'color' => 'orange',
                 ],
                 [
-                    'to' => '/timetable-generation',
+                    'to' => route('timetable.generate'),
                     'icon' => 'cpu',
                     'title' => 'Generate Timetable',
                     'description' => 'Create optimized schedules using Genetics algorithm',
                     'color' => 'indigo',
                 ],
                 [
-                    'to' => '/users',
+                    'to' => route('users'),
                     'icon' => 'users',
                     'title' => 'Users',
                     'description' => 'Manage user accounts and permissions',

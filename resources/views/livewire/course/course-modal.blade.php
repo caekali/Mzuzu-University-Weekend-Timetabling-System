@@ -12,8 +12,8 @@
              <div class="col-span-1 sm:col-span-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
                  <x-input label="Lecture Hours" placeholder="Lecture Hours" name="form.lecture_hours"
                      wire:model="form.lecture_hours" required />
-                 <x-number label="No. of Students" placeholder="No. of Students" name="form.num_of_students"
-                     wire:model="form.num_of_students" required />
+                 {{-- <x-number label="No. of Students" placeholder="No. of Students" name="form.num_of_students"
+                     wire:model="form.num_of_students" required /> --}}
              </div>
              <x-select label="Department" name="form.department_id" wire:model="form.department_id"
                  placeholder="Select Department" :options="$departments->toArray()" option-label="name" option-value="id" required class="sm:col-span-2" />
