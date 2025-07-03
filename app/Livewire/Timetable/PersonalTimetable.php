@@ -7,7 +7,7 @@ use App\Models\ScheduleVersion;
 use Carbon\Carbon;
 use Livewire\Component;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use Illuminate\Support\Facades\Auth;
 
 use function App\Helpers\getSetting;
 
@@ -44,16 +44,17 @@ class PersonalTimetable extends Component
 
     public function loadEntries()
     {
+        $user = Auth::user();
         if ($this->publishedVersion) {
             $query = $this->publishedVersion->entries()->with(['course', 'venue', 'lecturer.user']);
             $current_role = session('current_role');
 
             if ($current_role == 'Student') {
-                $student = auth()->user()->student;
+                $student = $user->student;
                 $query->where('level', $student->level)
                     ->where('programme_id', $student->programme_id);
             } elseif ($current_role == 'Lecturer') {
-                $lecturer = auth()->user()->lecturer;
+                $lecturer = $user->lecturer;
                 $query->where('lecturer_id', $lecturer->id);
             } else {
                 abort(401);
@@ -88,17 +89,28 @@ class PersonalTimetable extends Component
 
     public function exportToPdf()
     {
-       $data = [
-        'entries' => $this->entries,
-        'timeSlots' => $this->timeSlots,
-        'days' => $this->days,
-    ];
+        $user = Auth::user();
+        $data = [
+            'entries' => $this->entries,
+            'timeSlots' => $this->timeSlots,
+            'days' => $this->days,
+        ];
 
-    $pdf =  Pdf::loadView('exports.timetable', $data)->setPaper('A4', 'landscape');
+        // Add programme name if role is Student
+        if (session('current_role') == 'Student') {
+            $student = $user->student;
+            $data['programmeName'] = optional($student->programme)->name;
+        }
+        // Add lecturer name if role is Lecturer
+        if (session('current_role') == 'Lecturer' && $user->lecturer) {
+            $data['lecturerName'] = $user->first_name . ' ' . $user->last_name;
+        }
 
-    return response()->streamDownload(function () use ($pdf) {
-        echo $pdf->stream();
-    }, 'timetable.pdf');
+        $pdf =  Pdf::loadView('exports.timetable', $data)->setPaper('A4', 'landscape');
+
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->stream();
+        }, 'timetable.pdf');
     }
     public function render()
     {
