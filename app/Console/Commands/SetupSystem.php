@@ -16,7 +16,7 @@ class SetupSystem extends Command
             return;
         }
 
-        $this->call('db:seed', [
+          $this->call('db:seed', [
             '--class' => 'RoleSeeder',
             '--force' => true,
         ]);
