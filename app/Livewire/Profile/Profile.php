@@ -3,6 +3,8 @@
 namespace App\Livewire\Profile;
 
 use App\Livewire\Forms\PasswordUpdateForm;
+use App\Models\Department;
+use App\Models\Programme;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use WireUi\Traits\WireUiActions;
@@ -10,14 +12,33 @@ use WireUi\Traits\WireUiActions;
 class Profile extends Component
 {
     use WireUiActions;
+
     public PasswordUpdateForm $form;
+
     public $studentLevel;
+
+    public $isEditingProfile = false;
+
+    public $isEditingPassword = false;
+
+    public $departments = [];
+
+    public $programmes = [];
 
     public function mount()
     {
+
         if (session('current_role') == 'Student') {
             $student =  Auth::user()->student;
             $this->studentLevel = $student->level;
+        }
+
+        if (session('current_role') === 'Lecturer') {
+            $this->departments = Department::all();
+        }
+
+        if (session('current_role') === 'Student') {
+            $this->programmes = Programme::all();
         }
     }
 
@@ -31,9 +52,14 @@ class Profile extends Component
         }
     }
 
-    public function render()
+    public function toggleEditProfile()
     {
-        return view('livewire.profile.profile');
+        $this->isEditingProfile = !$this->isEditingProfile;
+    }
+
+    public function toggleEditPassword()
+    {
+        $this->isEditingPassword = !$this->isEditingPassword;
     }
 
     public function updateStudentLevel()
@@ -48,5 +74,10 @@ class Profile extends Component
                 'Profile updated successfully'
             );
         }
+    }
+
+    public function render()
+    {
+        return view('livewire.profile.profile');
     }
 }

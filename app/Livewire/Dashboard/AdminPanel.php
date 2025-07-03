@@ -12,14 +12,17 @@ use Livewire\Component;
 class AdminPanel extends Component
 {
     public  $stats = [];
+    public $cards = [];
 
     public function mount()
     {
         $this->stats = [
             [
-                'title' => 'Total Users',
-                'value' => User::count(),
-                'icon' => 'users',
+                'to' => 'departments',
+                'title' => 'Departments',
+                'icon' => 'building',
+                'description' => 'Manage academic departments and organizational structure',
+                'color' => 'blue'
             ],
             [
                 'title' => 'Total Courses',
@@ -37,6 +40,51 @@ class AdminPanel extends Component
                 'icon' => 'school',
             ],
         ];
+
+        $this->cards = [
+                [
+                    'to' => '/departments',
+                    'icon' => 'building',
+                    'title' => 'Departments',
+                    'description' => 'Manage academic departments and organizational structure',
+                    'color' => 'blue',
+                ],
+                [
+                    'to' => '/venues',
+                    'icon' => 'map-pin',
+                    'title' => 'Venues',
+                    'description' => 'Manage classrooms, labs, and teaching facilities',
+                    'color' => 'green',
+                ],
+                [
+                    'to' => '/settings',
+                    'icon' => 'settings',
+                    'title' => 'Venue Constraints',
+                    'description' => 'Set availability and restrictions for venues',
+                    'color' => 'purple',
+                ],
+                [
+                    'to' => '/timetable',
+                    'icon' => 'calendar',
+                    'title' => 'Full Timetable',
+                    'description' => 'View and manage the complete university schedule',
+                    'color' => 'orange',
+                ],
+                [
+                    'to' => '/timetable-generation',
+                    'icon' => 'cpu',
+                    'title' => 'Generate Timetable',
+                    'description' => 'Create optimized schedules using Genetics algorithm',
+                    'color' => 'indigo',
+                ],
+                [
+                    'to' => '/users',
+                    'icon' => 'users',
+                    'title' => 'Users',
+                    'description' => 'Manage user accounts and permissions',
+                    'color' => 'teal',
+                ],
+            ];
     }
 
     public function render()
