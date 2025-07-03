@@ -83,9 +83,9 @@
     <div style="text-align: center; margin-bottom: 10px;">
         <img src="{{ public_path('assets/mzunilogo.webp') }}" alt="Mzuni Logo" style="height: 80px; display: inline-block;" />
     </div>
-    @if(isset($studentName))
-        <div style="text-align: right; font-size: 13px; color: #374151; margin-bottom: 5px; font-weight: 500;">
-            Student: {{ $studentName }}
+    @if(isset($programmeName))
+        <div style="text-align: center; font-size: 13px; color: #374151; margin-bottom: 5px; font-weight: 500;">
+            Programme: {{ $programmeName }}
         </div>
     @endif
     <h2>Weekly Timetable</h2>

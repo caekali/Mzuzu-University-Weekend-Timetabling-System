@@ -96,9 +96,10 @@ class PersonalTimetable extends Component
             'days' => $this->days,
         ];
 
-        // Add student name if role is Student
+        // Add programme name if role is Student
         if (session('current_role') == 'Student') {
-            $data['studentName'] = $user->first_name . ' ' . $user->last_name;
+            $student = $user->student;
+            $data['programmeName'] = optional($student->programme)->name;
         }
         // Add lecturer name if role is Lecturer
         if (session('current_role') == 'Lecturer' && $user->lecturer) {
