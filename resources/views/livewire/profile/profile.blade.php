@@ -140,7 +140,8 @@
                                          <x-lucide-building class="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500" />
                                          <div>
                                              <p class="text-sm text-gray-500 dark:text-gray-400">Department</p>
-                                             <p class="font-medium">{{ auth()->user()->student->programme->department->name}}</p>
+                                             <p class="font-medium">
+                                                 {{ auth()->user()->student->programme->department->name }}</p>
                                          </div>
                                      </div>
                                  @elseif (session('current_role') === 'Lecturer')
@@ -157,17 +158,24 @@
                      @else
                          <form wire:submit.prevent="updateProfile" class="space-y-6">
                              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                 <x-input name="profileData.name" label="Full Name" required />
-                                 <x-input name="profileData.email" label="Email Address" type="email" required />
+                                 <x-input name="profile.first_name" disabled label="First Name"
+                                     wire:model='profile.first_name' required />
+                                 <x-input name="profile.last_name" disabled label="Last Name"
+                                     wire:model='profile.last_name' required />
+
+                                 <x-input name="profile.email" disabled label="Email Address" type="email"
+                                     wire:model='profile.email' required />
 
                                  @if (session('current_role') === 'Student')
-                                     <x-select name="profileData.programmeId" label="Programme" :options="$programmes"
-                                         option-value="id" option-label="name" required />
-                                     <x-select name="profileData.year" label="Year of Study" :options="[1, 2, 3, 4, 5, 6]"
+                                     <x-select name="profile.programmeId" wire:model='profile.programmeId'
+                                         label="Programme" :options="$programmes" option-value="id" option-label="name"
                                          required />
+                                     <x-select name="profile.level" wire:model='profile.level' label="Year of Study"
+                                         :options="[1, 2, 3, 4, 5, 6]" required />
                                  @elseif(session('current_role') === 'Lecturer')
-                                     <x-select name="profileData.department" label="Department" :options="$departments"
-                                         option-value="id" option-label="name" required />
+                                     <x-select name="profile.department" wire:model='profile.department'
+                                         label="Department" :options="$departments" option-value="id" option-label="name"
+                                         required />
                                  @endif
                              </div>
 

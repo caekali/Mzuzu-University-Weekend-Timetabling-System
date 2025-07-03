@@ -3,6 +3,7 @@
 namespace App\Livewire\Profile;
 
 use App\Livewire\Forms\PasswordUpdateForm;
+use App\Livewire\Forms\UpdateProfileForm;
 use App\Models\Department;
 use App\Models\Programme;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,8 @@ class Profile extends Component
     use WireUiActions;
 
     public PasswordUpdateForm $form;
+
+    public UpdateProfileForm $profile;
 
     public $studentLevel;
 
@@ -27,6 +30,9 @@ class Profile extends Component
 
     public function mount()
     {
+        $user = auth()->user();
+
+        $this->profile->setUser($user);
 
         if (session('current_role') == 'Student') {
             $student =  Auth::user()->student;
@@ -62,18 +68,16 @@ class Profile extends Component
         $this->isEditingPassword = !$this->isEditingPassword;
     }
 
-    public function updateStudentLevel()
+    public function updateProfile()
     {
-        $student = Auth::user()->student;
-        if ($student->level != $this->studentLevel) {
-            $student->level = $this->studentLevel;
-            $student->save();
+        $this->profile->update();
 
-            $this->notification()->success(
-                'Profile',
-                'Profile updated successfully'
-            );
-        }
+        $this->isEditingProfile = false;
+
+        $this->notification()->success(
+            'Profile',
+            'Profile updated successfully'
+        );
     }
 
     public function render()
