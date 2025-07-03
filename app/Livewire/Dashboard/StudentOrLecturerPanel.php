@@ -32,9 +32,11 @@ class StudentOrLecturerPanel extends Component
 
 
                 )
-                ->where('day', now()->format('l'))
+                ->where('day', 'Sunday')
                 ->orderBy('start_time')
                 ->get();
+
+                //    ->where('day', now()->format('l'))
 
             $grouped = $entries->groupBy(function ($entry) {
                 return "{$entry->day}-{$entry->course_id}-{$entry->lecturer_id}";

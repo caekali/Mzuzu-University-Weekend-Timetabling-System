@@ -7,6 +7,7 @@ use App\Models\Lecturer;
 use App\Models\Programme;
 use App\Models\ScheduleVersion;
 use App\Models\Venue;
+use App\Services\GeneticAlgorithm\GADataLoaderService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
@@ -51,24 +52,21 @@ class FullTimetable extends Component
     {
         $this->days = ScheduleDay::where('enabled', true)->pluck('name')->toArray();
 
-        // HH:MM
-        [$sh, $sm] = explode(':', getSetting('start_time', '07:00'));
-        [$eh, $em] = explode(':', getSetting('end_time', '18:00'));
+        $loader = new GADataLoaderService();
+        $slots = $loader->generateTimeslots();
 
-        $start = Carbon::createFromTime($sh, $sm);
-        $end = Carbon::createFromTime($eh, $em);
-        while ($start < $end) {
-            $slotStart = $start->copy();
-            $slotEnd = $start->copy()->addMinutes(intval(getSetting('slot_duration', 60)));
-            $this->timeSlots[] = [
-                'start' => $slotStart->format('H:i'),
-                'end' => $slotEnd->format('H:i')
-            ];
-            $start->addMinutes(intval(getSetting('slot_duration', 60)));
-        }
-
-
-
+        // Collect all unique start and end times
+        $this->timeSlots = collect($slots)
+            ->map(fn($slot) => [
+                'range' => $slot['start'] . ' - ' . $slot['end'],
+                'start' => $slot['start'],
+                'end' => $slot['end'],
+            ])
+            ->unique('range')
+            ->sortBy('start')
+            ->values()
+            ->all();
+            
         $this->levels = DB::table('schedule_entries')
             ->whereNotNull('level')
             ->distinct()

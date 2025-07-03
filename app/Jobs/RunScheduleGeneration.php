@@ -67,7 +67,7 @@ class RunScheduleGeneration implements ShouldQueue
                     'label' => $this->versionLabel,
                     'generated_at' => now(),
                 ]);
-                
+
                 foreach ($entries as $entry) {
                     foreach ($entry->timeSlots as $slot) {
                         foreach ($entry->programmes as $programme) {

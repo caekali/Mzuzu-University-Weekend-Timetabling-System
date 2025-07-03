@@ -22,37 +22,52 @@ class GeneticAlgorithm
         return new Population($schedules);
     }
 
-    public function evolve(Population $population): Population
+    public function evolve(Population $population, int $generation = 0): Population
     {
-        $crossover = $this->generateCrossoverPopulation($population);
-        return $this->applyMutation($crossover);
+        $crossover = $this->generateCrossoverPopulation($population, $generation);
+        return $this->applyMutation($crossover, $generation);
     }
 
-    private function generateCrossoverPopulation(Population $pop): Population
+    private function generateCrossoverPopulation(Population $pop, int $generation): Population
     {
         $newPop = new Population();
 
         for ($i = 0; $i < $this->eliteSchedules; $i++) {
-            $newPop->addSchedule(clone $pop->getSchedule($i));
+            $newPop->addSchedule($pop->getSchedule($i)->copy());
         }
 
-        // Fill remaining schedules using crossover
         while ($newPop->count() < $this->populationSize) {
             $parent1 = $this->tournamentSelection($pop);
             $parent2 = $this->tournamentSelection($pop);
-            $child = $this->crossoverSchedules($parent1, $parent2);
+            
+            if (mt_rand() / mt_getrandmax() < $this->crossoverRate) {
+                $child = $this->crossoverSchedules($parent1, $parent2);
+            } else {
+                $child = $parent1->copy();
+            }
+
             $newPop->addSchedule($child);
         }
 
         return $newPop;
     }
 
-    private function applyMutation(Population $population): Population
+    private function applyMutation(Population $population, int $generation): Population
     {
+        $adaptiveMutationRate = min(0.5, $this->mutationRate + ($generation * 0.01));
         $schedules = $population->getSchedules();
 
         for ($i = $this->eliteSchedules; $i < $this->populationSize; $i++) {
-            $this->mutateSchedule($schedules[$i]);
+            $original = $schedules[$i]->getScheduleEntries();
+            $mutated = Schedule::generateRandomSchedule($this->data)->getScheduleEntries();
+
+            foreach ($original as $key => $entry) {
+                if (mt_rand() / mt_getrandmax() < $adaptiveMutationRate && isset($mutated[$key])) {
+                    $original[$key] = $mutated[$key];
+                }
+            }
+
+            $schedules[$i]->setScheduleEntries($original);
         }
 
         $population->setSchedules($schedules);
@@ -63,31 +78,16 @@ class GeneticAlgorithm
     {
         $entries1 = $s1->getScheduleEntries();
         $entries2 = $s2->getScheduleEntries();
-        $schedule = Schedule::generateRandomSchedule($this->data);
-        $newEntries = $schedule->getScheduleEntries();
+        $newEntries = [];
 
-        foreach ($newEntries as $key => $_) {
-            $newEntries[$key] = rand(0, 1)
-                ? ($entries1[$key] ?? $entries2[$key])
-                : ($entries2[$key] ?? $entries1[$key]);
+        $i = 0;
+        foreach ($entries1 as $key => $entry) {
+            $newEntries[$key] = ($i++ % 2 == 0) ? ($entries1[$key] ?? $entries2[$key]) : ($entries2[$key] ?? $entries1[$key]);
         }
 
+        $schedule = new Schedule($this->data['constraints'] ?? []);
         $schedule->setScheduleEntries($newEntries);
         return $schedule;
-    }
-
-    private function mutateSchedule(Schedule $schedule): void
-    {
-        $original = $schedule->getScheduleEntries();
-        $mutated = Schedule::generateRandomSchedule($this->data)->getScheduleEntries();
-
-        foreach ($original as $key => $entry) {
-            if (mt_rand() / mt_getrandmax() < $this->mutationRate && isset($mutated[$key])) {
-                $original[$key] = $mutated[$key];
-            }
-        }
-
-        $schedule->setScheduleEntries($original);
     }
 
     private function tournamentSelection(Population $pop): Schedule

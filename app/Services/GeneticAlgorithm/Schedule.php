@@ -16,89 +16,22 @@ class Schedule
         $this->constraints = $constraints;
     }
 
-
-    // public static function generateRandomSchedule($data): Schedule
-    // {
-    //     $schedule = new Schedule($data['constraints'] ?? []);
-    //     $courses = $data['courses'];
-    //     $venues = $data['venues'];
-    //     $timeSlots = $data['timeslots'];
-
-    //     foreach ($courses as $course) {
-    //         $sessions = self::parseLectureHours($course->lecture_hours);
-    //         $usedDays = [];
-
-    //         foreach ($sessions as $i => $hours) {
-    //             $slotSet = static::randomConsecutiveTimeSlots($timeSlots, $hours);
-
-    //             // Track used day
-    //             if (!empty($slotSet)) {
-    //                 $usedDays[] = $slotSet[0]['day'];
-    //             }
-
-    //             $venue = $venues[array_rand($venues)];
-    //             $key = "{$course->id}-$i";
-
-    //             $schedule->scheduleEntries[$key] = new ScheduleEntry(
-    //                 $course,
-    //                 $course->lecturer_id,
-    //                 $venue,
-    //                 $slotSet,
-    //                 $course->level,
-    //                 $course->programmes
-    //             );
-    //         }
-    //     }
-
-    //     return $schedule;
-    // }
-    public static function generateRandomSchedule($data): Schedule
+    public static function generateRandomSchedule(array $data): Schedule
     {
-        $schedule = new Schedule($data['constraints'] ?? []);
+        $schedule = new Schedule();
         $courses = $data['courses'];
         $venues = $data['venues'];
         $timeSlots = $data['timeslots'];
-
-        // Keep track of last end times per programme+day
-        $programmeLastEnd = [];
-
+       
         foreach ($courses as $course) {
             $sessions = self::parseLectureHours($course->lecture_hours);
-            $usedDays = [];
 
             foreach ($sessions as $i => $hours) {
-                $attempts = 0;
-                $maxAttempts = 100;
-
-                do {
-                    $slotSet = static::randomConsecutiveTimeSlotsAvoidingDays($timeSlots, $hours, $usedDays);
-                    $valid = true;
-
-                    if (!empty($slotSet)) {
-                        $day = $slotSet[0]['day'];
-                        $start = $slotSet[0]['start'];
-
-                        foreach ($course->programmes as $programmeId) {
-                            $lastEnd = $programmeLastEnd[$programmeId][$day] ?? null;
-
-                            if ($lastEnd && strtotime($start) < strtotime($lastEnd) + 30 * 60) {
-                                $valid = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    $attempts++;
-                } while (!$valid && $attempts < $maxAttempts);
+                $slotSet = self::findConsecutiveTimeSlots($timeSlots, $hours);
 
                 if (!empty($slotSet)) {
-                    $usedDays[] = $slotSet[0]['day'];
-
-                    foreach ($course->programmes as $programmeId) {
-                        $programmeLastEnd[$programmeId][$slotSet[0]['day']] = end($slotSet)['end'];
-                    }
-
-                    $venue = $venues[array_rand($venues)];
+                    shuffle($venues);
+                    $venue = $venues[0];
                     $key = "{$course->id}-$i";
 
                     $schedule->scheduleEntries[$key] = new ScheduleEntry(
@@ -116,56 +49,51 @@ class Schedule
         return $schedule;
     }
 
-
     private static function parseLectureHours(string $lectureHours): array
     {
         return array_map('intval', explode(',', $lectureHours));
     }
 
-    private static function randomConsecutiveTimeSlots(array $timeSlots, int $length): array
+    private static function findConsecutiveTimeSlots(array $timeSlots, int $requiredHours): array
     {
-        $max = count($timeSlots) - $length;
-        $start = rand(0, $max);
-        return array_slice($timeSlots, $start, $length);
-    }
+        $sessionSlots = collect($timeSlots)
+            ->filter(fn($s) => ($s['type'] ?? 'session') === 'session')
+            ->sortBy(['day', 'start'])
+            ->values();
 
-    private static function randomConsecutiveTimeSlotsAvoidingDays(array $timeSlots, int $length, array $usedDays): array
-    {
-        $max = max(0, count($timeSlots) - $length);
-        $attempts = 10;
+        $requiredMinutes = $requiredHours * 60;
+        $n = $sessionSlots->count();
+        $validSets = [];
 
-        while ($attempts-- > 0) {
-            $start = rand(0, $max);
-            $slice = array_slice($timeSlots, $start, $length);
+        for ($i = 0; $i < $n; $i++) {
+            $set = [];
+            $totalMinutes = 0;
 
-            if (
-                self::areConsecutive($slice) &&
-                !in_array($slice[0]['day'], $usedDays)
-            ) {
-                return $slice;
-            }
-        }
+            for ($j = $i; $j < $n; $j++) {
+                $curr = $sessionSlots[$j];
 
-        // Fallback
-        foreach ($timeSlots as $start => $slot) {
-            if (!in_array($slot['day'], $usedDays)) {
-                $slice = array_slice($timeSlots, $start, $length);
-                if (self::areConsecutive($slice)) {
-                    return $slice;
+                if (!empty($set)) {
+                    $prev = end($set);
+                    if (
+                        $prev['day'] !== $curr['day'] ||
+                        strtotime($prev['end']) !== strtotime($curr['start'])
+                    ) {
+                        break;
+                    }
+                }
+
+                $duration = (strtotime($curr['end']) - strtotime($curr['start'])) / 60;
+                $totalMinutes += $duration;
+                $set[] = $curr;
+
+                if ($totalMinutes >= $requiredMinutes) {
+                    $validSets[] = $set;
+                    break; // Done with this sequence, go to next starting point
                 }
             }
         }
 
-        return array_slice($timeSlots, 0, $length); // Last resort fallback
-    }
-
-    private static function areConsecutive(array $slots): bool
-    {
-        for ($i = 1; $i < count($slots); $i++) {
-            if ($slots[$i - 1]['day'] !== $slots[$i]['day']) return false;
-            if ((strtotime($slots[$i]['start']) - strtotime($slots[$i - 1]['start'])) !== 3600) return false;
-        }
-        return true;
+        return !empty($validSets) ? $validSets[array_rand($validSets)] : [];
     }
 
     public function getFitness()
@@ -209,7 +137,7 @@ class Schedule
             'programme_conflict' => 1.0,
             'venue_conflict' => 1.0,
             'venue_overcapacity' => 0.5,
-            'same_day_sessions' => 1.0, // New: Penalty for same-day sessions
+            'same_day_sessions' => 1.0,
         ];
 
         $courseDayMap = [];
@@ -218,7 +146,6 @@ class Schedule
             $courseId = $entry1->course->id;
             $day = $entry1->timeSlots[0]['day'] ?? null;
 
-            // Track course sessions by day
             if ($day !== null) {
                 if (!isset($courseDayMap[$courseId])) {
                     $courseDayMap[$courseId] = [];
@@ -231,7 +158,6 @@ class Schedule
                 $courseDayMap[$courseId][] = $day;
             }
 
-            // constraint checking for each slot
             foreach ($entry1->timeSlots as $slot) {
                 $lecturerViolation = $this->getConstraintViolationType('lecturers', $entry1->lecturer, $slot);
                 $venueViolation = $this->getConstraintViolationType('venues', $entry1->venue->id, $slot);
@@ -243,7 +169,6 @@ class Schedule
                 if ($venueViolation === 'soft') $softConflicts += 0.5;
             }
 
-            // check overlapping
             foreach ($this->scheduleEntries as $j => $entry2) {
                 if ($i >= $j) continue;
 
@@ -262,7 +187,6 @@ class Schedule
                 }
             }
 
-            // Soft constraint: venue too small
             if ($entry1->course->expected_students > $entry1->venue->capacity) {
                 $softConflicts += $weights['venue_overcapacity'];
             }
@@ -291,9 +215,8 @@ class Schedule
             }
         }
 
-        return null; // no constraint violated
+        return null;
     }
-
 
     public function getScheduleEntries()
     {
@@ -305,5 +228,12 @@ class Schedule
     {
         $this->scheduleEntries = $scheduleEntries;
         $this->isFitnessChanged = true;
+    }
+
+    public function copy(): self
+    {
+        $copy = new self($this->constraints);
+        $copy->setScheduleEntries($this->scheduleEntries);
+        return $copy;
     }
 }

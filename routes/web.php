@@ -1,5 +1,6 @@
 <?php
 
+use App\DTO\GAParameterDTO;
 use App\Http\Controllers\GAController;
 use App\Http\Controllers\RoleSwitchController;
 use Illuminate\Support\Facades\Route;
@@ -25,63 +26,14 @@ use App\Livewire\Timetable\PersonalTimetable;
 use App\Livewire\Timetable\Timetable;
 use App\Livewire\User\UserList;
 use App\Livewire\Venue\VenueList;
+use App\Models\GAParameter;
 use App\Models\ScheduleEntry;
+use App\Services\GeneticAlgorithm\GADataLoaderService;
+use App\Services\GeneticAlgorithm\GeneticAlgorithm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-Route::get('/test', function () {
-    $entries = ScheduleEntry::with(['course', 'venue', 'lecturer.user'])
-        ->orderBy('start_time')
-        ->get();
-
-    $grouped = $entries->groupBy(function ($entry) {
-        return "{$entry->day}-{$entry->course_id}-{$entry->lecturer_id}";
-    });
-
-    $mergedEntries = []; // 🔁 Flat array without group key
-
-    foreach ($grouped as $blocks) {
-        $blocks = $blocks->sortBy('start_time')->values();
-
-        $current = $blocks[0];
-
-        for ($i = 1; $i < $blocks->count(); $i++) {
-            $next = $blocks[$i];
-
-            if ($next->start_time <= $current->end_time) {
-                $current->end_time = max($current->end_time, $next->end_time);
-            } else {
-                $mergedEntries[] = [
-                    'day' => $current->day,
-                    'start_time' => $current->start_time,
-                    'end_time' => $current->end_time,
-                    'level' => $current->level,
-                    'course' => $current->course->name ?? '',
-                    'lecturer' => $current->lecturer->user->name ?? '',
-                    'venue' => $current->venue->name ?? '',
-                ];
-                $current = $next;
-            }
-        }
-
-        // Push last one
-        $mergedEntries[] = [
-            'day' => $current->day,
-            'start_time' => $current->start_time,
-            'end_time' => $current->end_time,
-            'level' => $current->level,
-            'course' => $current->course->name ?? '',
-            'lecturer' => $current->lecturer->user->name ?? '',
-            'venue' => $current->venue->name ?? '',
-        ];
-    }
-
-    return $mergedEntries;
-
-
-    return $mergedGroups;
-});
-
+Route::get('/test', [GAController::class, 'generate']);
 
 Route::get('/', function () {
     return Auth::check()
@@ -106,7 +58,7 @@ Route::middleware('auth')->group(function () {
 
 
 Route::middleware(['auth', 'profile.setup'])->group(function () {
-    
+
     Route::post('/logout', function (Request $request) {
         Auth::logout();
         $request->session()->invalidate();
