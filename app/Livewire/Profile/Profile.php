@@ -48,7 +48,7 @@ class Profile extends Component
         }
     }
 
-    public function update()
+    public function updatePassword()
     {
         if ($this->form->update()) {
             $this->notification()->success(

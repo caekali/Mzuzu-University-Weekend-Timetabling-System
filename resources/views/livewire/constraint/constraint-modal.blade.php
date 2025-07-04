@@ -9,7 +9,7 @@
             <x-select label="Venue" placeholder="Select Venue" :options="$constraintable_resources" option-label="name" option-value="id"
                 wire:model.defer="form.constraintable_id" />
         @endif
-        <x-select label="Day" placeholder="Select Day" :options="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']" wire:model.defer="form.day" />
+        <x-select label="Day" placeholder="Select Day" :options="$days" wire:model.defer="form.day" />
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <x-time-picker label="Start Time" name="form.start_time" military-time wire:model.live="form.start_time"
                 without-seconds />

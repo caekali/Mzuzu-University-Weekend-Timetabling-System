@@ -8,7 +8,7 @@ use App\Models\Programme;
 use App\Models\ScheduleVersion;
 use App\Models\Venue;
 use App\Services\GeneticAlgorithm\GADataLoaderService;
-use Carbon\Carbon;
+
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -43,10 +43,11 @@ class FullTimetable extends Component
 
     public $venues;
 
-    public $publishedVersion;
+    public $currentVersion;
 
     public int|null $selectedVersionId = null;
 
+   public bool $showFilters = false;
 
     public function mount()
     {
@@ -90,7 +91,7 @@ class FullTimetable extends Component
             ];
         });
 
-        $this->publishedVersion = ScheduleVersion::published()->first();
+        $this->currentVersion = ScheduleVersion::published()->first();
 
         $this->selectedVersionId = optional(ScheduleVersion::published()->first())->id;
 
@@ -135,12 +136,14 @@ class FullTimetable extends Component
     {
         $version = $this->selectedVersionId
             ? ScheduleVersion::find($this->selectedVersionId)
-            : $this->publishedVersion;
+            : $this->currentVersion;
 
         if (!$version) {
             $this->entries = collect();
             return;
         }
+
+        $this->currentVersion = $version;
 
         $query = $version->entries()->with(['course', 'lecturer.user', 'venue']);
 
@@ -196,6 +199,8 @@ class FullTimetable extends Component
     {
         $this->dispatch('openModal', $id, $day, $startTime, $endTime)->to('timetable.schedule-modal');
     }
+
+   
 
     public function render()
     {

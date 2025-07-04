@@ -5,6 +5,7 @@ namespace App\Livewire\Constraint;
 use App\Livewire\Forms\ConstraintForm;
 use App\Models\Constraint;
 use App\Models\Lecturer;
+use App\Models\ScheduleDay;
 use App\Models\Venue;
 use Livewire\Component;
 use WireUi\Traits\WireUiActions;
@@ -16,6 +17,12 @@ class ConstraintModal extends Component
     public ConstraintForm $form;
     public $constraintable_type = 'lecturer';
     public $constraintable_resources = [];
+    public $days = [];
+
+    public function mount()
+    {
+        $this->days = ScheduleDay::where('enabled', true)->pluck('name')->sort()->toArray();
+    }
 
     public function openModal($id = null, $type)
     {

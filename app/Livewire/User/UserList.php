@@ -19,6 +19,8 @@ class UserList extends Component
 
     public $userRoleFilter = '';
 
+    public $search = '';
+
     public $roles;
 
     public function mount()
@@ -76,6 +78,17 @@ class UserList extends Component
     public function render()
     {
         $query = User::query()->with(['roles']);
+
+        $query->when(
+            trim($this->search),
+            function ($query) {
+                $query->where(function ($query) {
+                    $query->where('first_name', 'like', '%' . trim($this->search) . '%')
+                        ->orWhere('last_name', 'like', '%' . trim($this->search) . '%')
+                        ->orWhere('email', 'like', '%' . trim($this->search) . '%');
+                });
+            }
+        );
 
         if (!empty($this->userRoleFilter)) {
             $query->whereHas('roles', function ($q) {

@@ -1,46 +1,67 @@
 <div class="py-6">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Full Weekly Timetable</h1>
-        @if (session('current_role') === 'Admin')
-            <div class="flex items-center gap-4">
-                @if ($selectedVersionId)
-                    <div class="text-sm text-gray-700 dark:text-gray-300">
-                        Viewing version:
-                        <x-badge primary :label="\App\Models\ScheduleVersion::find($selectedVersionId)?->label ?? 'N/A'" />
-                    </div>
-
-                    <div class="text-sm text-gray-700 dark:text-gray-300">
-                        Status:
-                        @if (\App\Models\ScheduleVersion::find($selectedVersionId)?->is_published)
-                            <x-badge primary label="Published" />
-                        @else
-                            <x-badge secondary label="Not Published" />
-                        @endif
-                    </div>
-                @endif
-                <x-button label="Manage Versions" wire:click="$dispatch('open-version-drawer')" />
-                <livewire:timetable.version-manager-drawer />
+    <div class="flex justify-between items-center mb-6 print:hidden">
+        <div class="flex items-center">
+            <x-lucide-calendar class="h-6 w-6 text-green-600 dark:text-green-400 mr-3" />
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Timetable</h1>
+                <div class="flex items-center mt-1 space-x-3">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">
+                        Current: {{ $currentVersion?->label ?? '—' }}
+                    </span>
+                    @if ($currentVersion->is_published)
+                        <x-badge primary label="Published" />
+                    @else
+                        <x-badge amber label="Draft" />
+                    @endif
+                </div>
             </div>
+        </div>
 
-        @endif
+        <div class="flex space-x-2">
+            <x-button secondary wire:click="$toggle('showFilters')">
+                <x-slot:prepend>
+                    <x-lucide-filter class="h-4 w-4" />
+                </x-slot:prepend>
+                Filters
+            </x-button>
 
+            @if (session('current_role') === 'Admin')
+                <x-button secondary wire:click="$dispatch('openVersionSlider')">
+                    <x-slot:prepend>
+                        <x-lucide-history class="h-4 w-4" />
+                    </x-slot:prepend>
+                    Versions
+                </x-button>
+                <livewire:timetable.version-manager-drawer />
+            @endif
+        </div>
     </div>
 
-    <div
-        class="bg-white dark:bg-gray-800  border border-gray-200 dark:border-gray-700 transition-colors duration-200 rounded-lg shadow-sm p-6 mb-6">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-medium text-gray-900 dark:text-white">Filters</h2>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <x-select label="Programme" placeholder="Select programme" :options="$programmes"
-                wire:model.live="selectedProgramme" option-label="name" option-value="id" />
-            <x-select label="Level" placeholder="Select level" :options="$levels" wire:model.live="selectedLevel" />
-            <x-select label="Lecturer" placeholder="Select lecturer" :options="$lecturers" option-label="name"
-                option-value="id" wire:model.live="selectedLecturer" />
-            <x-select label="Venue" placeholder="Select venue" :options="$venues" option-label="name" option-value="id"
-                wire:model.live="selectedVenue" />
+
+    <div x-data="{ open: @entangle('showFilters') }" x-show="open" x-cloak>
+        <div
+            class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 transition-colors duration-200 rounded-lg shadow-sm p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-white">Filters</h2>
+                <button @click="open = false; $wire.set('showFilters', false)"
+                    class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none"
+                    aria-label="Close filters">
+                    <x-lucide-x class="h-5 w-5" />
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <x-select label="Programme" placeholder="Select programme" :options="$programmes"
+                    wire:model.live="selectedProgramme" option-label="name" option-value="id" />
+                <x-select label="Level" placeholder="Select level" :options="$levels" wire:model.live="selectedLevel" />
+                <x-select label="Lecturer" placeholder="Select lecturer" :options="$lecturers" option-label="name"
+                    option-value="id" wire:model.live="selectedLecturer" />
+                <x-select label="Venue" placeholder="Select venue" :options="$venues" option-label="name"
+                    option-value="id" wire:model.live="selectedVenue" />
+            </div>
         </div>
     </div>
+
+
 
 
     <div

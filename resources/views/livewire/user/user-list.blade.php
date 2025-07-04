@@ -17,7 +17,7 @@
                     <div class="mb-6 space-y-4">
                         <div class="flex flex-col sm:flex-row gap-4">
                             <div class="relative flex-1 ">
-                                <x-input placeholder="Search users..." />
+                                <x-input wire:model.live='search' placeholder="Search programme..." />
                             </div>
                             <div class="flex items-center space-x-4">
                                 <div class="flex items-center space-x-2">
@@ -83,7 +83,6 @@
                 <div wire:key="import-tab">
                     <livewire:user.user-csv-import />
                 </div>
-      
             @endif
         </div>
 
