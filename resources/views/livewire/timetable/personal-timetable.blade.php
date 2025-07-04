@@ -8,7 +8,10 @@
             </div>
         @endif --}}
 
-        <x-button icon="arrow-down-tray" label="Export PDF" wire:click="exportToPdf" />
+        <div class="flex justify-end gap-3">
+            <x-button icon="arrow-down-tray" label="Export PDF" wire:click="exportToPdf" />
+            <x-button icon="arrow-down-tray" label="Export EXCEL" wire:click="exportToExcel" />
+        </div>
 
     </div>
     <div
