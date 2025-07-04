@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('label');
             $table->boolean('is_published')->default(false);
             $table->timestamp('generated_at');
+            $table->timestamp('published_at')->nullable();
         });
     }
 

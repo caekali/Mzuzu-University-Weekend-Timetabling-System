@@ -81,9 +81,10 @@
 
 <body>
     <div style="text-align: center; margin-bottom: 10px;">
-        <img src="{{ public_path('assets/mzunilogo.webp') }}" alt="Mzuni Logo" style="height: 80px; display: inline-block;" />
+        <img src="{{ public_path('assets/mzunilogo.webp') }}" alt="Mzuni Logo"
+            style="height: 80px; display: inline-block;" />
     </div>
-    @if(isset($programmeName))
+    @if (isset($programmeName))
         <div style="text-align: center; font-size: 13px; color: #374151; margin-bottom: 5px; font-weight: 500;">
             Programme: {{ $programmeName }}
         </div>
@@ -120,7 +121,7 @@
                                         </div>
                                         {{-- <div class="meta">{{ $entry['lecturer'] }}</div> --}}
                                         <div class="meta">{{ $entry['venue'] }}</div>
-                                        </div>
+                                    </div>
                                     </div>
                                 @endforeach
                             @else
@@ -134,7 +135,7 @@
     </table>
 
     <div class="footer">
-        Generated on {{ now()->format('d M Y, H:i') }} by {{ config('app.name') }}
+        Published at {{ $published_at }} by {{ config('app.name') }}
     </div>
 
 </body>

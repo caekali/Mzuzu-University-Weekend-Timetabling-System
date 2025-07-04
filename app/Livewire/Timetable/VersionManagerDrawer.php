@@ -65,7 +65,7 @@ class VersionManagerDrawer extends Component
 
     public function unpublishVersion($id)
     {
-        ScheduleVersion::where('id', $id)->update(['is_published' => false]);
+        ScheduleVersion::where('id', $id)->update(['is_published' => false, 'published_at' => null]);
         $this->notification()->success(
             'Unpublished',
             'Version has been unpublished.',
@@ -78,9 +78,10 @@ class VersionManagerDrawer extends Component
     public function publishVersion($id)
     {
         DB::transaction(function () use ($id) {
-            ScheduleVersion::where('is_published', true)->update(['is_published' => false]);
+            ScheduleVersion::where('is_published', true)->update(['is_published' => false, 'published_at' => null]);
             $version = ScheduleVersion::find($id);
             $version->is_published = true;
+            $version->published_at = now();
             $version->save();
 
             $users = User::all();

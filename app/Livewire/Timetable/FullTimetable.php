@@ -50,8 +50,7 @@ class FullTimetable extends Component
 
     public function mount()
     {
-        $this->days = ScheduleDay::where('enabled', true)->pluck('name')->toArray();
-
+        $this->days = ScheduleDay::where('enabled', true)->pluck('name')->sort()->toArray();
         $loader = new GADataLoaderService();
         $slots = $loader->generateTimeslots();
 
@@ -66,11 +65,12 @@ class FullTimetable extends Component
             ->sortBy('start')
             ->values()
             ->all();
-            
+
         $this->levels = DB::table('schedule_entries')
             ->whereNotNull('level')
             ->distinct()
-            ->pluck('level');
+            ->pluck('level')
+            ->sort();
 
 
         $this->programmes = Programme::all()->map(function ($programme) {

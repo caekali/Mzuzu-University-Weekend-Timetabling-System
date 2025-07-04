@@ -4,6 +4,7 @@ namespace App\Livewire\Timetable;
 
 use App\Models\ScheduleDay;
 use App\Models\ScheduleVersion;
+use App\Services\GeneticAlgorithm\GADataLoaderService;
 use Carbon\Carbon;
 use Livewire\Component;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -20,23 +21,22 @@ class PersonalTimetable extends Component
 
     public function mount()
     {
-        $this->days = ScheduleDay::where('enabled', true)->pluck('name')->toArray();
+        $this->days = ScheduleDay::where('enabled', true)->pluck('name')->sort()->toArray();
 
-        // HH:MM
-        [$sh, $sm] = explode(':', getSetting('start_time', '07:00'));
-        [$eh, $em] = explode(':', getSetting('end_time', '07:00'));
+        $loader = new GADataLoaderService();
+        $slots = $loader->generateTimeslots();
 
-        $start = Carbon::createFromTime($sh, $sm);
-        $end = Carbon::createFromTime($eh, $em);
-        while ($start < $end) {
-            $slotStart = $start->copy();
-            $slotEnd = $start->copy()->addMinutes(intval(getSetting('slot_duration', 60)));
-            $this->timeSlots[] = [
-                'start' => $slotStart->format('H:i'),
-                'end' => $slotEnd->format('H:i')
-            ];
-            $start->addMinutes(intval(getSetting('slot_duration', 60)));
-        }
+        // Collect all unique start and end times
+        $this->timeSlots = collect($slots)
+            ->map(fn($slot) => [
+                'range' => $slot['start'] . ' - ' . $slot['end'],
+                'start' => $slot['start'],
+                'end' => $slot['end'],
+            ])
+            ->unique('range')
+            ->sortBy('start')
+            ->values()
+            ->all();
 
         $this->publishedVersion = ScheduleVersion::published()->first();
         $this->loadEntries();
@@ -94,6 +94,7 @@ class PersonalTimetable extends Component
             'entries' => $this->entries,
             'timeSlots' => $this->timeSlots,
             'days' => $this->days,
+            'published_at' => $this->publishedVersion->published_at
         ];
 
         // Add programme name if role is Student
@@ -110,7 +111,7 @@ class PersonalTimetable extends Component
 
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->stream();
-        }, 'timetable.pdf');
+        }, "ict_weekend_timetable_" . $this->publishedVersion->published_at . ".pdf");
     }
     public function render()
     {
