@@ -11,13 +11,13 @@
         integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     {{-- tooltip css --}}
-    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
+    {{-- <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" /> --}}
 
 
-    <wireui:scripts />
-    @vite('resources/css/app.css')
-    @vite('resources/js/app.js')
     @livewireStyles
+    @wireUiScripts
+    @livewireScripts
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
@@ -35,8 +35,7 @@
     <x-modal />
     <x-notifications />
     <x-dialog />
-    @wireUiScripts
-    @livewireScripts
+
 </body>
 
 </html>

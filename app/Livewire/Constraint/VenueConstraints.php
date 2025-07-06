@@ -25,7 +25,7 @@ class VenueConstraints extends Component
 
     public function openModal($id = null)
     {
-        $this->dispatch('openModal', $id, 'venue')->to('constraint.constraint-modal');
+        $this->dispatch('openModal', 'venue',$id)->to('constraint.constraint-modal');
     }
 
     public function confirmDelete($id)

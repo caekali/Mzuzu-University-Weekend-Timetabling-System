@@ -31,7 +31,7 @@
                         @foreach ($timeSlots as $slot)
                             <th
                                 class="px-2 py-3  text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                {{ \Carbon\Carbon::parse($slot['start'])->format('H:i') }} <br/> - <br/>
+                                {{ \Carbon\Carbon::parse($slot['start'])->format('H:i') }} <br /> - <br />
                                 {{ \Carbon\Carbon::parse($slot['end'])->format('H:i') }}
                             </th>
                         @endforeach
@@ -57,21 +57,25 @@
 
                                     @if ($cellEntries->isNotEmpty())
                                         @foreach ($cellEntries as $entry)
-                                            <div class="bg-green-100 rounded p-1 mb-1 w-full min-h-[80px]">
-                                                <div>
-                                                    <div class="font-bold flex items-center gap-2">
-                                                        <x-lucide-book-open class="w-3 h-3" />
-                                                        <span>{{ $entry['course_code'] }} - {{ $entry['course_name'] }}
-                                                        </span>
+                                            <div
+                                                class=" min-h-[80px]  p-1 md:p-2 rounded-lg border group transition-all duration-200 hover:shadow-md bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700">
+                                                <div
+                                                    class="font-bold text-green-900 dark:text-green-300 flex items-center justify-between">
+                                                    <div class="flex items-center">
+                                                        <x-lucide-book-open class="h-3 w-3 mr-1 flex-shrink-0" />
+                                                        <span>{{ $entry['course_code'] }} </span>
                                                     </div>
-                                                    <div class="text-gray-700 flex items-center gap-2">
-                                                        <x-lucide-user class="w-3 h-3" />
-                                                        <span>{{ $entry['lecturer'] }}</span>
-                                                    </div>
-                                                    <div class="text-gray-600 flex items-center gap-2">
-                                                        <x-lucide-map-pin class="w-3 h-3" />
-                                                        <span>{{ $entry['venue'] }}</span>
-                                                    </div>
+                                                </div>
+                                                <div class="text-green-800 dark:text-green-200 text-xs md:text-sm">
+                                                    {{ $entry['course_name'] }}</div>
+                                                <div
+                                                    class="text-gray-600 dark:text-gray-400 flex items-center mt-1 text-xs">
+                                                    <x-lucide-user class="h-3 w-3 mr-1 flex-shrink-0" />
+                                                    <span>{{ $entry['lecturer'] }}</span>
+                                                </div>
+                                                <div class="text-gray-600 dark:text-gray-400 flex items-center text-xs">
+                                                    <x-lucide-map-pin class="w-3 h-3  mr-1 flex-shrink-0" />
+                                                    <span>{{ $entry['venue'] }}</span>
                                                 </div>
                                             </div>
                                         @endforeach

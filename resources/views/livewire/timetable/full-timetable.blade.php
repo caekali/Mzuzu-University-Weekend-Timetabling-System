@@ -1,4 +1,17 @@
 <div class="py-6">
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('conflictState', {
+                highlightedEntryIds: [],
+            });
+
+            window.addEventListener('highlight-conflicts', event => {
+                Alpine.store('conflictState').highlightedEntryIds = event.detail[0].entryIds ?? [];
+            });
+        });
+    </script>
+
     <div class="flex justify-between items-center mb-6 print:hidden">
         <div class="flex items-center">
             <x-lucide-calendar class="h-6 w-6 text-green-600 dark:text-green-400 mr-3" />
@@ -8,7 +21,7 @@
                     <span class="text-sm text-gray-500 dark:text-gray-400">
                         Current: {{ $currentVersion?->label ?? '—' }}
                     </span>
-                    @if ($currentVersion->is_published)
+                    @if ($currentVersion?->is_published)
                         <x-badge primary label="Published" />
                     @else
                         <x-badge amber label="Draft" />
@@ -61,9 +74,6 @@
         </div>
     </div>
 
-
-
-
     <div
         class="bg-white dark:bg-gray-800  border border-gray-200 dark:border-gray-700 transition-colors duration-200
  rounded-lg shadow-sm p-2 md:p-6 overflow-x-auto">
@@ -90,8 +100,6 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white  dark:bg-gray-800 divide-y divide-gray-200 ">
-
-
                     @foreach ($days as $day)
                         <tr>
                             <td
@@ -110,41 +118,86 @@
                                     @if ($cellEntries->isNotEmpty())
                                         @foreach ($cellEntries as $entry)
                                             @if (session('current_role') == 'Admin')
-                                                <div
-                                                    class="bg-green-100 rounded p-1 mb-1 w-full min-h-[80px] hover:cursor-pointer">
-                                                    <div
+                                                {{-- <div class="space-y-2 mb-2">
+                                                    <div class=" min-h-[80px] hover:cursor-pointer p-1 md:p-2 rounded-lg border group transition-all duration-200 hover:shadow-md bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700"
                                                         wire:click="openModal({{ $entry->id }}, '{{ $day }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')">
-                                                        <div class="font-bold flex items-center gap-2">
-                                                            <x-lucide-book-open class="w-3 h-3" />
-                                                            <span>{{ $entry->course_code }} -
-                                                                {{ $entry->course_name }}</span>
+                                                        <div
+                                                            class="font-bold text-green-900 dark:text-green-300 flex items-center justify-between">
+                                                            <div class="flex items-center">
+                                                                <x-lucide-book-open
+                                                                    class="h-3 w-3 mr-1 flex-shrink-0" />
+                                                                <span>{{ $entry->course_code }} </span>
+                                                            </div>
                                                         </div>
-                                                        <div class="text-gray-700 flex items-center gap-2">
-                                                            <x-lucide-user class="w-3 h-3" />
+                                                        <div
+                                                            class="text-green-800 dark:text-green-200 text-xs md:text-sm">
+                                                            {{ $entry->course_name }}</div>
+                                                        <div
+                                                            class="text-gray-600 dark:text-gray-400 flex items-center mt-1 text-xs">
+                                                            <x-lucide-user class="h-3 w-3 mr-1 flex-shrink-0" />
                                                             <span>{{ $entry->lecturer }}</span>
                                                         </div>
-                                                        <div class="text-gray-600 flex items-center gap-2">
-                                                            <x-lucide-map-pin class="w-3 h-3" />
+                                                        <div
+                                                            class="text-gray-600 dark:text-gray-400 flex items-center text-xs">
+                                                            <x-lucide-map-pin class="w-3 h-3  mr-1 flex-shrink-0" />
+                                                            <span>{{ $entry->venue }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div> --}}
+
+                                                <div class="space-y-2 mb-2">
+                                                    <div x-data
+                                                        x-bind:class="Alpine.store('conflictState').highlightedEntryIds.includes(
+                                                                {{ $entry->id }}) ?
+                                                            'bg-red-100 border-red-400 dark:bg-red-900/30 dark:border-red-700' :
+                                                            'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-700'"
+                                                        class="min-h-[80px] hover:cursor-pointer p-1 md:p-2 rounded-lg border group transition-all duration-200 hover:shadow-md"
+                                                        wire:click="openModal({{ $entry->id }}, '{{ $day }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')">
+                                                        <div
+                                                            class="font-bold text-green-900 dark:text-green-300 flex items-center justify-between">
+                                                            <div class="flex items-center">
+                                                                <x-lucide-book-open
+                                                                    class="h-3 w-3 mr-1 flex-shrink-0" />
+                                                                <span>{{ $entry->course_code }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="text-green-800 dark:text-green-200 text-xs md:text-sm">
+                                                            {{ $entry->course_name }}
+                                                        </div>
+                                                        <div
+                                                            class="text-gray-600 dark:text-gray-400 flex items-center mt-1 text-xs">
+                                                            <x-lucide-user class="h-3 w-3 mr-1 flex-shrink-0" />
+                                                            <span>{{ $entry->lecturer }}</span>
+                                                        </div>
+                                                        <div
+                                                            class="text-gray-600 dark:text-gray-400 flex items-center text-xs">
+                                                            <x-lucide-map-pin class="w-3 h-3  mr-1 flex-shrink-0" />
                                                             <span>{{ $entry->venue }}</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             @else
-                                                <div class="bg-green-100 rounded p-1 mb-1 w-full min-h-[80px]">
-                                                    <div>
-                                                        <div class="font-bold flex items-center gap-2">
-                                                            <x-lucide-book-open class="w-3 h-3" />
-                                                            <span>{{ $entry->course_code }} -
-                                                                {{ $entry->course_name }}</span>
+                                                <div
+                                                    class=" min-h-[80px]  p-1 md:p-2 rounded-lg border group transition-all duration-200 hover:shadow-md bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700">
+                                                    <div
+                                                        class="font-bold text-green-900 dark:text-green-300 flex items-center justify-between">
+                                                        <div class="flex items-center">
+                                                            <x-lucide-book-open class="h-3 w-3 mr-1 flex-shrink-0" />
+                                                            <span>{{ $entry->course_code }} </span>
                                                         </div>
-                                                        <div class="text-gray-700 flex items-center gap-2">
-                                                            <x-lucide-user class="w-3 h-3" />
-                                                            <span>{{ $entry->lecturer }}</span>
-                                                        </div>
-                                                        <div class="text-gray-600 flex items-center gap-2">
-                                                            <x-lucide-map-pin class="w-3 h-3" />
-                                                            <span>{{ $entry->venue }}</span>
-                                                        </div>
+                                                    </div>
+                                                    <div class="text-green-800 dark:text-green-200 text-xs md:text-sm">
+                                                        {{ $entry->course_name }}</div>
+                                                    <div
+                                                        class="text-gray-600 dark:text-gray-400 flex items-center mt-1 text-xs">
+                                                        <x-lucide-user class="h-3 w-3 mr-1 flex-shrink-0" />
+                                                        <span>{{ $entry->lecturer }}</span>
+                                                    </div>
+                                                    <div
+                                                        class="text-gray-600 dark:text-gray-400 flex items-center text-xs">
+                                                        <x-lucide-map-pin class="w-3 h-3  mr-1 flex-shrink-0" />
+                                                        <span>{{ $entry->venue }}</span>
                                                     </div>
                                                 </div>
                                             @endif
@@ -153,6 +206,15 @@
                                         {{-- Empty cell  to preserve spacing --}}
                                         <div class="min-h-[80px] w-36"></div>
                                     @endif
+                                    @if (session('current_role') == 'Admin')
+                                        <div class="h-8 w-full flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer"
+                                            wire:click="openModal(null, '{{ $day }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')"
+                                            title="Add Schedule">
+                                            <x-lucide-plus class="h-4 w-4" />
+                                        </div>
+                                    @endif
+
+                                </td>
                                 </td>
                             @endforeach
                         </tr>
@@ -162,5 +224,8 @@
             </table>
         </div>
     </div>
-    <livewire:timetable.schedule-modal />
+    <livewire:timetable.schedule-modal :version-id="$selectedVersionId" />
+
+
+
 </div>

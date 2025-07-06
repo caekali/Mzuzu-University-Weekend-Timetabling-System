@@ -22,7 +22,7 @@ class Schedule
         $courses = $data['courses'];
         $venues = $data['venues'];
         $timeSlots = $data['timeslots'];
-       
+
         foreach ($courses as $course) {
             $sessions = self::parseLectureHours($course->lecture_hours);
 
@@ -143,21 +143,6 @@ class Schedule
         $courseDayMap = [];
 
         foreach ($this->scheduleEntries as $i => $entry1) {
-            $courseId = $entry1->course->id;
-            $day = $entry1->timeSlots[0]['day'] ?? null;
-
-            if ($day !== null) {
-                if (!isset($courseDayMap[$courseId])) {
-                    $courseDayMap[$courseId] = [];
-                }
-
-                if (in_array($day, $courseDayMap[$courseId])) {
-                    $hardConflicts += $weights['same_day_sessions'];
-                }
-
-                $courseDayMap[$courseId][] = $day;
-            }
-
             foreach ($entry1->timeSlots as $slot) {
                 $lecturerViolation = $this->getConstraintViolationType('lecturers', $entry1->lecturer, $slot);
                 $venueViolation = $this->getConstraintViolationType('venues', $entry1->venue->id, $slot);
@@ -209,7 +194,7 @@ class Schedule
                 $constraint->constraintable_id == $id &&
                 $constraint->day === $slot['day'] &&
                 strtotime($slot['start']) >= strtotime($constraint->start_time) &&
-                strtotime($slot['start']) < strtotime($constraint->end_time)
+                strtotime($slot['end']) < strtotime($constraint->end_time)
             ) {
                 return $constraint->is_hard ? 'hard' : 'soft';
             }

@@ -25,7 +25,7 @@ class LecturerConstraints extends Component
 
     public function openModal($id = null)
     {
-        $this->dispatch('openModal', $id, 'lecturer')->to('constraint.constraint-modal');
+        $this->dispatch('openModal','lecturer',$id)->to('constraint.constraint-modal');
     }
 
     public function confirmDelete($id)

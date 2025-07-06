@@ -122,4 +122,6 @@ return [
         //     'alias' => 'new-mini-button',
         // ],
     ]),
+
+    'load_alpine' => false,
 ];
