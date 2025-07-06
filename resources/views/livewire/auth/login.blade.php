@@ -1,10 +1,10 @@
 <x-slot:subheader>Sign in</x-slot>
 <div>
     <form wire:submit.prevent="login" class="space-y-4">
-        <x-input label="Email" name="email" type="email" wire:model.live="email" autocomplete="on"
+        <x-input label="Email" name="email" type="email" wire:model.defer="email" autocomplete="on"
             placeholder="you@my.mzuni.ac.mw" />
 
-        <x-password label="Password" name="password" wire:model.live="password" placeholder="Password"  autocomplete="on"/>
+        <x-password label="Password" name="password" wire:model.defer="password" placeholder="Password"  autocomplete="on"/>
 
         <div class="flex justify-between items-center">
             <x-checkbox label="Remember Me" wire:model="remember" />

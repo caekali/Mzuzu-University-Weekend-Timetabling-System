@@ -94,10 +94,12 @@ class ScheduleModal extends Component
 
         if (!empty($violations)) {
             foreach ($violations as $violation) {
-                $this->notification()->warning(
-                    title: 'Constraint Violation',
-                    description: $violation['message'],
-                );
+                $this->notification()->send([
+                    'icon' => 'warning',
+                    'title' => 'Constraint Violation',
+                    'description' => $violation['message'],
+                    'timeout' => false
+                ]);
             }
         } else {
             $this->notification()->success(
@@ -105,17 +107,6 @@ class ScheduleModal extends Component
                 description: 'Schedule saved successfully.'
             );
         }
-
-
-        $entryIds = collect($violations)->flatMap(fn($v) => $v['entry_ids'] ?? [])->map(fn($id) => (int) $id)->unique();
-        $conflictIds = collect($violations)->flatMap(fn($v) => $v['conflicting_entry_ids'] ?? [])->map(fn($id) => (int) $id)->unique();
-
-        $allConflictIds = $entryIds->merge($conflictIds)->unique();
-
-        $this->dispatch('highlight-conflicts', [
-            'entryIds' => $allConflictIds->values()->all(),
-        ]);
-
 
         $this->modal()->close('schedule-modal');
         $this->dispatch('refresh-list');

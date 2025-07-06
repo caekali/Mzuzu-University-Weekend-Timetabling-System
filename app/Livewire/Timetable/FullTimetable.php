@@ -15,7 +15,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use WireUi\Traits\WireUiActions;
 
-use function App\Helpers\getSetting;
+
 
 class FullTimetable extends Component
 {
@@ -94,7 +94,8 @@ class FullTimetable extends Component
 
         $this->currentVersion = ScheduleVersion::published()->first();
 
-        $this->selectedVersionId = optional(ScheduleVersion::published()->first())->id;
+        $this->selectedVersionId = $this->currentVersion ?   $this->currentVersion->id : ScheduleVersion::first()?->id;
+
 
 
         $this->loadEntries();
@@ -166,9 +167,9 @@ class FullTimetable extends Component
         $allConflictIds = $entryIds->merge($conflictIds)->unique();
 
         $this->dispatch('highlight-conflicts', [
-            'entryIds' => $allConflictIds->values()->all(), 
+            'entryIds' => $allConflictIds->values()->all(),
         ]);
-      
+
         $grouped = $entries->groupBy(fn($e) => "{$e->day}-{$e->lecturer_id}-{$e->course_id}-{$e->start_time}-{$e->end_time}");
         $filteredEntries = $grouped->map(function ($group) {
             $first = $group->first();

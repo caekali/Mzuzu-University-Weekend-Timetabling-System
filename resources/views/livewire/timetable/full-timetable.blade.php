@@ -146,8 +146,8 @@
                                                 </div> --}}
 
                                                 <div class="space-y-2 mb-2">
-                                                    <div x-data
-                                                        x-bind:class="Alpine.store('conflictState').highlightedEntryIds.includes(
+                                                    <div x-data="{}"
+                                                        x-bind:class="Alpine.store('conflictState')?.highlightedEntryIds.includes(
                                                                 {{ $entry->id }}) ?
                                                             'bg-red-100 border-red-400 dark:bg-red-900/30 dark:border-red-700' :
                                                             'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-700'"
@@ -179,7 +179,7 @@
                                                 </div>
                                             @else
                                                 <div
-                                                    class=" min-h-[80px]  p-1 md:p-2 rounded-lg border group transition-all duration-200 hover:shadow-md bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700">
+                                                    class="  mb-2 min-h-[80px]  p-1 md:p-2 rounded-lg border group transition-all duration-200 hover:shadow-md bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700">
                                                     <div
                                                         class="font-bold text-green-900 dark:text-green-300 flex items-center justify-between">
                                                         <div class="flex items-center">

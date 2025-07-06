@@ -1,5 +1,70 @@
 <?php
 
+// namespace App\Services\GeneticAlgorithm;
+
+// use App\Models\ScheduleEntry;
+// use Illuminate\Database\Eloquent\Collection;
+
+// class ConstraintViolationChecker
+// {
+//     public function check(array $entries): array
+//     {
+//         if (empty($entries)) return [];
+
+//         $entryBlockIds = collect($entries)->pluck('id')->all();
+//         $ignoreIds = collect($entryBlockIds)->filter()->all();
+
+//         $scheduleVersionId = $entries[0]->schedule_version_id;
+
+//         $allEntries = ScheduleEntry::where('schedule_version_id', $scheduleVersionId)
+//             ->when($ignoreIds, fn($q) => $q->whereNotIn('id', $ignoreIds))
+//             ->get();
+
+//         return $this->detectConflicts(collect($entries), $allEntries, $entryBlockIds);
+//     }
+
+//     public function checkMany(Collection $entries): array
+//     {
+//         return $this->detectConflicts($entries, $entries, $entries->pluck('id')->all());
+//     }
+
+
+//     private function detectConflicts(Collection $newEntries, Collection $existingEntries, array $entryBlockIds): array
+//     {
+//         $violations = [];
+
+//         foreach ($newEntries as $entry) {
+//             $conflict = $this->findLecturerConflict($entry, $existingEntries);
+//             if ($conflict) {
+//                 $violations[] = $this->buildViolation('lecturer_conflict', $entryBlockIds, [$conflict->id], $entry);
+//                 continue;
+//             }
+
+//             $conflict = $this->findProgrammeConflict($entry, $existingEntries);
+//             if ($conflict) {
+//                 $violations[] = $this->buildViolation('programme_conflict', $entryBlockIds, [$conflict->id], $entry);
+//                 continue;
+//             }
+
+//             $conflict = $this->findVenueConflict($entry, $existingEntries);
+//             if ($conflict) {
+//                 $violations[] = $this->buildViolation('venue_conflict', $entryBlockIds, [$conflict->id], $entry);
+//             }
+//         }
+
+//         return $violations;
+//     }
+
+//     private function buildViolation(string $type, array $entryIds, array $conflictIds, $entry): array
+//     {
+//         return [
+//             'type' => $type,
+//             'entry_ids' => $entryIds,
+//             'conflicting_entry_ids' => $conflictIds,
+//             'message' => ucfirst(str_replace('_', ' ', $type)) . " at {$entry->day} {$entry->start_time}"
+//         ];
+//     }
+// }
 namespace App\Services\GeneticAlgorithm;
 
 
@@ -26,65 +91,48 @@ class ConstraintViolationChecker
             ->when($ignoreIds, fn($q) => $q->whereNotIn('id', $ignoreIds))
             ->get();
 
-        $conflictingLecturer = null;
-        $conflictingProgramme = null;
 
         foreach ($entries as $entry) {
             // Lecturer conflict
-            $conflictingLecturer = $allEntries->first(function ($existing) use ($entry) {
-                return $existing->lecturer_id === $entry->lecturer_id
-                    && $existing->day === $entry->day
-                    && $existing->start_time < $entry->end_time
-                    && $existing->end_time > $entry->start_time
-                    && $existing->id !== $entry->id
-                    && !(
-                        $existing->course_id === $entry->course_id &&
-                        $existing->programme_id === $entry->programme_id &&
-                        $existing->level === $entry->level
-                    );
-            });
-
-            if ($conflictingLecturer) {
+            $lecturerConflict = $this->findLecturerConflict($entry, $allEntries);
+            if ($lecturerConflict) {
                 break;
             }
         }
 
-        if ($conflictingLecturer) {
+        if ($lecturerConflict) {
             $violations[] = [
                 'entry_ids' => $entryBlockIds,
-                'conflicting_entry_ids' => [$conflictingLecturer->id],
+                'conflicting_entry_ids' => [$lecturerConflict->id],
                 'type' => 'lecturer_conflict',
-                'message' => "Lecturer conflict at {$conflictingLecturer->day} {$conflictingLecturer->start_time}",
+                'message' => "Lecturer conflict at {$lecturerConflict->day} {$lecturerConflict->start_time}",
             ];
         }
 
+        // programme + level conflict
         foreach ($entries as $entry) {
-            $conflictingProgramme = $allEntries->first(function ($existing) use ($entry) {
-                return $existing->programme_id === $entry->programme_id
-                    && $existing->day === $entry->day
-                    && $existing->start_time < $entry->end_time
-                    && $existing->end_time > $entry->start_time
-                    && $existing->id !== $entry->id
-                    &&  $existing->level === $entry->level
-                    && !(
-                        $existing->course_id === $entry->course_id
-                    );
-            });
-
-            if ($conflictingProgramme) {
+            $programmeConflict = $this->findProgrammeConflict($entry, $allEntries);
+            if ($programmeConflict) {
+                $violations[] = [
+                    'type' => 'programme_conflict',
+                    'entry_ids' => [$entry->id],
+                    'conflicting_entry_ids' => [$programmeConflict->id],
+                    'message' => "Programme conflict at {$entry->day} {$entry->start_time}"
+                ];
                 break;
             }
         }
 
-        if ($conflictingProgramme) {
+        // venue conflict check
+        $venueConflict =  $this->findVenueConflict($entry, $allEntries);
+        if ($venueConflict) {
             $violations[] = [
-                'entry_ids' => $entryBlockIds,
-                'conflicting_entry_ids' => [$conflictingProgramme->id],
-                'type' => 'programme_conflict',
-                'message' => "Programme conflict at {$conflictingProgramme->day} {$conflictingProgramme->start_time}",
+                'type' => 'venue_conflict',
+                'entry_ids' => [$entry->id],
+                'conflicting_entry_ids' => [$venueConflict->id],
+                'message' => "Venue conflict at {$entry->day} {$entry->start_time}"
             ];
         }
-
         return $violations;
     }
     public function checkMany(Collection $entries): array
@@ -95,26 +143,8 @@ class ConstraintViolationChecker
             // Filter out the current entry
             $others = $entries->filter(fn($e) => $e->id !== $entry->id);
 
-            $overlaps = fn($a, $b) =>
-            $a->day === $b->day &&
-                $a->start_time < $b->end_time &&
-                $a->end_time > $b->start_time;
-
-            //check if two entries are part of same "session block"
-            $isSameSession = fn($a, $b) =>
-            $a->course_id === $b->course_id &&
-                $a->lecturer_id === $b->lecturer_id &&
-                $a->day === $b->day &&
-                $a->start_time === $b->start_time &&
-                $a->end_time === $b->end_time;
-
-            // === LECTURER CONFLICT ===
-            $lecturerConflict = $others->first(
-                fn($other) =>
-                !$isSameSession($entry, $other) &&
-                    $other->lecturer_id === $entry->lecturer_id &&
-                    $overlaps($entry, $other)
-            );
+            // lecturer conflict
+            $lecturerConflict = $this->findLecturerConflict($entry, $others);
 
             if ($lecturerConflict) {
                 $violations[] = [
@@ -126,15 +156,8 @@ class ConstraintViolationChecker
                 continue;
             }
 
-            // === PROGRAMME CONFLICT ===
-            $programmeConflict = $others->first(
-                fn($other) =>
-                !$isSameSession($entry, $other) &&
-                    $other->programme_id === $entry->programme_id &&
-                    $other->level === $entry->level &&
-                    $overlaps($entry, $other)
-            );
-
+            // programme + level conflict
+            $programmeConflict = $this->findProgrammeConflict($entry, $others);
             if ($programmeConflict) {
                 $violations[] = [
                     'type' => 'programme_conflict',
@@ -145,14 +168,8 @@ class ConstraintViolationChecker
                 continue;
             }
 
-            // === VENUE CONFLICT ===
-            $venueConflict = $others->first(
-                fn($other) =>
-                !$isSameSession($entry, $other) &&
-                    $other->venue_id === $entry->venue_id &&
-                    $overlaps($entry, $other)
-            );
-
+            // venue conflict check
+            $venueConflict =  $this->findVenueConflict($entry, $others);
             if ($venueConflict) {
                 $violations[] = [
                     'type' => 'venue_conflict',
@@ -164,5 +181,54 @@ class ConstraintViolationChecker
         }
 
         return $violations;
+    }
+
+
+    private function overlaps($a, $b): bool
+    {
+        return $a->day === $b->day &&
+            $a->start_time < $b->end_time &&
+            $a->end_time > $b->start_time;
+    }
+
+    private function findLecturerConflict($entry, $others)
+    {
+        return $others->first(
+            fn($other) =>
+            !$this->isSameSession($entry, $other) &&
+                $entry->lecturer_id === $other->lecturer_id &&
+                $this->overlaps($entry, $other)
+        );
+    }
+
+    private function findProgrammeConflict($entry, $others)
+    {
+        return $others->first(
+            fn($other) =>
+            !$this->isSameSession($entry, $other) &&
+                $entry->programme_id === $other->programme_id &&
+                $entry->level === $other->level &&
+                $this->overlaps($entry, $other)
+        );
+    }
+
+    private function findVenueConflict($entry, $others)
+    {
+        return $others->first(
+            fn($other) =>
+            !$this->isSameSession($entry, $other) &&
+                $entry->venue_id === $other->venue_id &&
+                $this->overlaps($entry, $other)
+        );
+    }
+
+    // only differ in programmes
+    private function isSameSession($a, $b): bool
+    {
+        return $a->course_id === $b->course_id &&
+            $a->lecturer_id === $b->lecturer_id &&
+            $a->start_time === $b->start_time &&
+            $a->end_time === $b->end_time &&
+            $a->day === $b->day;
     }
 }

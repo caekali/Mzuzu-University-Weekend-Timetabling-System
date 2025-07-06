@@ -5,6 +5,7 @@ namespace App\Livewire\Forms;
 use App\DTO\ScheduleEntryDTO;
 use App\Models\LecturerCourseAllocation;
 use App\Models\ScheduleEntry;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -41,6 +42,8 @@ class ScheduleForm extends Form
         $sessionsPerWeek = $allocation->course->lecture_hours;
         $baseTime = \Carbon\Carbon::createFromFormat('H:i', $this->start_time);
 
+
+
         foreach ($allocation->programmes as $programme) {
             if ($this->scheduleEntryId) {
                 $entries = ScheduleEntry::where('lecturer_id', $allocation->lecturer_id)
@@ -55,6 +58,10 @@ class ScheduleForm extends Form
 
                 foreach ($entries as $entry) {
                     $entry->update([
+                        'course_id' => $allocation->course_id,
+                        'lecturer_id' => $allocation->lecturer_id,
+                        'level' => $allocation->level,
+                        'programme_id' => $programme->id,
                         'venue_id' => $this->venue_id,
                         'day' => $this->day,
                         'start_time' => $start->format('H:i:s'),
