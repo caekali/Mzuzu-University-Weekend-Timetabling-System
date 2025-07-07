@@ -57,7 +57,7 @@
                                     @if ($cellEntries->isNotEmpty())
                                         @foreach ($cellEntries as $entry)
                                             <div
-                                                class=" min-h-[80px]  p-1 md:p-2 rounded-lg border group transition-all duration-200 hover:shadow-md bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700">
+                                                class="mb-2 min-h-[80px]  p-1 md:p-2 rounded-lg border group transition-all duration-200 hover:shadow-md bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700">
                                                 <div
                                                     class="font-bold text-green-900 dark:text-green-300 flex items-center justify-between">
                                                     <div class="flex items-center">
