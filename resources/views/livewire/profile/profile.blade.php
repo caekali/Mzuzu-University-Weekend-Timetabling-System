@@ -1,86 +1,84 @@
 <div class="py-6 animate-fade-in">
-     <div class="">
-         <div class="flex items-center justify-between mb-6">
-             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">My Profile</h1>
-         </div>
-         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-             <div class="lg:col-span-2">
-                 <div
-                     class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200 p-6">
-                     <div class="flex items-center justify-between mb-6">
-                         <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Profile Information</h2>
-                         <button wire:click="toggleEditProfile"
+    <div class="">
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">My Profile</h1>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Profile Information</h2>
+                        {{-- <button wire:click="toggleEditProfile"
                              class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200">
                              <x-lucide-pencil class="h-4 w-4 mr-2" />
                              {{ $isEditingProfile ? 'Cancel' : 'Edit Profile' }}
-                         </button>
-                     </div>
+                         </button> --}}
+                    </div>
 
-                     @if (!$isEditingProfile)
-                         <div class="space-y-6">
-                             <div class="flex items-center mb-6">
-                                 <div
-                                     class="h-20 w-20 rounded-full bg-gradient-to-br from-green-600 to-green-700 dark:from-green-500 dark:to-green-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                                     {{ strtoupper(substr(auth()->user()->first_name, 0, 1)) }}
-                                 </div>
-                                 <div class="ml-6">
-                                     <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-                                         {{ auth()->user()->first_name . ' ' . auth()->user()->last_name }}</h2>
-                                     </h3>
+                    {{-- @if (!$isEditingProfile) --}}
+                    <div class="space-y-6">
+                        <div class="flex items-center mb-6">
 
-                                     <p class="text-sm text-gray-500 dark:text-gray-400 capitalize">
-                                         {{ auth()->user()->roles->pluck('name')->implode(', ') }}
-                                     </p>
-                                 </div>
-                             </div>
+                            <x-avatar size="w-20 h-20" icon-size="2xl" :label="strtoupper(substr(Auth::user()->first_name, 0, 1)) .
+                                strtoupper(substr(Auth::user()->last_name, 0, 1))" primary/>
+                            <div class="ml-6">
+                                <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                                    {{ auth()->user()->first_name . ' ' . auth()->user()->last_name }}</h2>
+                                </h3>
 
-                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                 <div class="flex items-center text-gray-700 dark:text-gray-300">
-                                     <x-lucide-mail class="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500" />
-                                     <div>
-                                         <p class="text-sm text-gray-500 dark:text-gray-400">Email</p>
-                                         <p class="font-medium">{{ auth()->user()->email }}</p>
-                                     </div>
-                                 </div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 capitalize">
+                                    {{ auth()->user()->roles->pluck('name')->implode(', ') }}
+                                </p>
+                            </div>
+                        </div>
 
-                                 @if (session('current_role') === 'Student')
-                                     <div class="flex items-center text-gray-700 dark:text-gray-300">
-                                         <x-lucide-book-open class="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500" />
-                                         <div>
-                                             <p class="text-sm text-gray-500 dark:text-gray-400">Programme</p>
-                                             <p class="font-medium">{{ auth()->user()->student->programme->name }}</p>
-                                         </div>
-                                     </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="flex items-center text-gray-700 dark:text-gray-300">
+                                <x-lucide-mail class="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500" />
+                                <div>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Email</p>
+                                    <p class="font-medium">{{ auth()->user()->email }}</p>
+                                </div>
+                            </div>
 
-                                     <div class="flex items-center text-gray-700 dark:text-gray-300">
-                                         <x-lucide-graduation-cap
-                                             class="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500" />
-                                         <div>
-                                             <p class="text-sm text-gray-500 dark:text-gray-400">Level of Study</p>
-                                             <p class="font-medium">Level {{ auth()->user()->student->level }}</p>
-                                         </div>
-                                     </div>
+                            @if (session('current_role') === 'Student')
+                                <div class="flex items-center text-gray-700 dark:text-gray-300">
+                                    <x-lucide-book-open class="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500" />
+                                    <div>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Programme</p>
+                                        <p class="font-medium">{{ auth()->user()->student->programme->name }}</p>
+                                    </div>
+                                </div>
 
-                                     <div class="flex items-center text-gray-700 dark:text-gray-300">
-                                         <x-lucide-building class="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500" />
-                                         <div>
-                                             <p class="text-sm text-gray-500 dark:text-gray-400">Department</p>
-                                             <p class="font-medium">
-                                                 {{ auth()->user()->student->programme->department->name }}</p>
-                                         </div>
-                                     </div>
-                                 @elseif (session('current_role') === 'Lecturer')
-                                     <div class="flex items-center text-gray-700 dark:text-gray-300">
-                                         <x-lucide-building class="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500" />
-                                         <div>
-                                             <p class="text-sm text-gray-500 dark:text-gray-400">Department</p>
-                                             <p class="font-medium">{{ auth()->user()->lecturer->department->name }}</p>
-                                         </div>
-                                     </div>
-                                 @endif
-                             </div>
-                         </div>
-                     @else
+                                <div class="flex items-center text-gray-700 dark:text-gray-300">
+                                    <x-lucide-graduation-cap class="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500" />
+                                    <div>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Level of Study</p>
+                                        <p class="font-medium">Level {{ auth()->user()->student->level }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center text-gray-700 dark:text-gray-300">
+                                    <x-lucide-building class="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500" />
+                                    <div>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Department</p>
+                                        <p class="font-medium">
+                                            {{ auth()->user()->student->programme->department->name }}</p>
+                                    </div>
+                                </div>
+                            @elseif (session('current_role') === 'Lecturer')
+                                <div class="flex items-center text-gray-700 dark:text-gray-300">
+                                    <x-lucide-building class="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500" />
+                                    <div>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Department</p>
+                                        <p class="font-medium">{{ auth()->user()->lecturer->department->name }}</p>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    {{-- @else
                          <form wire:submit.prevent="updateProfile" class="space-y-6">
                              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                  <x-input name="profile.first_name" disabled label="First Name"
@@ -111,42 +109,42 @@
                                  </x-button>
                              </div>
                          </form>
-                     @endif
-                 </div>
-             </div>
+                     @endif --}}
+                </div>
+            </div>
 
-             <div class="space-y-6">
-                 <div
-                     class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200 p-6">
-                     <div class="flex items-center justify-between mb-4">
-                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Security</h3>
-                         <button wire:click="toggleEditPassword"
-                             class="text-sm text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 font-medium transition-colors duration-200">
-                             {{ $isEditingPassword ? 'Cancel' : 'Change Password' }}
-                         </button>
-                     </div>
+            <div class="space-y-6">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Security</h3>
+                        <button wire:click="toggleEditPassword"
+                            class="text-sm text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 font-medium transition-colors duration-200">
+                            {{ $isEditingPassword ? 'Cancel' : 'Change Password' }}
+                        </button>
+                    </div>
 
-                     @if (!$isEditingPassword)
-                         <div class="space-y-3">
-                             <div class="flex items-center text-gray-700 dark:text-gray-300">
-                                 <x-lucide-lock class="h-4 w-4 mr-3 text-gray-400 dark:text-gray-500" />
-                                 <p class="text-sm font-medium">Password</p>
-                             </div>
-                         </div>
-                     @else
-                         <form wire:submit.prevent="updatePassword" class="space-y-4">
-                             <x-input type="password" label="Current Password"
-                                 wire:model.defer="form.current_password" />
-                             <x-input type="password" label="New Password" wire:model.defer="form.password" />
-                             <x-input type="password" label="Confirm Password"
-                                 wire:model.defer="form.password_confirmation" />
-                             <x-button primary type="submit" class="w-full">
-                                 <x-lucide-lock class="h-4 w-4 mr-2" />Update Password
-                             </x-button>
-                         </form>
-                     @endif
-                 </div>
-             </div>
-         </div>
-     </div>
- </div>
+                    @if (!$isEditingPassword)
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-700 dark:text-gray-300">
+                                <x-lucide-lock class="h-4 w-4 mr-3 text-gray-400 dark:text-gray-500" />
+                                <p class="text-sm font-medium">Password</p>
+                            </div>
+                        </div>
+                    @else
+                        <form wire:submit.prevent="updatePassword" class="space-y-4">
+                            <x-input type="password" label="Current Password"
+                                wire:model.defer="form.current_password" />
+                            <x-input type="password" label="New Password" wire:model.defer="form.password" />
+                            <x-input type="password" label="Confirm Password"
+                                wire:model.defer="form.password_confirmation" />
+                            <x-button primary type="submit" class="w-full">
+                                <x-lucide-lock class="h-4 w-4 mr-2" />Update Password
+                            </x-button>
+                        </form>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

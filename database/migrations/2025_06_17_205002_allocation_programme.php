@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('allocation_id')->constrained('lecturer_course_allocations')->cascadeOnDelete();
             $table->foreignId('programme_id')->constrained()->cascadeOnDelete();
-            
-            $table->timestamps();
         });
     }
 

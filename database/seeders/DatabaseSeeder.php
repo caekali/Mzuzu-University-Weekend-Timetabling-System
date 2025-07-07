@@ -10,8 +10,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            UserSeeder::class,
-            // MzuniSeeder::class,
+            MzuniSeeder::class,
             // ScheduleDaySeeder::class
         ]);
     }
