@@ -8,12 +8,13 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    //  server: {
-    //     host: '0.0.0.0',
-    //     port: 5173, 
-    //     strictPort: true,
-    //     hmr: {
-    //         host: '192.168.31.33',
-    //     },
-    // },
+    server: {
+        host: '0.0.0.0', // allows Ngrok to access
+        https: true,      // this is the key
+        origin: 'https://e436-102-70-101-196.ngrok-free.app', // your Ngrok HTTPS URL
+        hmr: {
+            protocol: 'wss',
+            host: 'e436-102-70-101-196.ngrok-free.app',
+        },
+    },
 });

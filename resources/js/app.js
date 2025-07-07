@@ -10,3 +10,9 @@ Alpine.plugin(Tooltip);
 
 // window.Alpine = Alpine
 // Alpine.start()
+
+document.addEventListener("livewire:initialized", () => {
+    Livewire.hook('message.sent', (message, component) => {
+        message.headers['ngrok-skip-browser-warning'] = 'true';
+    });
+});

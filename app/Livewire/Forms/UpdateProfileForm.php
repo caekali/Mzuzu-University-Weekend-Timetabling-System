@@ -78,10 +78,12 @@ class UpdateProfileForm extends Form
 
             $student->programme_id = $this->programmeId;
             $student->level = $this->level;
+            $student->save();
         }
         if ($user->isLecturer()) {
             $lecturer  = Auth::user()->lecturer;
             $lecturer->department_id = $this->department;
+            $student->save();
         }
 
         $user->save();
