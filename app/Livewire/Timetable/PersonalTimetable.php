@@ -5,23 +5,10 @@ namespace App\Livewire\Timetable;
 use App\Models\ScheduleDay;
 use App\Models\ScheduleVersion;
 use App\Services\GeneticAlgorithm\GADataLoaderService;
-use Carbon\Carbon;
 use Livewire\Component;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
-use App\Exports\PersonalTimetableExport;
-use Maatwebsite\Excel\Facades\Excel;
 
-
-if (class_exists('Maatwebsite\\Excel\\Facades\\Excel')) {
-    class_alias('Maatwebsite\\Excel\\Facades\\Excel', 'ExcelFacadeAlias');
-    if (interface_exists('Maatwebsite\\Excel\\Concerns\\FromArray')) {
-        class_alias('Maatwebsite\\Excel\\Concerns\\FromArray', 'FromArrayAlias');
-    }
-    if (interface_exists('Maatwebsite\\Excel\\Concerns\\WithHeadings')) {
-        class_alias('Maatwebsite\\Excel\\Concerns\\WithHeadings', 'WithHeadingsAlias');
-    }
-}
 
 use function App\Helpers\getSetting;
 
@@ -127,76 +114,7 @@ class PersonalTimetable extends Component
         }, "ict_weekend_timetable_" . $this->publishedVersion->published_at . ".pdf");
     }
 
-    public function exportToExcel()
-    {
-        $user = Auth::user();
-        $days = $this->days;
-        $timeSlots = $this->timeSlots;
-        $entries = collect($this->entries);
-        $published_at = $this->publishedVersion->published_at;
-        $programmeName = null;
-        $lecturerName = null;
-        if (session('current_role') == 'Student') {
-            $student = $user->student;
-            $programmeName = optional($student->programme)->name;
-        }
-        if (session('current_role') == 'Lecturer' && $user->lecturer) {
-            $lecturerName = $user->first_name . ' ' . $user->last_name;
-        }
-
-        $filename = 'ict_weekend_timetable_' . $published_at . '.csv';
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename=\"$filename\"",
-        ];
-        $callback = function () use ($days, $timeSlots, $entries, $programmeName, $lecturerName, $published_at) {
-            $file = fopen('php://output', 'w');
-            // Title
-            fputcsv($file, ['Weekly Timetable']);
-            if ($programmeName) {
-                fputcsv($file, ["Programme: $programmeName"]);
-            }
-            if ($lecturerName) {
-                fputcsv($file, ["Lecturer: $lecturerName"]);
-            }
-            fputcsv($file, []); // Empty row
-            // Header row
-            $header = ['Day / Time'];
-            foreach ($timeSlots as $slot) {
-                $header[] =
-                    \Carbon\Carbon::parse($slot['start'])->format('H:i') . ' - ' .
-                    \Carbon\Carbon::parse($slot['end'])->format('H:i');
-            }
-            fputcsv($file, $header);
-            // Data rows
-            foreach ($days as $day) {
-                $row = [$day];
-                foreach ($timeSlots as $slot) {
-                    $cellEntries = $entries->filter(function ($entry) use ($day, $slot) {
-                        return $entry['day'] === $day && $entry['start_time'] === $slot['start'];
-                    });
-                    if ($cellEntries->isNotEmpty()) {
-                        $cellText = [];
-                        foreach ($cellEntries as $entry) {
-                            $cellText[] =
-                                $entry['course_code'] . ' - ' . $entry['course_name'] . "\n" .
-                                'Lecturer: ' . $entry['lecturer'] . "\n" .
-                                'Venue: ' . $entry['venue'];
-                        }
-                        $row[] = implode("\n---\n", $cellText);
-                    } else {
-                        $row[] = '';
-                    }
-                }
-                fputcsv($file, $row);
-            }
-            // Footer
-            fputcsv($file, []);
-            fputcsv($file, ["Published at $published_at"]);
-            fclose($file);
-        };
-        return response()->stream($callback, 200, $headers);
-    }
+    
 
     public function render()
     {
