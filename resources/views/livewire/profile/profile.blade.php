@@ -21,7 +21,7 @@
                         <div class="flex items-center mb-6">
 
                             <x-avatar size="w-20 h-20" icon-size="2xl" :label="strtoupper(substr(Auth::user()->first_name, 0, 1)) .
-                                strtoupper(substr(Auth::user()->last_name, 0, 1))" primary/>
+                                strtoupper(substr(Auth::user()->last_name, 0, 1))" primary />
                             <div class="ml-6">
                                 <h3 class="text-xl font-bold text-gray-900 dark:text-white">
                                     {{ auth()->user()->first_name . ' ' . auth()->user()->last_name }}</h2>
@@ -51,14 +51,39 @@
                                     </div>
                                 </div>
 
-                                <div class="flex items-center text-gray-700 dark:text-gray-300">
+                                <div class="flex items-center text-gray-700 dark:text-gray-300" x-data="{ editBtnClicked: false }">
                                     <x-lucide-graduation-cap class="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500" />
                                     <div>
                                         <p class="text-sm text-gray-500 dark:text-gray-400">Level of Study</p>
-                                        <p class="font-medium">Level {{ auth()->user()->student->level }}</p>
+                                        <div class="flex">
+                                            <p class="font-medium">Level {{ auth()->user()->student->level }}</p>
+                                            <button x-show='!editBtnClicked' type="submit"
+                                                @click="editBtnClicked = true"
+                                                class="ml-4 text-sm text-green-600 hover:text-green-700 hover:underline">Edit</button>
+                                            <div x-cloak :class="editBtnClicked ? 'flex' : 'hidden'"
+                                                class="ml-4 items-center space-x-2">
+                                                <select wire:model='studentLevel'
+                                                    class="rounded-md text-sm border-green-600 focus:border-green-600 focus:ring focus:ring-green-200 text-green-700 dark:bg-gray-900 dark:text-green-400 dark:border-green-500">
+                                                    @foreach (config('mzuni-config.levels') as $level)
+                                                        <option value="{{ $level }}"
+                                                            {{ isset(auth()->user()->student->level) && auth()->user()->student->level == $level ? 'selected' : '' }}>
+                                                            Level {{ $level }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+
+                                                <button @click="editBtnClicked = false" wire:click='updateStudentLevel'
+                                                    class="text-sm text-green-600 hover:text-green-700 hover:underline">
+                                                    Save
+                                                </button>
+                                                <button @click="editBtnClicked = false"
+                                                    class="text-sm text-gray-600 hover:text-gray-700 hover:underline">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-
                                 <div class="flex items-center text-gray-700 dark:text-gray-300">
                                     <x-lucide-building class="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500" />
                                     <div>

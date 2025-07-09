@@ -10,7 +10,6 @@ use WireUi\Traits\WireUiActions;
 
 use function App\Helpers\getSetting;
 
-
 class Settings extends Component
 {
     use WireUiActions;
@@ -31,19 +30,11 @@ class Settings extends Component
 
     public int $originalBreakDuration;
 
-    #[Validate('required')]
-    public $standardStartTime;
-
-    #[Validate('required')]
-    public $standardEndTime;
-
-    public  $originalStandardStartTime;
-
-    public  $originalStandardEndTime;
-
     public function mount()
     {
-        $this->scheduleDays = ScheduleDay::all()->map(function ($day) {
+        $this->scheduleDays = ScheduleDay::all()
+        ->sortByDesc('enabled')
+        ->map(function ($day) {
             return [
                 'id' => $day->id,
                 'name' => $day->name,
@@ -51,18 +42,12 @@ class Settings extends Component
                 'start_time' => $day->start_time,
                 'end_time' => $day->end_time,
             ];
-        })->toArray();
+        })
+        ->values()
+        ->toArray();
 
         $this->slotDuration = getSetting('slot_duration', 60);
-        $this->breakDuration = getSetting('break_duration', 10);
-
-        $this->standardStartTime = getSetting('start_time', '07:00');
-        $this->standardEndTime = getSetting('end_time', '18:00');
-
-        // original values
-
-        $this->originalStandardStartTime =   $this->standardStartTime;
-        $this->originalStandardEndTime =   $this->standardEndTime;
+        $this->breakDuration = getSetting('break_duration', 30);
 
         $this->originalSlotDuration = $this->slotDuration;
         $this->originalBreakDuration = $this->breakDuration;
@@ -80,36 +65,26 @@ class Settings extends Component
             ]);
         }
 
-        // Save settings
         Setting::updateOrCreate(['key' => 'slot_duration'], ['value' => $this->slotDuration]);
         Setting::updateOrCreate(['key' => 'break_duration'], ['value' => $this->breakDuration]);
-        Setting::updateOrCreate(['key' => 'start_time'], ['value' => $this->standardStartTime]);
-        Setting::updateOrCreate(['key' => 'end_time'], ['value' => $this->standardEndTime]);
 
-        // Sync originals
         $this->originalScheduleDays = $this->scheduleDays;
         $this->originalSlotDuration = $this->slotDuration;
         $this->originalBreakDuration = $this->breakDuration;
-        $this->originalStandardStartTime = $this->standardStartTime;
-        $this->originalStandardEndTime =  $this->standardEndTime;
-
         $this->hasUnsavedChanges = false;
 
         $this->notification()->success(
             'Updated',
-            'Setings updated successfully.'
+            'Settings updated successfully.'
         );
     }
-
 
     public function checkForChanges()
     {
         $this->hasUnsavedChanges =
             $this->scheduleDays !== $this->originalScheduleDays ||
             $this->slotDuration !== $this->originalSlotDuration ||
-            $this->breakDuration !== $this->originalBreakDuration ||
-            $this->standardStartTime !==  $this->originalStandardStartTime ||
-            $this->standardEndTime !==  $this->originalStandardEndTime;
+            $this->breakDuration !== $this->originalBreakDuration;
     }
 
     public function updatedSlotDuration()
@@ -122,52 +97,11 @@ class Settings extends Component
         $this->checkForChanges();
     }
 
-    public function updatedStandardStartTime()
+    public function updatedScheduleDays()
     {
         $this->checkForChanges();
     }
 
-    public function updatedStandardEndTime()
-    {
-        $this->checkForChanges();
-    }
-
-    public function formatDuration($minutes): string
-    {
-        $hours = intdiv(intval($minutes) ?? 0, 60);
-        $mins = ($minutes ? $minutes : 0) % 60;
-
-        if ($hours > 0) {
-            return $mins > 0 ? "{$hours}h {$mins}m" : "{$hours}h";
-        }
-        return "{$mins}m";
-    }
-
-    public function calculateDurationMinutes(array $day): int
-    {
-        [$sh, $sm] = explode(':', $day['start_time']);
-        [$eh, $em] = explode(':', $day['end_time']);
-
-        return ((int)$eh * 60 + (int)$em) - ((int)$sh * 60 + (int)$sm);
-    }
-    public function calculateTotalSlots($day)
-    {
-        if (!$day['enabled']) return 0;
-
-        // HH:MM
-        [$sh, $sm] = explode(':', $day['start_time']);
-        [$eh, $em] = explode(':', $day['end_time']);
-
-        $startMinutes = ((int)$sh * 60) + (int)$sm;
-        $endMinutes = ((int)$eh * 60) + (int)$em;
-        $totalMinutes = $endMinutes - $startMinutes;
-
-        if ($this->slotDuration + $this->breakDuration <= 0) {
-            return 0;
-        }
-
-        return (int)floor($totalMinutes / ($this->slotDuration + $this->breakDuration));
-    }
     public function toggleDay($dayId)
     {
         foreach ($this->scheduleDays as $index => $day) {
@@ -176,23 +110,54 @@ class Settings extends Component
                 break;
             }
         }
+
         $this->checkForChanges();
     }
 
-
-    public function updateTime($dayId, $field, $value)
+    public function formatDuration($minutes): string
     {
-        if (!in_array($field, ['start_time', 'end_time'])) return;
+        $hours = intdiv((int)($minutes ?? 0), 60);
+        $mins = ($minutes ?? 0) % 60;
 
-        foreach ($this->scheduleDays as $index => $day) {
-            if ($day['id'] === $dayId) {
-                $this->scheduleDays[$index][$field] = $value;
-                break;
-            }
+        if ($hours > 0) {
+            return $mins > 0 ? "{$hours}h {$mins}m" : "{$hours}h";
         }
-        $this->checkForChanges();
+
+        return "{$mins}m";
     }
 
+    public function calculateDurationMinutes(array $day): int
+    {
+        if (empty($day['start_time']) || empty($day['end_time'])) {
+            return 0;
+        }
+
+        [$sh, $sm] = explode(':', $day['start_time']);
+        [$eh, $em] = explode(':', $day['end_time']);
+
+        return ((int)$eh * 60 + (int)$em) - ((int)$sh * 60 + (int)$sm);
+    }
+
+    public function calculateTotalSlots($day)
+    {
+        if (
+            !$day['enabled'] ||
+            empty($day['start_time']) ||
+            empty($day['end_time']) ||
+            ($this->slotDuration + $this->breakDuration <= 0)
+        ) {
+            return 0;
+        }
+
+        [$sh, $sm] = explode(':', $day['start_time']);
+        [$eh, $em] = explode(':', $day['end_time']);
+
+        $startMinutes = ((int)$sh * 60) + (int)$sm;
+        $endMinutes = ((int)$eh * 60) + (int)$em;
+        $totalMinutes = $endMinutes - $startMinutes;
+
+        return (int)floor($totalMinutes / ($this->slotDuration + $this->breakDuration));
+    }
 
     public function render()
     {

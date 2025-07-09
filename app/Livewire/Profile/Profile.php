@@ -7,6 +7,7 @@ use App\Livewire\Forms\UpdateProfileForm;
 use App\Models\Department;
 use App\Models\Programme;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use WireUi\Traits\WireUiActions;
 
@@ -18,6 +19,7 @@ class Profile extends Component
 
     public UpdateProfileForm $profile;
 
+    #[Validate('required')]
     public $studentLevel;
 
     public $isEditingProfile = false;
@@ -77,6 +79,20 @@ class Profile extends Component
         $this->notification()->success(
             'Profile',
             'Profile updated successfully'
+        );
+    }
+
+    public function updateStudentLevel()
+    {
+        $user = auth()->user();
+
+        $student = $user->student;
+        $student->level = $this->studentLevel;
+        $student->save();
+
+        $this->notification()->success(
+            'Student Profile',
+            'Level of study updated'
         );
     }
 
