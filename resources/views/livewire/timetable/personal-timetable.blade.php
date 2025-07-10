@@ -1,15 +1,11 @@
 <div class="py-6">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">My Timetable</h1>
-        {{-- @if (!$publishedVersion)
-            <div
-                class="text-sm text-red-600 dark:text-red-400 font-semibold bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-800 px-4 py-2 rounded-md">
-                Timetable has not been published yet.
-            </div>
-        @endif --}}
 
         <div class="flex justify-end gap-3">
-            <x-button icon="arrow-down-tray" label="Export PDF" wire:click="exportToPdf" />
+            @if ($publishedVersion)
+                <x-button icon="arrow-down-tray" label="Export PDF" wire:click="exportToPdf" />
+            @endif
         </div>
 
     </div>

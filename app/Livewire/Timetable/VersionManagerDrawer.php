@@ -209,21 +209,36 @@ class VersionManagerDrawer extends Component
 
     public function deleteVersion($id)
     {
-        if ($this->currentVersion->id != $id) {
-            ScheduleVersion::findOrFail($id)->delete();
-            $this->notification()->success(
-                'Version Deleted',
-                'The selected version has been deleted successfully.',
-                'check'
-            );
-            $this->loadVersions();
+        $version = ScheduleVersion::findOrFail($id);
+
+        if ($version->is_published) {
+            $this->dialog()->confirm([
+                'title'       => 'Delete Schedule Version',
+                'description' => 'Are you sure you want to delete this published version?',
+                'icon'        => 'warning',
+                'accept'      => [
+                    'label'  => 'Yes, Delete',
+                    'method' => 'deleteScheduleVersion',
+                    'params' => $id,
+                ],
+                'reject' => [
+                    'label'  => 'Cancel',
+                ],
+            ]);
         } else {
-            $this->notification()->warning(
-                'Version Delete',
-                'Your are viewing this version.',
-                'info'
-            );
+            $this->deleteScheduleVersion($id);
         }
+    }
+
+    private function deleteScheduleVersion($id)
+    {
+        ScheduleVersion::findOrFail($id)->delete();
+        $this->notification()->success(
+            'Schedule version',
+            'The schedule version deleted successfully.',
+            'check'
+        );
+        $this->loadVersions();
     }
 
     public function loadVersions()

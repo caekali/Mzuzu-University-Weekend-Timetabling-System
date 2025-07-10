@@ -21,10 +21,14 @@
                     <span class="text-sm text-gray-500 dark:text-gray-400">
                         Current: {{ $currentVersion?->label ?? '—' }}
                     </span>
-                    @if ($currentVersion?->is_published)
-                        <x-badge primary label="Published" />
+                    @if ($currentVersion)
+                        @if ($currentVersion->is_published)
+                            <x-badge primary label="Published" />
+                        @else
+                            <x-badge amber label="Draft" />
+                        @endif
                     @else
-                        <x-badge amber label="Draft" />
+                        <x-badge amber label="Not Available" />
                     @endif
                 </div>
             </div>
