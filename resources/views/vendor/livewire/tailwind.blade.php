@@ -23,7 +23,7 @@
                             &laquo;
                         </span>
                     @else
-                        <button wire:click="previousPage('{{ $paginator->getPageName() }}')" class="inline-flex items-center px-2 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded-l-md hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600">
+                        <button wire:click="previousPage('{{ $paginator->getPageName() }}')" class="inline-flex items-center px-2 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded-l-md hover:bg-gray-400 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600">
                             &laquo;
                         </button>
                     @endif
@@ -55,7 +55,7 @@
 
                     {{-- Next --}}
                     @if ($paginator->hasMorePages())
-                        <button wire:click="nextPage('{{ $paginator->getPageName() }}')" class="inline-flex items-center px-2 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded-r-md hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600">
+                        <button wire:click="nextPage('{{ $paginator->getPageName() }}')" class="inline-flex items-center px-2 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded-r-md hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600">
                             &raquo;
                         </button>
                     @else

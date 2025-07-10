@@ -1,8 +1,6 @@
 <?php
 
-use App\DTO\GAParameterDTO;
-use App\Http\Controllers\GAController;
-use App\Http\Controllers\RoleSwitchController;
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Auth\ActivateAccount;
 use App\Livewire\Auth\ForgotPassword;
@@ -11,7 +9,6 @@ use App\Livewire\Auth\RequestActivationLink;
 use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Constraint\LecturerConstraints;
 use App\Livewire\Constraint\VenueConstraints;
-use App\Livewire\ConstraintList;
 use App\Livewire\Course\CourseList;
 use App\Livewire\CourseAllocation\CourseAllocation;
 use App\Livewire\Dashboard;
@@ -23,17 +20,12 @@ use App\Livewire\Settings;
 use App\Livewire\Timetable\FullTimetable;
 use App\Livewire\Timetable\GenerateTimetable;
 use App\Livewire\Timetable\PersonalTimetable;
-use App\Livewire\Timetable\Timetable;
 use App\Livewire\User\UserList;
 use App\Livewire\Venue\VenueList;
-use App\Models\GAParameter;
-use App\Models\ScheduleEntry;
-use App\Services\GeneticAlgorithm\GADataLoaderService;
-use App\Services\GeneticAlgorithm\GeneticAlgorithm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-Route::get('/test', [GAController::class, 'generate']);
+Route::get('/test', [TestController::class, 'generate']);
 
 Route::get('/', function () {
     return Auth::check()

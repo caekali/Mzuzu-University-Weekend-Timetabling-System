@@ -6,7 +6,7 @@ use App\Services\GeneticAlgorithm\GADataLoaderService;
 use App\Services\GeneticAlgorithm\GeneticAlgorithm;
 use App\Services\GeneticAlgorithm\ScheduleEntry;
 
-class GAController extends Controller
+class TestController extends Controller
 {
 
   public function generate()
