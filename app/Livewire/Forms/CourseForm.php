@@ -10,10 +10,10 @@ class CourseForm extends Form
 {
     public $courseId = null;
 
-    #[Validate('required|string|unique:courses,code|max:10')]
+    #[Validate('required|string')]
     public $code = '';
 
-    #[Validate('required|string|unique:courses,code')]
+    #[Validate('required|string')]
     public $name = '';
 
 
@@ -24,11 +24,11 @@ class CourseForm extends Form
     public $semester = null;
 
 
-    #[Validate('required|string')]
+    #[Validate('required|int')]
     public $lecture_hours = null;
 
-    #[Validate('required|integer|min:0')]
-    public $num_of_students = null;
+    // #[Validate('required|integer|min:0')]
+    // public $num_of_students = null;
 
     #[Validate('required|exists:departments,id')]
     public $department_id = '';
@@ -36,6 +36,8 @@ class CourseForm extends Form
     public function store()
     {
         $validated = $this->validate();
+
+        $validated['num_of_students'] = 50;
 
         if (!$this->courseId) {
             Course::create($validated);
@@ -46,6 +48,5 @@ class CourseForm extends Form
 
         $this->reset('form');
         $this->resetValidation();
-        
     }
 }

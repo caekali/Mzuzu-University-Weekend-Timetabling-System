@@ -17,7 +17,7 @@
                     <div class="mb-6 space-y-4">
                         <div class="flex flex-col sm:flex-row gap-4">
                             <div class="relative flex-1 ">
-                                <x-input wire:model.live='search' placeholder="Search programme..." />
+                                <x-input wire:model.live='search' placeholder="Search user..." />
                             </div>
                             <div class="flex items-center space-x-4">
                                 <div class="flex items-center space-x-2">

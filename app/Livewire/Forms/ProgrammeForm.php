@@ -3,6 +3,7 @@
 namespace App\Livewire\Forms;
 
 use App\Models\Programme;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -10,27 +11,40 @@ class ProgrammeForm extends Form
 {
     public $programmeId = null;
 
-    #[Validate('required|string|unique:programmes,code|max:10')]
+    #[Validate('required|string|max:10')]
     public $code = '';
 
-    #[Validate('required|string|unique:programmes,name')]
+    #[Validate('required|string')]
     public $name = '';
 
     #[Validate('required|exists:departments,id')]
     public $department_id = '';
 
-     public function store()
+    public function store()
     {
-        $validated = $this->validate();
+        $rules = [
+            'code' => [
+                'required',
+                'string',
+                'max:10',
+                Rule::unique('programmes', 'code')->ignore($this->programmeId),
+            ],
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('programmes', 'name')->ignore($this->programmeId),
+            ],
+            'department_id' => 'required|exists:departments,id',
+        ];
 
-        if (!$this->programmeId) {
-            Programme::create($validated);
-        } else {
-            Programme::findOrFail($this->programmeId)
-                ->update($validated);
-        }
+        $validated = $this->validate($rules);
 
-        $this->reset('form');
+        Programme::updateOrCreate(
+            ['id' => $this->programmeId],
+            $validated
+        );
+
+        $this->reset();
         $this->resetValidation();
     }
 }

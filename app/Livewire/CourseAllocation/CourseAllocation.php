@@ -33,6 +33,8 @@ class CourseAllocation extends Component
 
     public $selectedProgramme;
 
+    public $search = '';
+
     public bool $showFilters = false;
 
     public function mount()
@@ -50,6 +52,12 @@ class CourseAllocation extends Component
                 'name' => $lecturer->user->first_name . ' ' . $lecturer->user->last_name,
             ];
         });
+    }
+
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
     }
 
     public function openModal($id = null)
@@ -128,17 +136,19 @@ class CourseAllocation extends Component
         $allocations = LecturerCourseAllocation::with(['lecturer.user', 'course', 'programmes'])
             ->when($this->selectedLecturer, fn($q) =>
             $q->where('lecturer_id', $this->selectedLecturer))
-            ->when(
-                $this->selectedLevel,
-                fn($q) =>
-                $q->where('level', $this->selectedLevel)
-            )->when(
-                $this->selectedProgramme,
-                fn($q) =>
-                $q->whereHas('programmes', fn($q) => $q->where('programmes.id', $this->selectedProgramme))
-
-            )->paginate(8);
-
+            ->when($this->selectedLevel, fn($q) =>
+            $q->where('level', $this->selectedLevel))
+            ->when($this->selectedProgramme, fn($q) =>
+            $q->whereHas('programmes', fn($q) =>
+            $q->where('programmes.id', $this->selectedProgramme)))
+            ->when(trim($this->search), function ($query) {
+                $searchTerm = trim($this->search);
+                $query->whereHas('course', function ($q) use ($searchTerm) {
+                    $q->where('name', 'like', "%{$searchTerm}%")
+                        ->orWhere('code', 'like', "%{$searchTerm}%");
+                });
+            })
+            ->paginate(8);
 
         $allocations->setCollection($allocations->getCollection()->transform(function ($allocation) {
             return [

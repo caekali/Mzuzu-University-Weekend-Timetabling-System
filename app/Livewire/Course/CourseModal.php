@@ -44,7 +44,9 @@ class CourseModal extends Component
 
     public function save()
     {
+
         $this->form->store();
+       
         $this->notification()->success(
             'Saved',
             'Course saved successfully.'

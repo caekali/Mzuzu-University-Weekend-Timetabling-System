@@ -1,4 +1,4 @@
-<div class="overflow-x-auto">
+<div class="overflow-x-auto mb-4">
     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
         <thead class="bg-gray-100 dark:bg-gray-900">
             <tr>
@@ -55,8 +55,5 @@
     </table>
 </div>
 @if ($paginate && $rows instanceof \Illuminate\Pagination\AbstractPaginator)
-    <div class="mt-4">
-      {{ $rows->links('vendor.livewire.tailwind') }}
-
-    </div>
+    {{ $rows->links('vendor.livewire.tailwind') }}
 @endif

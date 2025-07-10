@@ -3,6 +3,7 @@
 namespace App\Livewire\Forms;
 
 use App\Models\Venue;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -10,7 +11,7 @@ class VenueForm extends Form
 {
     public $venueId = null;
 
-    #[Validate('required|string|unique:venues,name')]
+    #[Validate('required|string')]
     public $name = '';
 
     #[Validate('required|integer')]
@@ -21,14 +22,22 @@ class VenueForm extends Form
 
     public function store()
     {
-        $validated =  $this->validate();
+        $rules = [
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('venues', 'name')->ignore($this->venueId),
+            ],
+            'capacity' => 'required|integer',
+            'is_lab' => 'required|boolean',
+        ];
 
-        if (!$this->venueId) {
-            Venue::create($validated);
-        } else {
-            Venue::findOrFail($this->venueId)
-                ->update($validated);
-        }
+        $validated = $this->validate($rules);
+
+        Venue::updateOrCreate(
+            ['id' => $this->venueId],
+            $validated
+        );
 
         $this->reset();
     }

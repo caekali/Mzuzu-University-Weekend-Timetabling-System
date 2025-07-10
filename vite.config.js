@@ -17,4 +17,13 @@ export default defineConfig({
     //         host: 'e436-102-70-101-196.ngrok-free.app',
     //     },
     // },
+
+    server: {
+        host: '0.0.0.0',
+        port: 5173,
+        strictPort: true,
+        hmr: {
+            host: '192.168.43.33',
+        },
+    },
 });

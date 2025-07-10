@@ -104,6 +104,7 @@ class UserList extends Component
         }
 
         $users = $query->paginate(8);
+        $users->onEachSide(1);
 
         $users->getCollection()->transform(function ($user) {
             $data = [
