@@ -89,32 +89,46 @@ class PersonalTimetable extends Component
 
     public function exportToPdf()
     {
-        $user = Auth::user();
+
+
+        $title = '';
+        if ($this->publishedVersion) {
+            $published_at = $this->publishedVersion->published_at;
+            $title = $this->publishedVersion->label . " Mzuzu University ICT Weekend Teaching Timetable $published_at";
+        }
+
         $data = [
+            'title' => $title,
             'entries' => $this->entries,
             'timeSlots' => $this->timeSlots,
             'days' => $this->days,
-            'published_at' => $this->publishedVersion->published_at
+            'subtitle' => '',
         ];
 
-        // Add programme name if role is Student
-        if (session('current_role') == 'Student') {
+        $user = Auth::user();
+        if (session('current_role') === 'Student' && $user->student) {
             $student = $user->student;
-            $data['programmeName'] = optional($student->programme)->name;
-        }
-        // Add lecturer name if role is Lecturer
-        if (session('current_role') == 'Lecturer' && $user->lecturer) {
-            $data['lecturerName'] = $user->first_name . ' ' . $user->last_name;
+            $data['subtitle'] = "For " . optional($student->programme)->name . " Level " . $student->level;
         }
 
-        $pdf =  Pdf::loadView('exports.timetable', $data)->setPaper('A4', 'landscape');
+        if (session('current_role') === 'Lecturer' && $user->lecturer) {
+            $data['subtitle'] = "For {$user->first_name} {$user->last_name}";
+        }
+
+        $customPaper = [0, 0, 850.00, 1000.00];
+
+        $pdf = PDF::loadView('exports.timetable', $data)
+            ->setPaper($customPaper, 'landscape');
+
+        $filename = 'ict_weekend_timetable_' . optional($this->publishedVersion)->published_at . '.pdf';
 
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->stream();
-        }, "ict_weekend_timetable_" . $this->publishedVersion->published_at . ".pdf");
+        }, $filename);
     }
 
-    
+
+
 
     public function render()
     {

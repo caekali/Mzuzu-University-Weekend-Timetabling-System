@@ -12,10 +12,10 @@ class DepartmentForm extends Form
 
     public $departmentId = null;
 
-    #[Validate('required|string')]
+    #[Validate('required|string|unique:departments,code')]
     public $code = '';
 
-    #[Validate('required|string')]
+    #[Validate('required|string|unique:departments,code')]
     public $name = '';
 
     public function store()

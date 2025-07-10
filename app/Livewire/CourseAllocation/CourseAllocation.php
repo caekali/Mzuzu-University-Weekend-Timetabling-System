@@ -33,6 +33,7 @@ class CourseAllocation extends Component
 
     public $selectedProgramme;
 
+    public bool $showFilters = false;
 
     public function mount()
     {
@@ -74,15 +75,49 @@ class CourseAllocation extends Component
         ]);
     }
 
-    public function delete($id)
+    public function delete($id = null)
     {
-        LecturerCourseAllocation::findOrFail($id)->delete();
-        $this->notification()->success(
-            'Deleted',
-            'Allocation deleted successfully.'
-        );
+        if ($id) {
+            LecturerCourseAllocation::findOrFail($id)->delete();
+
+            $this->notification()->success(
+                'Deleted',
+                'Allocation deleted successfully.'
+            );
+        } else {
+            LecturerCourseAllocation::query()->delete();
+            $this->notification()->success(
+                'Deleted',
+                'All allocations deleted successfully.'
+            );
+        }
 
         $this->dispatch('refresh-list');
+    }
+
+
+    public function clearAll()
+    {
+        if (LecturerCourseAllocation::count() > 0) {
+            $this->dialog()->confirm([
+                'title'       => 'Delete Allocations',
+                'description' => 'Are you sure you want to delete all Course Allocation?',
+                'icon'        => 'warning',
+                'accept'      => [
+                    'label'  => 'Yes, Delete',
+                    'method' => 'delete',
+                    'params' => null,
+                ],
+                'reject' => [
+                    'label'  => 'Cancel',
+                ],
+            ]);
+        } else {
+            $this->notification()->info(
+                'Deletion',
+                'No records to delete.'
+            );
+        }
     }
 
     #[On('refresh-list')]

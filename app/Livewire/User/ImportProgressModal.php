@@ -57,11 +57,13 @@ class ImportProgressModal extends Component
         $this->startImport();
     }
 
-    public function resolveProgrammeId(?string $programmeName): ?int
+    public function resolveProgrammeId(?string $programmeNameOrCode): ?int
     {
-        if (!$programmeName) return null;
-
-        return Programme::where('name', 'LIKE', trim($programmeName))->value('id');
+        if (!$programmeNameOrCode) return null;
+        $query = trim($programmeNameOrCode);
+        return Programme::where('name', 'LIKE', $query)
+            ->orWhere('code', 'LIKE', $query)
+            ->value('id');
     }
 
     public function resolveDepartmentId(?string $departmentNameOrCode): ?int
@@ -163,14 +165,10 @@ class ImportProgressModal extends Component
             $errors = $validator->errors()->all();
 
             // Check for existing user
-            $exists = \App\Models\User::where('email', $data['email'])
-                ->orWhere(function ($q) use ($data) {
-                    $q->where('first_name', $data['first_name'])
-                        ->where('last_name', $data['last_name']);
-                })->exists();
+            $exists = \App\Models\User::where('email', $data['email'])->exists();
 
             if ($exists) {
-                $errors[] = "User with same email or full name already exists.";
+                $errors[] = "User with email already exists.";
             }
 
             // Resolve programme or department IDs
@@ -208,7 +206,12 @@ class ImportProgressModal extends Component
                 'email'      => $data['email'],
             ]);
 
-            $user->assignRole($data['role']);
+            $roleMap = [
+                'student' => 'Student',
+                'lecturer' => 'Lecturer',
+            ];
+
+            $user->assignRole($roleMap[strtolower($data['role'])]);
 
             if ($data['role'] === 'student') {
                 $user->student()->create([

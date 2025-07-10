@@ -8,12 +8,11 @@
                 </h3>
                 <div class="text-sm text-green-800 dark:text-green-400 space-y-2">
                     <p><strong>Required headers:</strong> first_name, last_name, email, role</p>
-                    <p><strong>Optional headers:</strong> level (for students), programme (for students), department
-                        (for lecturers)</p>
+                    <p><strong>Optional headers:</strong> level (for students), programme (for students), department (for lecturers)</p>
                     <p><strong>Valid roles:</strong> student, lecturer, admin</p>
-                    <p><strong>Student level:</strong> 1-6</p>
-                    <p><strong>Valid programmes names from the system</strong></p>
-                    <p><strong>Valid departments names from the system</strong></p>
+                    <p><strong>Student level:</strong> 1-5</p>
+                    <p><strong>Valid programmes names or code from the system</strong></p>
+                    <p><strong>Valid departments names or code from the system</strong></p>
                 </div>
                 <div class="mt-3">
                     <x-button secondary wire:click="downloadTemplate" wire:loading.attr="disabled"
@@ -48,13 +47,10 @@
                         </form>
                     </label>
                 </div>
-                <p class="text-xs text-gray-500 dark:text-gray-400">
-                    CSV files only
-                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">CSV files only</p>
             </div>
         </div>
     </div>
-
 
     @if ($isReadyToImport && count($previewData))
         <div class="mt-6">
@@ -77,30 +73,6 @@
                 </div>
             </div>
 
-            {{-- <div class="grid grid-cols-3 gap-4 mb-4">
-                <div
-                    class="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700">
-                    <div class="text-sm font-medium text-green-800 dark:text-green-300">Valid</div>
-                    <div class="text-2xl font-bold text-green-600 dark:text-green-400">
-                       0
-                    </div>
-                </div>
-                <div
-                    class="text-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-700">
-                    <div class="text-sm font-medium text-red-800 dark:text-red-300">Errors</div>
-                    <div class="text-2xl font-bold text-red-600 dark:text-red-400">
-                       0
-                    </div>
-                </div>
-                <div
-                    class="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700">
-                    <div class="text-sm font-medium text-green-800 dark:text-green-300">Total</div>
-                    <div class="text-2xl font-bold text-green-600 dark:text-green-400">
-                        0
-                    </div>
-                </div>
-            </div> --}}
-
             @php
                 $headers = [
                     'first_name' => 'First Name',
@@ -111,19 +83,29 @@
                     'programme' => 'Programme',
                     'department' => 'Department',
                 ];
+
+                $customCell = function ($row) {
+                    $roleColors = [
+                        'admin' => 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+                        'lecturer' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+                        'hod' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+                        'student' => 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
+                    ];
+                    $role = strtolower($row);
+                    $classes = $roleColors[$role] ?? 'bg-gray-100 text-gray-800';
+                    return "<span class='inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium $classes'>" . ucfirst($row) . "</span>";
+                };
             @endphp
 
             <div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 max-h-96">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-100 dark:bg-gray-900">
                         <tr>
-                            <th
-                                class="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 #
                             </th>
                             @foreach ($headers as $field => $label)
-                                <th
-                                    class="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                     {{ $label }}
                                 </th>
                             @endforeach
@@ -139,10 +121,15 @@
                             @endphp
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                                 <td class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400 font-mono">
-                                    {{ $rowNum }}</td>
+                                    {{ $rowNum }}
+                                </td>
                                 @foreach ($headers as $field => $label)
                                     <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-200">
-                                        <span>{{ $row[$field] ?? '' }}</span>
+                                        @if ($field === 'role')
+                                            {!! $customCell($row['role']) !!}
+                                        @else
+                                            <span>{{ $row[$field] ?? '' }}</span>
+                                        @endif
                                     </td>
                                 @endforeach
                             </tr>
@@ -152,5 +139,6 @@
             </div>
         </div>
     @endif
+
     @livewire('user.import-progress-modal')
 </div>

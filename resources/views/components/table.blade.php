@@ -56,6 +56,7 @@
 </div>
 @if ($paginate && $rows instanceof \Illuminate\Pagination\AbstractPaginator)
     <div class="mt-4">
-        {{ $rows->links() }}
+      {{ $rows->links('vendor.livewire.tailwind') }}
+
     </div>
 @endif

@@ -4,33 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Weekly Timetable</title>
+
     <style>
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: "Segoe UI", sans-serif;
             font-size: 12px;
             color: #111827;
             margin: 20px;
         }
 
+        h1,
         h2 {
             text-align: center;
+            margin: 0;
+        }
+
+        h1 {
             font-size: 20px;
-            margin-bottom: 20px;
             color: #1f2937;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 16px;
+            color: #4b5563;
+            margin-bottom: 20px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
+            margin-bottom: 30px;
         }
 
         th,
         td {
             border: 1px solid #e5e7eb;
-            padding: 6px;
+            padding: 8px;
             vertical-align: top;
-            text-align: left;
+            text-align: center;
+            word-wrap: break-word;
         }
 
         th {
@@ -39,65 +53,87 @@
             color: #374151;
         }
 
-        .time-slot {
-            width: 100px;
-        }
 
-        .time-slot .slot {
-            text-align: center;
-        }
-
-
-
-        .entry-card {
-            background-color: #d1fae5;
+        td div {
+            margin-bottom: 6px;
+            background-color: #ecfdf5;
+            border: 1px solid #bbf7d0;
             border-radius: 4px;
-            padding: 4px;
-            margin-bottom: 4px;
-        }
-
-        .entry-card .course {
-            font-weight: bold;
+            padding: 6px;
+            font-size: 11px;
             color: #065f46;
         }
 
-        .entry-card .meta {
-            font-size: 10px;
+        td div:last-child {
+            margin-bottom: 0;
+        }
+
+        .course-details {
+            margin-top: 30px;
+        }
+
+        .course-details h3 {
+            font-size: 14px;
+            color: #065f46;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #d1d5db;
+            padding-bottom: 4px;
+        }
+
+        .course-details div {
+            font-size: 12px;
+            margin-bottom: 5px;
             color: #374151;
         }
 
-        .empty-cell {
-            min-height: 50px;
+        .course-details strong {
+            color: #065f46;
         }
 
         .footer {
+            margin-top: 40px;
             text-align: center;
             font-size: 10px;
             color: #9ca3af;
+        }
+
+
+
+        .course-details {
             margin-top: 30px;
+        }
+
+        .course-details h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #000;
+            padding-bottom: 4px;
+        }
+
+        .course-details div {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 10px;
         }
     </style>
 </head>
 
 <body>
-    <div style="text-align: center; margin-bottom: 10px;">
-        <img src="{{ public_path('assets/mzunilogo.webp') }}" alt="Mzuni Logo"
-            style="height: 80px; display: inline-block;" />
-    </div>
-    @if (isset($programmeName))
-        <div style="text-align: center; font-size: 13px; color: #374151; margin-bottom: 5px; font-weight: 500;">
-            Programme: {{ $programmeName }}
-        </div>
-    @endif
-    <h2>Weekly Timetable</h2>
+    <h1>{{ $title }}</h1>
+    <h2>{{ $subtitle }}</h2>
 
     <table>
         <thead>
             <tr>
-                <th class="time-slot">Day / Time</th>
+                <th>Day / Time</th>
                 @foreach ($timeSlots as $slot)
-                    <th class='slot'>
-                        {{ \Carbon\Carbon::parse($slot['start'])->format('H:i') }} <br /> - <br />
+                    <th>
+                        {{ \Carbon\Carbon::parse($slot['start'])->format('H:i') }}<br> - <br>
                         {{ \Carbon\Carbon::parse($slot['end'])->format('H:i') }}
                     </th>
                 @endforeach
@@ -109,23 +145,20 @@
                     <th>{{ $day }}</th>
                     @foreach ($timeSlots as $slot)
                         @php
-                            $cellEntries = collect($entries)->filter(function ($entry) use ($day, $slot) {
-                                return $entry['day'] === $day && $entry['start_time'] === $slot['start'];
-                            });
+                            $cellEntries = collect($entries)->filter(
+                                fn($entry) => $entry['day'] === $day && $entry['start_time'] === $slot['start'],
+                            );
                         @endphp
                         <td>
                             @if ($cellEntries->isNotEmpty())
                                 @foreach ($cellEntries as $entry)
-                                    <div class="entry-card">
-                                        <div class="course">{{ $entry['course_code'] }}
-                                        </div>
-                                        {{-- <div class="meta">{{ $entry['lecturer'] }}</div> --}}
-                                        <div class="meta">{{ $entry['venue'] }}</div>
-                                    </div>
-                                    </div>
+                                    <span style="margin-bottom: 16px">{{ $entry['course_code'] }}
+                                    </span>
+                                    <br>
+                                    <span> {{ $entry['venue'] }}</span>
                                 @endforeach
                             @else
-                                <div class="empty-cell"></div>
+                                &nbsp;
                             @endif
                         </td>
                     @endforeach
@@ -134,10 +167,14 @@
         </tbody>
     </table>
 
-    <div class="footer">
-        Published at {{ $published_at }} by {{ config('app.name') }}
+    <div class="course-details">
+        <h3>Course Details</h3>
+        @foreach (collect($entries)->unique('course_code') as $entry)
+            <div>
+                <strong>{{ $entry['course_code'] }}</strong>: {{ $entry['course_name'] }} — {{ $entry['lecturer'] }}
+            </div>
+        @endforeach
     </div>
-
 </body>
 
 </html>

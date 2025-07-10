@@ -10,7 +10,7 @@ class VenueForm extends Form
 {
     public $venueId = null;
 
-    #[Validate('required|string')]
+    #[Validate('required|string|unique:venues,name')]
     public $name = '';
 
     #[Validate('required|integer')]

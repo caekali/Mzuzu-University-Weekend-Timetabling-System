@@ -10,10 +10,10 @@ class CourseForm extends Form
 {
     public $courseId = null;
 
-    #[Validate('required|string|max:10')]
+    #[Validate('required|string|unique:courses,code|max:10')]
     public $code = '';
 
-    #[Validate('required|string')]
+    #[Validate('required|string|unique:courses,code')]
     public $name = '';
 
 

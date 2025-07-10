@@ -77,12 +77,12 @@ class User extends Authenticatable
         return $this->roles->contains('name', 'Admin');
     }
 
-     public function isLecturer(): bool
+    public function isLecturer(): bool
     {
         return $this->roles->contains('name', 'Lecturer');
     }
 
-     public function isStudent(): bool
+    public function isStudent(): bool
     {
         return $this->roles->contains('name', 'Student');
     }

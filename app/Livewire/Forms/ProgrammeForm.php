@@ -10,10 +10,10 @@ class ProgrammeForm extends Form
 {
     public $programmeId = null;
 
-    #[Validate('required|string|max:10')]
+    #[Validate('required|string|unique:programmes,code|max:10')]
     public $code = '';
 
-    #[Validate('required|string')]
+    #[Validate('required|string|unique:programmes,name')]
     public $name = '';
 
     #[Validate('required|exists:departments,id')]
