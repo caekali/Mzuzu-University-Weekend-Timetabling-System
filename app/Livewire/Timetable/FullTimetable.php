@@ -253,6 +253,12 @@ class FullTimetable extends Component
         $this->loadEntries();
     }
 
+    #[On('update-current')]
+    public function updateCurrentVersion()
+    {
+        $this->currentVersion = ScheduleVersion::published()->first();
+    }
+
     public function openModal($id = null, $day = null, $startTime = null, $endTime = null)
     {
         $this->dispatch('openModal', $this->selectedVersionId, $id, $day, $startTime, $endTime)->to('timetable.schedule-modal');

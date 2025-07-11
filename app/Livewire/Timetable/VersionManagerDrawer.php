@@ -180,6 +180,10 @@ class VersionManagerDrawer extends Component
             'info'
         );
 
+        if ($this->currentVersion?->id == $id) {
+            $this->dispatch('update-current');
+        }
+
         $this->loadVersions();
     }
 
@@ -191,6 +195,10 @@ class VersionManagerDrawer extends Component
             $version->is_published = true;
             $version->published_at = now();
             $version->save();
+
+            if ($this->currentVersion?->id == $id) {
+                $this->dispatch('update-current');
+            }
 
             $users = User::all();
             foreach ($users as $user) {
