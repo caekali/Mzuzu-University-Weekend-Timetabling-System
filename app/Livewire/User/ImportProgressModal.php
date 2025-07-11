@@ -156,12 +156,19 @@ class ImportProgressModal extends Component
             $validator = Validator::make($data, [
                 'first_name' => 'required|string',
                 'last_name'  => 'required|string',
-                'email'      => 'required|email',
+                'email'      => [
+                    'required',
+                    'email',
+                    'regex:/^[^@\s]+@(my\.mzuni\.ac\.mw|mzuni\.ac\.mw)$/'
+                ],
                 'role'       => 'required|in:student,lecturer',
                 'level'      => 'required_if:role,student|nullable|integer',
                 'programme'  => 'required_if:role,student|nullable|string',
                 'department' => 'required_if:role,lecturer|nullable|string',
+            ], [
+                'email.regex' => 'Provide instutition email.',
             ]);
+
             $errors = $validator->errors()->all();
 
             // Check for existing user

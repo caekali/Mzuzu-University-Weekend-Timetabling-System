@@ -96,9 +96,18 @@ class UserForm extends Form
         ];
 
         if ($this->userId) {
-            $rules['email'] = 'required|email';
+            $rules['email'] = [
+                'required',
+                'email',
+                'regex:/^[^@\s]+@(my\.mzuni\.ac\.mw|mzuni\.ac\.mw)$/'
+            ];
         } else {
-            $rules['email'] = 'required|email|unique:users,email';
+            $rules['email'] = [
+                'required',
+                'email',
+                'unique:users,email',
+                'regex:/^[^@\s]+@(my\.mzuni\.ac\.mw|mzuni\.ac\.mw)$/'
+            ];
         }
 
 
@@ -114,5 +123,12 @@ class UserForm extends Form
         }
 
         return $rules;
+    }
+
+    public function messages()
+    {
+        return [
+            'email.regex' => 'Provide instutition email.',
+        ];
     }
 }
