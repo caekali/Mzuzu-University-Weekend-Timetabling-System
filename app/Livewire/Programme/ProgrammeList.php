@@ -15,9 +15,10 @@ class ProgrammeList extends Component
     use WireUiActions, WithPagination, WithoutUrlPagination;
 
     public $search = '';
-    public   $headers = [
+    public $headers = [
         'code' => 'Code',
         'name' => 'Name',
+        'number_of_students' => 'No. of Students',
         'department' => 'Department',
     ];
 
@@ -81,6 +82,7 @@ class ProgrammeList extends Component
                     'id' => $programme->id,
                     'code' => $programme->code,
                     'name' => $programme->name,
+                    'number_of_students' => $programme->number_of_students,
                     'department' => $programme->department->name ?? 'N/A',
                 ];
             })

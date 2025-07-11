@@ -89,7 +89,6 @@ class CourseList extends Component
                     'level' => $course->level,
                     'semester' => $course->semester,
                     'department' => $course->department->name ?? 'N/A',
-                    'num_of_students' => $course->num_of_students,
                 ];
             })
         );

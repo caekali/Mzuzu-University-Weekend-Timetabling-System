@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('code');
             $table->string('name');
+            $table->unsignedInteger('number_of_students')->default(30);
             $table->foreignId('department_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

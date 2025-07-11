@@ -27,8 +27,7 @@ class CourseForm extends Form
     #[Validate('required|int')]
     public $lecture_hours = null;
 
-    // #[Validate('required|integer|min:0')]
-    // public $num_of_students = null;
+   
 
     #[Validate('required|exists:departments,id')]
     public $department_id = '';
@@ -36,8 +35,6 @@ class CourseForm extends Form
     public function store()
     {
         $validated = $this->validate();
-
-        $validated['num_of_students'] = 50;
 
         if (!$this->courseId) {
             Course::create($validated);

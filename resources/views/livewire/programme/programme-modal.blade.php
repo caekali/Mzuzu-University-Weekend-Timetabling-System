@@ -3,12 +3,14 @@
      <form id="programmeForm" wire:submit="save">
          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
              <x-input label="Programme Code" placeholder="Programme Code" name="form.code" wire:model="form.code"
-                 required />
+                  />
              <x-input label="Programme Name" placeholder="Programme Name" name="form.name" wire:model="form.name"
-                 required />
+                  />
+             <x-number label="No. of Students" placeholder="No. of Students" name="form.number_of_students"
+                 wire:model="form.number_of_students" />
+                 
              <x-select label="Department" name="form.department_id" wire:model="form.department_id"
-                 placeholder="Select Department" :options="$departments->toArray()" option-label="name" option-value="id" required
-                 class="sm:col-span-2" />
+                 placeholder="Select Department" :options="$departments->toArray()" option-label="name" option-value="id" />
          </div>
      </form>
      <x-slot name="footer" class="flex justify-end gap-x-4">

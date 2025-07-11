@@ -11,10 +11,10 @@ export default defineConfig({
     // server: {
     //     host: '0.0.0.0', // allows Ngrok to access
     //     https: true,      // this is the key
-    //     origin: 'https://e436-102-70-101-196.ngrok-free.app', // your Ngrok HTTPS URL
+    //     origin: 'https://0f5ea15d818e.ngrok-free.app', // your Ngrok HTTPS URL
     //     hmr: {
     //         protocol: 'wss',
-    //         host: 'e436-102-70-101-196.ngrok-free.app',
+    //         host: '0f5ea15d818e.ngrok-free.app',
     //     },
     // },
 

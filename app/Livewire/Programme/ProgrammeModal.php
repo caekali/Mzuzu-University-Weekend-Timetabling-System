@@ -24,6 +24,7 @@ class ProgrammeModal extends Component
             $this->form->programmeId = $programme->id;
             $this->form->code = $programme->code;
             $this->form->name = $programme->name;
+            $this->form->number_of_students = $programme->number_of_students;
             $this->form->department_id = $programme->department_id;
         }
 

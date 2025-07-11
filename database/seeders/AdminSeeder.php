@@ -26,6 +26,7 @@ class AdminSeeder extends Seeder
             'last_name' => 'Admin',
             'email' => $adminEmail,
             'password' => Hash::make($adminPassword),
+            'is_active' => true
         ]);
 
         $admin->assignRole('Admin');

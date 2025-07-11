@@ -18,7 +18,6 @@ class Course extends Model
         'level',
         'lecture_hours',
         'semester',
-        'num_of_students',
         'department_id'
     ];
 

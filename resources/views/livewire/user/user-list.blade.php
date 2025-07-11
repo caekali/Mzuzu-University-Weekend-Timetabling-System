@@ -30,7 +30,6 @@
                     <div class="overflow-y-auto">
                         @php
                             $headers = [
-                                'id' => 'ID',
                                 'name' => 'Name',
                                 'email' => 'Email',
                             ];

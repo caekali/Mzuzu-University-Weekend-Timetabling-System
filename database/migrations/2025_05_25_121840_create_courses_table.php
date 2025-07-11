@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('code');
             $table->string('name');
-            $table->integer('num_of_students');
             $table->string('lecture_hours');
             $table->integer('level');
             $table->integer('semester');

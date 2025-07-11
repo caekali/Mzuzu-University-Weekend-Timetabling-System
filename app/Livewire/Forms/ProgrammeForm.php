@@ -17,6 +17,9 @@ class ProgrammeForm extends Form
     #[Validate('required|string')]
     public $name = '';
 
+    #[Validate('required|integer|min:0')]
+    public $number_of_students;
+
     #[Validate('required|exists:departments,id')]
     public $department_id = '';
 
@@ -35,6 +38,7 @@ class ProgrammeForm extends Form
                 Rule::unique('programmes', 'name')->ignore($this->programmeId),
             ],
             'department_id' => 'required|exists:departments,id',
+            'number_of_students' => 'required|integer|min:0'
         ];
 
         $validated = $this->validate($rules);

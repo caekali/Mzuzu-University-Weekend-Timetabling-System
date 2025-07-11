@@ -17,17 +17,17 @@ class EnsureProfileIsSetup
     {
         $user = $request->user();
 
-        if ($user) {
-            if (
-                ($user->hasRole('Student') && is_null($user->student)) ||
-                ($user->hasRole('Lecturer') && is_null($user->lecturer))
-            ) {
-                // URL to return after setup
-                session(['setup_redirect_url' => url()->current()]);
+        // if ($user) {
+        //     if (
+        //         ($user->hasRole('Student') && is_null($user->student)) ||
+        //         ($user->hasRole('Lecturer') && is_null($user->lecturer))
+        //     ) {
+        //         // URL to return after setup
+        //         session(['setup_redirect_url' => url()->current()]);
 
-                return redirect()->route('profile.setup');
-            }
-        }
+        //         return redirect()->route('profile.setup');
+        //     }
+        // }
         return $next($request);
     }
 }

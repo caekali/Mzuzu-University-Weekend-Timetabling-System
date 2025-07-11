@@ -44,11 +44,12 @@ class GADataLoaderService
 
         $courseData = $allocations->map(function ($allocation) {
             $programmes = $allocation->programmes->pluck('id')->toArray();
+            $number_of_students = $allocation->programmes->sum('number_of_students');
             return new CourseDTO(
                 $allocation->course->id,
                 $allocation->course->code,
                 $allocation->course->lecture_hours,
-                $allocation->course->num_of_students,
+                $number_of_students,
                 $allocation->lecturer->id,
                 $allocation->level,
                 $programmes
