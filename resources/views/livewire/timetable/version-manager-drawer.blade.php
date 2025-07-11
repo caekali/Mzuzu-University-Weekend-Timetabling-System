@@ -3,7 +3,8 @@
     <div x-show="isOpen" @click="isOpen = false; $wire.set('isOpen', false)"
         class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"></div>
 
-    <div class="fixed top-0 right-0 h-full w-96 bg-white dark:bg-gray-800 shadow-2xl border-l border-gray-200 dark:border-gray-700 z-50 transform transition-transform duration-300 ease-in-out"
+    <div class="fixed top-0 right-0 h-full w-full max-w-full sm:max-w-sm md:max-w-md lg:max-w-lg
+ bg-white dark:bg-gray-800 shadow-2xl border-l border-gray-200 dark:border-gray-700 z-50 transform transition-transform duration-300 ease-in-out"
         :class="{ 'translate-x-0': isOpen, 'translate-x-full': !isOpen }">
         <div class="flex flex-col h-full">
             <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
@@ -86,7 +87,6 @@
                             <div class="text-xs text-gray-500 mt-2">
                                 Created: {{ \Carbon\Carbon::parse($version->generated_at)->format('M d, Y') }}
                                 <br>
-                                {{-- By: {{ $version->creator->name }} --}}
                             </div>
                         @endif
 

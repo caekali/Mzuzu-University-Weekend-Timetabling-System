@@ -12,13 +12,13 @@
         });
     </script>
 
-    <div class="flex justify-between items-center mb-6 print:hidden">
-        <div class="flex items-center">
-            <x-lucide-calendar class="h-6 w-6 text-green-600 dark:text-green-400 mr-3" />
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 print:hidden">
+        <div class="flex items-start sm:items-center">
+            <x-lucide-calendar class="h-6 w-6 text-green-600 dark:text-green-400 mr-3 mt-1 sm:mt-0" />
             <div>
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Timetable</h1>
-                <div class="flex items-center mt-1 space-x-3">
-                    <span class="text-sm text-gray-500 dark:text-gray-400">
+                <div class="flex flex-wrap items-center mt-1 gap-2 text-sm text-gray-500 dark:text-gray-400">
+                    <span>
                         Current: {{ $currentVersion?->label ?? '—' }}
                     </span>
                     @if ($currentVersion)
@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        <div class="flex space-x-2">
+        <div class="flex flex-wrap gap-2">
             <x-button secondary wire:click="$toggle('showFilters')">
                 <x-slot:prepend>
                     <x-lucide-filter class="h-4 w-4" />
@@ -53,6 +53,7 @@
             @endif
         </div>
     </div>
+
 
 
     <div x-data="{ open: @entangle('showFilters') }" x-show="open" x-cloak>
