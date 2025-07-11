@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
@@ -16,6 +17,14 @@ class ForgotPassword extends Component
         $this->validate([
             'email' => 'required|email',
         ]);
+
+        $user = User::where('email', $this->email)->first();
+
+        if (!$user) {
+            throw ValidationException::withMessages([
+                'email' => 'We couldn’t find an account with that email.',
+            ]);
+        }
 
         $status = Password::sendResetLink(['email' => $this->email]);
 

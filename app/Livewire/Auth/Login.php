@@ -26,7 +26,7 @@ class Login extends Component
         'password.required' => 'The Password cannot be empty.',
     ];
 
-   
+
 
 
     public function login()
@@ -34,6 +34,11 @@ class Login extends Component
         $this->validate();
 
         $user = User::where('email', $this->email)->first();
+
+        if (!$user) {
+            session()->flash('status', 'We couldn’t find an account with that email.');
+            return;
+        }
 
         if (!$user || ! $user->is_active) {
             session()->flash('status', 'Your account is not activated. Activate now.');
