@@ -60,13 +60,14 @@ class CourseAllocationModal extends Component
 
     public function save()
     {
-        $this->form->store();
-        $this->notification()->success(
-            'Saved',
-            'Allocation saved successfully.'
-        );
-        $this->modal()->close('course-allocation-modal');
-        $this->dispatch('refresh-list');
+        if ($this->form->store()) {
+            $this->notification()->success(
+                'Saved',
+                'Allocation saved successfully.'
+            );
+            $this->modal()->close('course-allocation-modal');
+            $this->dispatch('refresh-list');
+        }
     }
     public function render()
     {

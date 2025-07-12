@@ -25,24 +25,21 @@
     </div>
 
     @if ($publishedVersion)
-        {{-- Sticky Day Tabs --}}
         <div class="sticky top-0 z-20 bg-white dark:bg-gray-900 py-3 border-b border-gray-200 dark:border-gray-700">
             <div class="flex flex-wrap gap-2 sm:gap-4 px-2 sm:px-4">
                 @foreach ($days as $day)
-                    <button
-                        wire:click="loadEntriesForDay('{{ $day }}')"
+                    <button wire:click="loadEntriesForDay('{{ $day }}')"
                         class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200
-                            {{ $selectedDay === $day 
-                                ? 'bg-green-600 text-white shadow' 
-                                : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-green-100 dark:hover:bg-green-600' }}"
-                    >
+                            {{ $selectedDay === $day
+                                ? 'bg-green-600 text-white shadow'
+                                : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-green-100 dark:hover:bg-green-600' }}">
                         {{ $day }}
                     </button>
                 @endforeach
             </div>
         </div>
 
-        {{-- Schedule Entries --}}
+
         @if (count($allDayEntries) > 0)
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                 @foreach ($allDayEntries as $entry)
