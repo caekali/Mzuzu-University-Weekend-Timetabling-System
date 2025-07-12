@@ -10,44 +10,54 @@
         default => 'Good evening',
     };
 
-    $formattedDate = $now->format('l, F j, Y'); // Saturday, May 24, 2025
+    $formattedDate = $now->format('l, F j, Y');
 @endphp
 
+<div class="flex flex-col h-full overflow-y-auto py-6 px-4 space-y-6">
 
-<div class="flex flex-col h-full py-6">
-    <div class="mb-6">
+    {{-- Header --}}
+    <div class="mb-2">
         <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
             {{ $greeting }}, {{ Auth::user()->first_name }}!
         </h2>
         <p class="text-sm text-gray-500 dark:text-gray-100">{{ $formattedDate }}</p>
-        <p class="text-sm text-gray-600 dark:text-gray-100 mt-1">Here are your schedules for today.</p>
+        <p class="text-sm text-gray-600 dark:text-gray-100 mt-1">Here are your schedules.</p>
     </div>
 
-    <h3 class="text-lg font-semibold text-gray-800 mb-3 dark:text-white">Today's Schedules</h3>
     @if ($publishedVersion)
-        @if ($toscheduleDayEntries && count($toscheduleDayEntries) > 0)
-            <!-- Scrollable container takes remaining height -->
-            <div class="flex-1 overflow-y-auto space-y-4">
-                @foreach ($toscheduleDayEntries as $scheduleEntry)
-                    <x-timetable.card :scheduleEntry="$scheduleEntry" />
+        {{-- Sticky Day Tabs --}}
+        <div class="sticky top-0 z-20 bg-white dark:bg-gray-900 py-3 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex flex-wrap gap-2 sm:gap-4 px-2 sm:px-4">
+                @foreach ($days as $day)
+                    <button
+                        wire:click="loadEntriesForDay('{{ $day }}')"
+                        class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200
+                            {{ $selectedDay === $day 
+                                ? 'bg-green-600 text-white shadow' 
+                                : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-green-100 dark:hover:bg-green-600' }}"
+                    >
+                        {{ $day }}
+                    </button>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Schedule Entries --}}
+        @if (count($allDayEntries) > 0)
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                @foreach ($allDayEntries as $entry)
+                    <x-timetable.card :scheduleEntry="$entry" />
                 @endforeach
             </div>
         @else
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-4">
-                <p class="text-gray-600 dark:text-white">You have no scheduled classes today.</p>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-4">
+                <p class="text-gray-600 dark:text-white">You have no scheduled classes on {{ $selectedDay }}.</p>
             </div>
         @endif
-
-        <div class=" bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mt-6">
-            <a href="{{ route('my.timetable') }}" class="text-green-600 font-medium hover:underline">
-                View Full Weekly Schedule →
-            </a>
-        </div>
     @else
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-4">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
             <p class="text-gray-600 dark:text-white">Timetable has not been published yet.</p>
         </div>
     @endif
-
 
 </div>

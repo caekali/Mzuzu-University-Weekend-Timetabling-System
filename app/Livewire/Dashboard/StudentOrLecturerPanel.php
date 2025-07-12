@@ -2,85 +2,93 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Models\ScheduleDay;
 use App\Models\ScheduleVersion;
-use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class StudentOrLecturerPanel extends Component
 {
-    public $toscheduleDayEntries = [];
-
     public $publishedVersion;
+
+    public $days;
+
+    public $selectedDay;
+
+    public $allDayEntries = [];
 
     public function mount()
     {
+        $this->days = ScheduleDay::where('enabled', true)->pluck('name')->sort()->toArray();
+
+        $today = Carbon::now()->format('l');
+
+        $this->selectedDay = in_array($today, $this->days) ? $today : 'Friday';
 
         $this->publishedVersion = ScheduleVersion::published()->first();
 
-        if ($this->publishedVersion) {
-            $entries = $this->publishedVersion->entries()->with(['course', 'lecturer.user', 'venue'])
-                ->when(
-                    Auth::user()->lecturer,
-                    fn($query) =>
-                    $query->where('lecturer_id', Auth::user()->lecturer->id)
-                )
-                ->when(
-                    Auth::user()->student,
-                    fn($query) =>
-                    $query->where('programme_id', Auth::user()->student->programme_id)
-                        ->where('level', Auth::user()->student->level)
+        if ($this->publishedVersion)
+            $this->loadEntriesForDay($this->selectedDay);
+    }
 
+    public function updatedSelectedDay($value)
+    {
+        $this->loadEntriesForDay($value);
+    }
 
-                )
-                ->where('day', now()->format('l'))
-                ->orderBy('start_time')
-                ->get();
+    public function loadEntriesForDay($day)
+    {
+        $this->selectedDay = $day;
 
+        $entries = $this->publishedVersion->entries()
+            ->with(['course', 'lecturer.user', 'venue'])
+            ->where('day', $day)
+            ->when(
+                auth()->user()->lecturer,
+                fn($q) => $q->where('lecturer_id', auth()->user()->lecturer->id)
+            )
+            ->when(
+                auth()->user()->student,
+                fn($q) => $q->where('programme_id', auth()->user()->student->programme_id)
+                    ->where('level', auth()->user()->student->level)
+            )
+            ->orderBy('start_time')
+            ->get();
 
+        $grouped = $entries->groupBy(fn($entry) => "{$entry->day}-{$entry->course_id}-{$entry->lecturer_id}");
 
-            $grouped = $entries->groupBy(function ($entry) {
-                return "{$entry->day}-{$entry->course_id}-{$entry->lecturer_id}";
-            });
+        $this->allDayEntries = [];
 
-            $mergedEntries = [];
+        foreach ($grouped as $blocks) {
+            $blocks = $blocks->sortBy('start_time')->values();
+            $current = $blocks[0];
 
-            foreach ($grouped as $blocks) {
-                $blocks = $blocks->sortBy('start_time')->values();
-
-                $current = $blocks[0];
-
-                for ($i = 1; $i < $blocks->count(); $i++) {
-                    $next = $blocks[$i];
-
-                    if ($next->start_time <= $current->end_time) {
-                        $current->end_time = max($current->end_time, $next->end_time);
-                    } else {
-                        $mergedEntries[] = [
-                            'day' => $current->day,
-                            'start_time' => $current->start_time,
-                            'end_time' => $current->end_time,
-                            'level' => $current->level,
-                            'course' => $current->course->name ?? '',
-                            'lecturer' => $current->lecturer->user->name ?? '',
-                            'venue' => $current->venue->name ?? '',
-                        ];
-                        $current = $next;
-                    }
+            for ($i = 1; $i < $blocks->count(); $i++) {
+                $next = $blocks[$i];
+                if ($next->start_time <= $current->end_time) {
+                    $current->end_time = max($current->end_time, $next->end_time);
+                } else {
+                    $this->allDayEntries[] = $this->formatEntry($current);
+                    $current = $next;
                 }
-
-                // add the last one
-                $this->toscheduleDayEntries[] = [
-                    'day' => $current->day,
-                    'start_time' => date('H:i', strtotime($current->start_time)),
-                    'end_time' => date('H:i', strtotime($current->end_time)),
-                    'level' => $current->level,
-                    'course_code' => $current->course->code ?? '',
-                    'course_name' => $current->course->name ?? '',
-                    'lecturer' => $current->lecturer->user->first_name . ' ' . $current->lecturer->user->last_name  ?? '',
-                    'venue' => $current->venue->name ?? '',
-                ];
             }
+
+            $this->allDayEntries[] = $this->formatEntry($current);
         }
+    }
+
+    protected function formatEntry($entry)
+    {
+        return [
+            'day' => $entry->day,
+            'start_time' => date('H:i', strtotime($entry->start_time)),
+            'end_time' => date('H:i', strtotime($entry->end_time)),
+            'level' => $entry->level,
+            'course_code' => $entry->course->code ?? '',
+            'course_name' => $entry->course->name ?? '',
+            'lecturer' => $entry->lecturer->user->first_name . ' ' . $entry->lecturer->user->last_name ?? '',
+            'venue' => $entry->venue->name ?? '',
+        ];
     }
 
     public function render()
