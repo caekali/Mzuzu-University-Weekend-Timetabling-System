@@ -36,7 +36,7 @@ class RunScheduleGeneration implements ShouldQueue
         $population_size       =  intval(getSetting('population_size', 100));
         $number_of_generations = intval(getSetting('number_of_generations', 500));
         $tournament_size       = intval(getSetting('tournament_size', 5));
-        $mutation_rate         = floatval(getSetting('mutation_rate', 0.05));
+        $mutation_rate         = floatval(getSetting('mutation_rate', 0.02));
         $crossover_rate        = floatval(getSetting('crossover_rate', 0.8));
         $elite_schedules = intval(getSetting('elite_schedules', 1));
 

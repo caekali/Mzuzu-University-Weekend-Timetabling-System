@@ -51,7 +51,7 @@ class GenerateTimetable extends Component
         $this->form->population_size       =  intval(getSetting('population_size', 100));
         $this->form->number_of_generations = intval(getSetting('number_of_generations', 500));
         $this->form->tournament_size       = intval(getSetting('tournament_size', 5));
-        $this->form->mutation_rate         = floatval(getSetting('mutation_rate', 0.05) * 100);
+        $this->form->mutation_rate         = floatval(getSetting('mutation_rate', 0.02) * 100);
         $this->form->crossover_rate        = floatval(getSetting('crossover_rate', 0.8) * 100);
         $this->form->elite_schedules = intval(getSetting('elite_schedules', 1));
         $this->lastUpdated = getSetting('ga_last_updated', now());
