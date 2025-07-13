@@ -13,7 +13,7 @@
     $formattedDate = $now->format('l, F j, Y');
 @endphp
 
-<div class="flex flex-col h-full overflow-y-auto py-6 px-4 space-y-6">
+<div class="flex flex-col h-full overflow-y-auto py-6 px-4">
 
     {{-- Header --}}
     <div class="mb-2">

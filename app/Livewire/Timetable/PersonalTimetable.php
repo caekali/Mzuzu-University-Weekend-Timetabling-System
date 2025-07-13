@@ -32,6 +32,7 @@ class PersonalTimetable extends Component
                 'range' => $slot['start'] . ' - ' . $slot['end'],
                 'start' => $slot['start'],
                 'end' => $slot['end'],
+                'type' => $slot['type']
             ])
             ->unique('range')
             ->sortBy('start')

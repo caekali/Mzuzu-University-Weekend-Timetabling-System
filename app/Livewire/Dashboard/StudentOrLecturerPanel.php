@@ -23,7 +23,7 @@ class StudentOrLecturerPanel extends Component
 
         $today = Carbon::now()->format('l');
 
-        $this->selectedDay = in_array($today, $this->days) ? $today : 'Friday';
+        $this->selectedDay = in_array($today, $this->days) ? $today : reset($this->days);
 
         $this->publishedVersion = ScheduleVersion::published()->first();
 

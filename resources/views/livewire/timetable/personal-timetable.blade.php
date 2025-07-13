@@ -43,42 +43,55 @@
                             </td>
 
                             @foreach ($timeSlots as $slot)
-                                <td class="border dark:border-gray-700 px-1 md:px-2 py-1 md:py-2 align-top w-40">
-                                    @php
-                                        $cellEntries = $entries->filter(function ($entry) use ($day, $slot) {
-                                            return $entry['day'] === $day && $entry['start_time'] === $slot['start'];
-                                        });
-                                    @endphp
+                                @if ($slot['type'] === 'break')
+                                    {{-- Render break slot --}}
+                                    <td
+                                        class="border dark:border-gray-700 px-2 py-2 bg-yellow-50 dark:bg-yellow-900/20 text-center text-yellow-800 dark:text-yellow-300 font-semibold text-sm">
+                                        <div
+                                            class="min-h-[80px] flex items-center justify-center flex-col dark:text-white">
+                                            Break
+                                        </div>
+                                    </td>
+                                @else
+                                    <td class="border dark:border-gray-700 px-1 md:px-2 py-1 md:py-2 align-top w-40">
+                                        @php
+                                            $cellEntries = $entries->filter(function ($entry) use ($day, $slot) {
+                                                return $entry['day'] === $day &&
+                                                    $entry['start_time'] === $slot['start'];
+                                            });
+                                        @endphp
 
-                                    @if ($cellEntries->isNotEmpty())
-                                        @foreach ($cellEntries as $entry)
-                                            <div
-                                                class="mb-2 min-h-[80px]  p-1 md:p-2 rounded-lg border group transition-all duration-200 hover:shadow-md bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700">
+                                        @if ($cellEntries->isNotEmpty())
+                                            @foreach ($cellEntries as $entry)
                                                 <div
-                                                    class="font-bold text-green-900 dark:text-green-300 flex items-center justify-between">
-                                                    <div class="flex items-center">
-                                                        <x-lucide-book-open class="h-3 w-3 mr-1 flex-shrink-0" />
-                                                        <span>{{ $entry['course_code'] }} </span>
+                                                    class="mb-2 min-h-[80px]  p-1 md:p-2 rounded-lg border group transition-all duration-200 hover:shadow-md bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700">
+                                                    <div
+                                                        class="font-bold text-green-900 dark:text-green-300 flex items-center justify-between">
+                                                        <div class="flex items-center">
+                                                            <x-lucide-book-open class="h-3 w-3 mr-1 flex-shrink-0" />
+                                                            <span>{{ $entry['course_code'] }} </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-green-800 dark:text-green-200 text-xs md:text-sm">
+                                                        {{ $entry['course_name'] }}</div>
+                                                    <div
+                                                        class="text-gray-600 dark:text-gray-400 flex items-center mt-1 text-xs">
+                                                        <x-lucide-user class="h-3 w-3 mr-1 flex-shrink-0" />
+                                                        <span>{{ $entry['lecturer'] }}</span>
+                                                    </div>
+                                                    <div
+                                                        class="text-gray-600 dark:text-gray-400 flex items-center text-xs">
+                                                        <x-lucide-map-pin class="w-3 h-3  mr-1 flex-shrink-0" />
+                                                        <span>{{ $entry['venue'] }}</span>
                                                     </div>
                                                 </div>
-                                                <div class="text-green-800 dark:text-green-200 text-xs md:text-sm">
-                                                    {{ $entry['course_name'] }}</div>
-                                                <div
-                                                    class="text-gray-600 dark:text-gray-400 flex items-center mt-1 text-xs">
-                                                    <x-lucide-user class="h-3 w-3 mr-1 flex-shrink-0" />
-                                                    <span>{{ $entry['lecturer'] }}</span>
-                                                </div>
-                                                <div class="text-gray-600 dark:text-gray-400 flex items-center text-xs">
-                                                    <x-lucide-map-pin class="w-3 h-3  mr-1 flex-shrink-0" />
-                                                    <span>{{ $entry['venue'] }}</span>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @else
-                                        {{-- Empty cell with fixed height to preserve spacing --}}
-                                        <div class="min-h-[80px] w-36"></div>
-                                    @endif
-                                </td>
+                                            @endforeach
+                                        @else
+                                            {{-- Empty cell with fixed height to preserve spacing --}}
+                                            <div class="min-h-[80px] w-36"></div>
+                                        @endif
+                                    </td>
+                                @endif
                             @endforeach
                         </tr>
                     @endforeach

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Timetable;
 
+use App\Exports\ScheduleExport;
 use App\Models\ScheduleDay;
 use App\Models\Lecturer;
 use App\Models\Programme;
@@ -13,6 +14,7 @@ use App\Services\GeneticAlgorithm\GADataLoaderService;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 use WireUi\Traits\WireUiActions;
 
 
@@ -62,6 +64,7 @@ class FullTimetable extends Component
                 'range' => $slot['start'] . ' - ' . $slot['end'],
                 'start' => $slot['start'],
                 'end' => $slot['end'],
+                'type' => $slot['type']
             ])
             ->unique('range')
             ->sortBy('start')
@@ -264,7 +267,18 @@ class FullTimetable extends Component
         $this->dispatch('openModal', $this->selectedVersionId, $id, $day, $startTime, $endTime)->to('timetable.schedule-modal');
     }
 
+    public function export($format)
+    {
+        if ($format === 'excel') {
+            return Excel::download(new ScheduleExport, 'timetable.xlsx');
+        }
 
+        // if ($format === 'pdf') {
+        //     $data = [...]; // fetch your data
+        //     $pdf = Pdf::loadView('exports.timetable-pdf', ['data' => $data]);
+        //     return response()->streamDownload(fn () => print($pdf->output()), 'timetable.pdf');
+        // }
+    }
 
     public function render()
     {
