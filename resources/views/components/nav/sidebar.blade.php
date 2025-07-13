@@ -7,7 +7,7 @@
 
     $navLinks = match (session('current_role')) {
         'Admin' => [
-            ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'lucide-home'],
+            ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'lucide-layout-dashboard'],
             ['href' => route('departments'), 'text' => 'Departments', 'icon' => 'lucide-building'],
             ['href' => route('venues'), 'text' => 'Venues', 'icon' => 'lucide-map-pin'],
             ['href' => route('venue.constraints'), 'text' => 'Venue Constraints', 'icon' => 'lucide-ban'],
@@ -18,7 +18,7 @@
             ['href' => route('settings'), 'text' => 'Settings', 'icon' => 'lucide-settings'],
         ],
         'HOD' => [
-            ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'lucide-home'],
+            ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'lucide-layout-dashboard'],
             ['href' => route('programmes'), 'text' => 'Programmes', 'icon' => 'lucide-graduation-cap'],
             ['href' => route('courses'), 'text' => 'Courses', 'icon' => 'lucide-book-open'],
             ['href' => route('course-allocations'), 'text' => 'Course Allocations', 'icon' => 'lucide-link'],
@@ -27,7 +27,7 @@
             ['href' => route('profile'), 'text' => 'Profile', 'icon' => 'lucide-user'],
         ],
         default => [
-            ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'lucide-home'],
+            ['href' => route('dashboard'), 'text' => 'Dashboard', 'icon' => 'lucide-layout-dashboard'],
             ['href' => route('my.timetable'), 'text' => 'My Timetable', 'icon' => 'lucide-calendar'],
             ['href' => route('full.timetable'), 'text' => 'Full Timetable', 'icon' => 'lucide-calendar-range'],
             ['href' => route('profile'), 'text' => 'Profile', 'icon' => 'lucide-user'],

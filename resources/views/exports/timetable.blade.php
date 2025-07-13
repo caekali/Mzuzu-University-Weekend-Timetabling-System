@@ -144,23 +144,29 @@
                 <tr>
                     <th>{{ $day }}</th>
                     @foreach ($timeSlots as $slot)
-                        @php
-                            $cellEntries = collect($entries)->filter(
-                                fn($entry) => $entry['day'] === $day && $entry['start_time'] === $slot['start'],
-                            );
-                        @endphp
-                        <td>
-                            @if ($cellEntries->isNotEmpty())
-                                @foreach ($cellEntries as $entry)
-                                    <span style="margin-bottom: 16px">{{ $entry['course_code'] }}
-                                    </span>
-                                    <br>
-                                    <span> {{ $entry['venue'] }}</span>
-                                @endforeach
-                            @else
-                                &nbsp;
-                            @endif
-                        </td>
+                        @if ($slot['type'] === 'break')
+                            <td>
+                                Break
+                            </td>
+                        @else
+                            @php
+                                $cellEntries = collect($entries)->filter(
+                                    fn($entry) => $entry['day'] === $day && $entry['start_time'] === $slot['start'],
+                                );
+                            @endphp
+                            <td>
+                                @if ($cellEntries->isNotEmpty())
+                                    @foreach ($cellEntries as $entry)
+                                        <span style="margin-bottom: 16px">{{ $entry['course_code'] }}
+                                        </span>
+                                        <br>
+                                        <span> {{ $entry['venue'] }}</span>
+                                    @endforeach
+                                @else
+                                    &nbsp;
+                                @endif
+                            </td>
+                        @endif
                     @endforeach
                 </tr>
             @endforeach

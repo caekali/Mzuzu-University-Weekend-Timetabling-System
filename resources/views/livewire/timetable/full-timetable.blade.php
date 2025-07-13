@@ -125,8 +125,8 @@
 
                             @foreach ($timeSlots as $slot)
                                 @if ($slot['type'] === 'break')
-                                    {{-- Render break slot --}}
-                                    <td
+
+                                <td
                                         class="border dark:border-gray-700 px-2 py-2 bg-yellow-50 dark:bg-yellow-900/20 text-center text-yellow-800 dark:text-yellow-300 font-semibold text-sm">
                                         <div
                                             class="min-h-[80px] flex items-center justify-center flex-col dark:text-white">

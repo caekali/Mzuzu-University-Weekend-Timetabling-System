@@ -32,7 +32,7 @@ class Schedule
                 if (!empty($slotSet)) {
                     shuffle($venues);
                     $venue = $venues[0];
-                    $key = "{$course->id}-$i";
+                    $key = "{$course->id}-$i-$course->level";
 
                     $schedule->scheduleEntries[$key] = new ScheduleEntry(
                         $course,
