@@ -100,8 +100,8 @@ class FullTimetable extends Component
         $this->selectedVersionId = $this->currentVersion ?   $this->currentVersion->id : ScheduleVersion::first()?->id;
 
 
-
-        $this->loadEntries();
+        $this->entries = collect();
+        // $this->loadEntries();
     }
 
     #[On('version-selected')]
@@ -111,32 +111,50 @@ class FullTimetable extends Component
         $this->loadEntries();
     }
 
-
-    public function updatedSelectedLevel()
+    #[On('refresh-list')]
+    public function refresh()
     {
         $this->loadEntries();
     }
 
-    public function updatedSelectedVenue()
+    #[On('update-current')]
+    public function updateCurrentVersion()
     {
-        $this->loadEntries();
+        $this->currentVersion = ScheduleVersion::published()->first();
     }
 
-    public function updatedSelectedLecturer()
-    {
-        $this->loadEntries();
-    }
+    // #[On('version-deleted')]
+    // public function resetTimetable($id)
+    // {
+    //     dd($id, $this->selectedVersionId);
 
-    public function updatedSelectedProgramme()
-    {
-        $this->loadEntries();
-    }
 
-    public function updatedSelectedVersionId()
-    {
-        $this->loadEntries();
-    }
+    //     if ($this->selectedVersionId == $id) {
 
+    //         $this->entries = collect();
+    //         $this->currentVersion = null;
+    //         $this->selectedVersionId = null;
+    //         // $this->currentVersion = ScheduleVersion::published()->first() ?? ScheduleVersion::first();
+    //         // $this->selectedVersionId = $this->currentVersion?->id;
+    //         // $this->loadEntries();
+    //     }
+    // }
+
+    #[On('selected-version-deleted')]
+    public function resetTimetable()
+    {
+        $fallback = ScheduleVersion::published()->first() ?? ScheduleVersion::first();
+
+        if ($fallback) {
+            $this->selectedVersionId = $fallback->id;
+            $this->currentVersion = $fallback;
+            $this->loadEntries();
+        } else {
+            $this->selectedVersionId = null;
+            $this->currentVersion = null;
+            $this->entries = collect();
+        }
+    }
 
     public function loadEntries()
     {
@@ -152,7 +170,6 @@ class FullTimetable extends Component
         $this->currentVersion = $version;
 
         $query = $version->entries()->with(['course', 'lecturer.user', 'venue']);
-
 
         if ($this->selectedLevel) $query->where('level', $this->selectedLevel);
         if ($this->selectedLecturer) $query->where('lecturer_id', $this->selectedLecturer);
@@ -193,73 +210,29 @@ class FullTimetable extends Component
     }
 
 
-    // public function loadEntries()
-    // {
-    //     $version = $this->selectedVersionId
-    //         ? ScheduleVersion::find($this->selectedVersionId)
-    //         : $this->currentVersion;
-
-    //     if (!$version) {
-    //         $this->entries = collect();
-    //         return;
-    //     }
-
-    //     $this->currentVersion = $version;
-
-    //     $query = $version->entries()->with(['course', 'lecturer.user', 'venue']);
-
-    //     if ($this->selectedLevel) {
-    //         $query->where('level', $this->selectedLevel);
-    //     }
-
-    //     if ($this->selectedLecturer) {
-    //         $query->where('lecturer_id', $this->selectedLecturer);
-    //     }
-
-    //     if ($this->selectedVenue) {
-    //         $query->where('venue_id', $this->selectedVenue);
-    //     }
-
-    //     if ($this->selectedProgramme) {
-    //         $query->where('programme_id', $this->selectedProgramme);
-    //     }
-
-    //     $entries = $query->get();
-
-    //     // group to get unique dat + lecturer_id + course +id + start_time + end_time
-    //     $grouped = $entries->groupBy(function ($entry) {
-    //         return "{$entry->day}-{$entry->lecturer_id}-{$entry->course_id}-{$entry->start_time}-{$entry->end_time}";
-    //     });
-
-    //     $filteredEntries = [];
-    //     foreach ($grouped as $group) {
-    //         $first = $group->first();
-    //         $filteredEntries[] = (object)[
-    //             'id' => $first->id,
-    //             'day' => $first->day,
-    //             'start_time' => date('H:i', strtotime($first->start_time)),
-    //             'end_time' => date('H:i', strtotime($first->end_time)),
-    //             'level' => $first->level,
-    //             'course_code' => $first->course->code ?? '',
-    //             'course_name' => $first->course->name ?? '',
-    //             'lecturer' => optional($first->lecturer?->user)->first_name . ' ' . optional($first->lecturer?->user)->last_name,
-    //             'venue' => $first->venue->name ?? '',
-    //         ];
-    //     }
-    //     $this->entries = collect($filteredEntries);
-    // }
-
-
-    #[On('refresh-list')]
-    public function refresh()
+    public function updatedSelectedLevel()
     {
         $this->loadEntries();
     }
 
-    #[On('update-current')]
-    public function updateCurrentVersion()
+    public function updatedSelectedVenue()
     {
-        $this->currentVersion = ScheduleVersion::published()->first();
+        $this->loadEntries();
+    }
+
+    public function updatedSelectedLecturer()
+    {
+        $this->loadEntries();
+    }
+
+    public function updatedSelectedProgramme()
+    {
+        $this->loadEntries();
+    }
+
+    public function updatedSelectedVersionId()
+    {
+        $this->loadEntries();
     }
 
     public function openModal($id = null, $day = null, $startTime = null, $endTime = null)

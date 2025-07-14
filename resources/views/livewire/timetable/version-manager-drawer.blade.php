@@ -19,7 +19,8 @@
 
             <div class="flex-1 overflow-y-auto p-4 space-y-3">
                 @foreach ($versions as $version)
-                    <div wire:click="selectVersion({{ $version->id }})" class="p-4 rounded-lg border cursor-pointer"
+                    <div wire:key="version-{{ $version->id }}" wire:click="selectVersion({{ $version->id }})"
+                        class="p-4 rounded-lg border cursor-pointer"
                         :class="{
                             'bg-green-50 dark:bg-green-900/20 ring-2 ring-green-500/20': {{ $version->id }} ===
                                 {{ $currentVersion->id }},
@@ -49,22 +50,22 @@
                             <div class="relative" @click.stop>
                                 <x-dropdown>
                                     <x-dropdown.item icon='eye' label="View"
-                                        wire:click.prevent="selectVersion({{ $version->id }})" />
+                                        wire:click="selectVersion({{ $version->id }})" />
                                     <x-dropdown.item icon="document-duplicate" label="Duplicate"
-                                        wire:click.prevent="duplicateVersion({{ $version->id }})" />
+                                        wire:click="duplicateVersion({{ $version->id }})" />
                                     <x-dropdown.item icon="pencil" label="Rename"
-                                        wire:click.prevent="startEditingLabel({{ $version->id }})" />
+                                        wire:click="startEditingLabel({{ $version->id }})" />
 
                                     @if ($version->is_published)
                                         <x-dropdown.item icon="x-circle" label="Unpublish"
-                                            wire:click.prevent="unPublishVersion({{ $version->id }})" />
+                                            wire:click="unPublishVersion({{ $version->id }})" />
                                     @else
                                         <x-dropdown.item icon="arrow-up-tray" label="Publish"
-                                            wire:click.prevent="publishVersion({{ $version->id }})" />
+                                            wire:click="publishVersion({{ $version->id }})" />
                                     @endif
 
                                     <x-dropdown.item icon='trash' label="Delete"
-                                        wire:click.prevent="deleteVersion({{ $version->id }})" />
+                                        wire:click="deleteVersion({{ $version->id }})" />
                                 </x-dropdown>
                             </div>
 

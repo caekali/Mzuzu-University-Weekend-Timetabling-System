@@ -115,6 +115,7 @@ class VersionManagerDrawer extends Component
             'label' => "New Version {$nextNumber}",
             'is_published' => false,
             'published_at' => null,
+            'generated_at' => now()
         ]);
 
         $this->loadVersions();
@@ -129,12 +130,15 @@ class VersionManagerDrawer extends Component
         try {
             $original = ScheduleVersion::with('entries')->findOrFail($versionId);
 
+
             // Create close
             $newVersion = ScheduleVersion::create([
                 'label' => 'Copy of ' . ($original->label ?? 'Version') . ' - ' . now()->format('Y-m-d H:i'),
                 'is_published' => false,
+                'generated_at' => now(),
                 'published_at' => null,
             ]);
+
 
             // Clone entries
             foreach ($original->entries as $entry) {
@@ -238,16 +242,67 @@ class VersionManagerDrawer extends Component
         }
     }
 
+    // private function deleteScheduleVersion($id)
+    // {
+    //     // $this->dispatch('version-deleted', $id);
+    //     ScheduleVersion::findOrFail($id)->delete();
+
+    //     if ($this->currentVersion?->id == $id) {
+    //         $this->currentVersion = ScheduleVersion::first();
+    //     }
+
+
+    //     $this->notification()->success(
+    //         'Schedule version',
+    //         'The schedule version deleted successfully.',
+    //         'check'
+    //     );
+
+    //     $this->loadVersions();
+    // }
+    // private function deleteScheduleVersion($id)
+    // {
+    //     ScheduleVersion::findOrFail($id)->delete();
+
+    //     // ✅ Dispatch event to FullTimetable
+    //     $this->dispatch('selected-version-deleted');
+
+    //     $this->notification()->success(
+    //         'Schedule version',
+    //         'The schedule version deleted successfully.',
+    //         'check'
+    //     );
+
+    // }
     private function deleteScheduleVersion($id)
     {
-        ScheduleVersion::findOrFail($id)->delete();
+        $deleted = ScheduleVersion::findOrFail($id);
+        $wasCurrent = $this->currentVersion?->id === $deleted->id;
+
+        $deleted->delete();
+
         $this->notification()->success(
             'Schedule version',
             'The schedule version deleted successfully.',
             'check'
         );
+
+        // Reload the versions after delete
         $this->loadVersions();
+
+        // Reset current version if the deleted one was selected
+        if ($wasCurrent) {
+            $this->currentVersion = ScheduleVersion::published()->first()
+                ?? $this->versions->first();
+            $this->dispatch('version-selected', $this->currentVersion?->id);
+        }
+
+        // Inform listeners (like FullTimetable) that version was deleted
+        $this->dispatch('selected-version-deleted');
     }
+
+
+
 
     public function loadVersions()
     {
