@@ -16,18 +16,22 @@
             <x-time-picker label="End Time" name="form.end_time" military-time wire:model.live="form.end_time"
                 without-seconds />
         </div>
-        <div class="space-y-2">
-            <p class="text-sm font-medium text-gray-700 dark:text-gray-200">Constraint Type</p>
-            <div class="flex gap-x-4">
-                <x-radio id="type-unavailable" primary label="Unavailable" value="unavailable"
-                    wire:model.defer="form.type" color="red" />
-                <x-radio id="type-preferred" label="Preferred" value="preferred" wire:model.defer="form.type"
-                    color="green" />
+
+        @if ($constraintable_type == 'lecturer')
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-200">Constraint Type</p>
+                <div class="flex gap-x-4">
+                    <x-radio id="type-unavailable" primary label="Unavailable" value="unavailable"
+                        wire:model.defer="form.type" color="red" />
+                    <x-radio id="type-preferred" label="Preferred" value="preferred" wire:model.defer="form.type"
+                        color="green" />
+                </div>
             </div>
-        </div>
-        <x-toggle label="Is Hard Constraint?" wire:model.defer="form.is_hard" on-label="Yes" off-label="No" />
+            <x-toggle label="Is Hard Constraint?" wire:model.defer="form.is_hard" on-label="Yes" off-label="No" />
+        @endif
+
     </form>
-    
+
     <x-slot name="footer" class="flex justify-end gap-x-4">
         <x-button flat label="Cancel" x-on:click="close" />
         <x-button primary label="{{ $form->id ? 'Update' : 'Save' }}" type="submit" form="constraintForm" />

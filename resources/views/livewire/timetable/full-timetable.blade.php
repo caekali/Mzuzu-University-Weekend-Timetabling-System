@@ -1,5 +1,4 @@
 <div class="py-6">
-
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('conflictState', {
@@ -60,12 +59,9 @@
                     </x-slot:prepend>
                     Versions
                 </x-button>
-                <livewire:timetable.version-manager-drawer />
             @endif
         </div>
     </div>
-
-
 
     <div x-data="{ open: @entangle('showFilters') }" x-show="open" x-cloak>
         <div
@@ -143,34 +139,7 @@
                                         @if ($cellEntries->isNotEmpty())
                                             @foreach ($cellEntries as $entry)
                                                 @if (session('current_role') == 'Admin')
-                                                    {{-- <div class="space-y-2 mb-2">
-                                                    <div class=" min-h-[80px] hover:cursor-pointer p-1 md:p-2 rounded-lg border group transition-all duration-200 hover:shadow-md bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700"
-                                                        wire:click="openModal({{ $entry->id }}, '{{ $day }}', '{{ $slot['start'] }}', '{{ $slot['end'] }}')">
-                                                        <div
-                                                            class="font-bold text-green-900 dark:text-green-300 flex items-center justify-between">
-                                                            <div class="flex items-center">
-                                                                <x-lucide-book-open
-                                                                    class="h-3 w-3 mr-1 flex-shrink-0" />
-                                                                <span>{{ $entry->course_code }} </span>
-                                                            </div>
-                                                        </div>
-                                                        <div
-                                                            class="text-green-800 dark:text-green-200 text-xs md:text-sm">
-                                                            {{ $entry->course_name }}</div>
-                                                        <div
-                                                            class="text-gray-600 dark:text-gray-400 flex items-center mt-1 text-xs">
-                                                            <x-lucide-user class="h-3 w-3 mr-1 flex-shrink-0" />
-                                                            <span>{{ $entry->lecturer }}</span>
-                                                        </div>
-                                                        <div
-                                                            class="text-gray-600 dark:text-gray-400 flex items-center text-xs">
-                                                            <x-lucide-map-pin class="w-3 h-3  mr-1 flex-shrink-0" />
-                                                            <span>{{ $entry->venue }}</span>
-                                                        </div>
-                                                    </div>
-                                                </div> --}}
-
-                                                    <div class="space-y-2 mb-2">
+                                                    <div wire:key="entry-{{ $entry->id }}" class="space-y-2 mb-2">
                                                         <div x-data="{}"
                                                             x-bind:class="Alpine.store('conflictState')?.highlightedEntryIds.includes(
                                                                     {{ $entry->id }}) ?
@@ -251,5 +220,8 @@
             </table>
         </div>
     </div>
-    <livewire:timetable.schedule-modal :version-id="$selectedVersionId" />
+    <livewire:timetable.version-manager-drawer :current-version-id="$currentVersionId"
+        wire:key="version-manager-drawer-{{ $currentVersionId }}" />
+
+    <livewire:timetable.schedule-modal :version-id="$currentVersionId" wire:key="modal-{{ $currentVersionId }}" />
 </div>

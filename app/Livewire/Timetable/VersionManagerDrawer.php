@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Notifications\TimetablePublished;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use WireUi\Traits\WireUiActions;
 
 class VersionManagerDrawer extends Component
@@ -23,15 +24,26 @@ class VersionManagerDrawer extends Component
 
     public $editingLabel = '';
 
+    public $currentVersionId;
+
     protected $listeners = [
         'openVersionSlider' => 'open',
         'closeVersionSlider' => 'close',
     ];
 
-    public function mount()
+    public function mount($currentVersionId)
     {
-        $this->versions = ScheduleVersion::all();
-        $this->currentVersion = ScheduleVersion::published()->first() ? ScheduleVersion::published()->first() :  $this->versions->first();
+        $this->loadVersions();
+        $this->currentVersionId = $currentVersionId;
+
+        $version = ScheduleVersion::find($currentVersionId);
+        if (!$version) {
+            $this->currentVersion = null;
+            $this->currentVersionId = null;
+            return;
+        }
+
+        $this->currentVersion = $version;
     }
 
     public function open()
@@ -44,6 +56,21 @@ class VersionManagerDrawer extends Component
     {
         $this->isOpen = false;
     }
+
+
+    public function selectVersion($id)
+    {
+        $this->currentVersionId = $id;
+        $this->dispatch('select-version', $id);
+    }
+
+
+
+    public function loadVersions()
+    {
+        $this->versions = ScheduleVersion::latest('generated_at')->get();
+    }
+
 
     public function startEditingLabel($versionId)
     {
@@ -71,13 +98,12 @@ class VersionManagerDrawer extends Component
                     description: 'Label updated.'
                 );
 
-
-                if ($this->currentVersion->id == $this->editingVersionId)
+                if ($this->currentVersion?->id === $this->editingVersionId) {
                     $this->dispatch('version-selected', $this->editingVersionId);
+                }
 
                 $this->editingVersionId = null;
                 $this->editingLabel = '';
-
                 $this->loadVersions();
             }
         }
@@ -89,26 +115,15 @@ class VersionManagerDrawer extends Component
         $this->editingLabel = '';
     }
 
-    public function selectVersion($versionId)
-    {
-        $this->currentVersion = ScheduleVersion::find($versionId);
-        $this->dispatch('version-selected', $versionId);
-    }
-
     public function createVersion()
     {
-        // Find existing "New Version X" number
         $latestVersion = ScheduleVersion::where('label', 'like', 'New Version%')
             ->orderByRaw("CAST(SUBSTRING(label, 13) AS UNSIGNED) DESC")
             ->first();
 
         $nextNumber = 1;
-        if ($latestVersion) {
-            // Extract the number
-            preg_match('/New Version (\d+)/', $latestVersion->label, $matches);
-            if (isset($matches[1])) {
-                $nextNumber = (int)$matches[1] + 1;
-            }
+        if ($latestVersion && preg_match('/New Version (\d+)/', $latestVersion->label, $matches)) {
+            $nextNumber = (int)$matches[1] + 1;
         }
 
         ScheduleVersion::create([
@@ -118,10 +133,9 @@ class VersionManagerDrawer extends Component
             'generated_at' => now()
         ]);
 
+        $this->dispatch('refresh-list');
         $this->loadVersions();
     }
-
-
 
     public function duplicateVersion($versionId)
     {
@@ -130,8 +144,6 @@ class VersionManagerDrawer extends Component
         try {
             $original = ScheduleVersion::with('entries')->findOrFail($versionId);
 
-
-            // Create close
             $newVersion = ScheduleVersion::create([
                 'label' => 'Copy of ' . ($original->label ?? 'Version') . ' - ' . now()->format('Y-m-d H:i'),
                 'is_published' => false,
@@ -139,19 +151,17 @@ class VersionManagerDrawer extends Component
                 'published_at' => null,
             ]);
 
-
-            // Clone entries
             foreach ($original->entries as $entry) {
-                $newVersion->entries()->create([
-                    'course_id' => $entry->course_id,
-                    'lecturer_id' => $entry->lecturer_id,
-                    'venue_id' => $entry->venue_id,
-                    'programme_id' => $entry->programme_id,
-                    'day' => $entry->day,
-                    'start_time' => $entry->start_time,
-                    'end_time' => $entry->end_time,
-                    'level' => $entry->level,
-                ]);
+                $newVersion->entries()->create($entry->only([
+                    'course_id',
+                    'lecturer_id',
+                    'venue_id',
+                    'programme_id',
+                    'day',
+                    'start_time',
+                    'end_time',
+                    'level',
+                ]));
             }
 
             DB::commit();
@@ -174,38 +184,21 @@ class VersionManagerDrawer extends Component
         }
     }
 
-
-    public function unPublishVersion($id)
-    {
-        ScheduleVersion::where('id', $id)->update(['is_published' => false, 'published_at' => null]);
-        $this->notification()->success(
-            'Unpublished',
-            'Version has been unpublished.',
-            'info'
-        );
-
-        if ($this->currentVersion?->id == $id) {
-            $this->dispatch('update-current');
-        }
-
-        $this->loadVersions();
-    }
-
     public function publishVersion($id)
     {
         DB::transaction(function () use ($id) {
             ScheduleVersion::where('is_published', true)->update(['is_published' => false, 'published_at' => null]);
+
             $version = ScheduleVersion::find($id);
-            $version->is_published = true;
-            $version->published_at = now();
-            $version->save();
+            $version->update([
+                'is_published' => true,
+                'published_at' => now(),
+            ]);
 
-            if ($this->currentVersion?->id == $id) {
-                $this->dispatch('update-current');
-            }
+            $this->currentVersion = $version;
+            $this->dispatch('update-current');
 
-            $users = User::all();
-            foreach ($users as $user) {
+            foreach (User::all() as $user) {
                 $user->notify(new TimetablePublished($version->label));
             }
         });
@@ -219,9 +212,27 @@ class VersionManagerDrawer extends Component
         $this->loadVersions();
     }
 
+    public function unPublishVersion($id)
+    {
+        ScheduleVersion::where('id', $id)->update(['is_published' => false, 'published_at' => null]);
+
+        if ($this->currentVersion?->id === $id) {
+            $this->dispatch('update-current');
+        }
+
+        $this->notification()->success(
+            'Unpublished',
+            'Version has been unpublished.',
+            'info'
+        );
+
+        $this->loadVersions();
+    }
+
     public function deleteVersion($id)
     {
-        $version = ScheduleVersion::findOrFail($id);
+        $version = ScheduleVersion::find($id);
+        if (!$version) return;
 
         if ($version->is_published) {
             $this->dialog()->confirm([
@@ -242,44 +253,38 @@ class VersionManagerDrawer extends Component
         }
     }
 
-    // private function deleteScheduleVersion($id)
+    // public function deleteScheduleVersion($id)
     // {
-    //     // $this->dispatch('version-deleted', $id);
-    //     ScheduleVersion::findOrFail($id)->delete();
+    //     $version_to_delete = ScheduleVersion::find($id);
+    //     if (!$version_to_delete) return;
+
+    //     $version_to_delete->delete();
 
     //     if ($this->currentVersion?->id == $id) {
-    //         $this->currentVersion = ScheduleVersion::first();
+
+
+    //         $this->currentVersion = null;
+    //         $this->currentVersionId = null;
+    //         $this->dispatch('selected-version-deleted');
     //     }
-
-
     //     $this->notification()->success(
     //         'Schedule version',
     //         'The schedule version deleted successfully.',
     //         'check'
     //     );
-
-    //     $this->loadVersions();
     // }
-    // private function deleteScheduleVersion($id)
-    // {
-    //     ScheduleVersion::findOrFail($id)->delete();
-
-    //     // ✅ Dispatch event to FullTimetable
-    //     $this->dispatch('selected-version-deleted');
-
-    //     $this->notification()->success(
-    //         'Schedule version',
-    //         'The schedule version deleted successfully.',
-    //         'check'
-    //     );
-
-    // }
-    private function deleteScheduleVersion($id)
+    public function deleteScheduleVersion($id)
     {
-        $deleted = ScheduleVersion::findOrFail($id);
-        $wasCurrent = $this->currentVersion?->id === $deleted->id;
+        if ($this->currentVersion?->id == $id) {
+            $this->currentVersion = null;
+            $this->currentVersionId = null;
 
-        $deleted->delete();
+            // Optional: clear editing state too
+            $this->editingVersionId = null;
+            $this->editingLabel = '';
+        }
+
+        ScheduleVersion::find($id)?->delete();
 
         $this->notification()->success(
             'Schedule version',
@@ -287,27 +292,10 @@ class VersionManagerDrawer extends Component
             'check'
         );
 
-        // Reload the versions after delete
-        $this->loadVersions();
-
-        // Reset current version if the deleted one was selected
-        if ($wasCurrent) {
-            $this->currentVersion = ScheduleVersion::published()->first()
-                ?? $this->versions->first();
-            $this->dispatch('version-selected', $this->currentVersion?->id);
-        }
-
-        // Inform listeners (like FullTimetable) that version was deleted
         $this->dispatch('selected-version-deleted');
+        $this->loadVersions();
     }
 
-
-
-
-    public function loadVersions()
-    {
-        $this->versions = ScheduleVersion::all();
-    }
 
     public function render()
     {

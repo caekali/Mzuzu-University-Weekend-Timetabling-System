@@ -13,7 +13,7 @@
 
     @livewireStyles
     @wireUiScripts
-    @livewireScripts
+    {{-- @livewireScripts --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -37,6 +37,11 @@
             </div>
         </div>
     </div>
+    {{-- @livewireScripts --}}
+    {{-- @wireUiScripts --}}
+    @livewireScriptConfig
+
+
 </body>
 
 </html>

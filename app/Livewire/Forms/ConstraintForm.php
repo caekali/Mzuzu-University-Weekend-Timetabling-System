@@ -31,6 +31,7 @@ class ConstraintForm extends Form
                 $model = Lecturer::findOrFail($this->constraintable_id);
             } elseif ($this->constraintable_type === 'venue') {
                 $model = Venue::findOrFail($this->constraintable_id);
+                $validated['is_hard'] = true;
             } else {
                 throw new \Exception("Unsupported constraintable type: {$this->constraintable_type}");
             }

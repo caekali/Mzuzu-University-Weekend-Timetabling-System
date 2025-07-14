@@ -16,7 +16,7 @@
 
     @livewireStyles
     @wireUiScripts
-    @livewireScripts
+    {{-- @livewireScripts  --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -35,7 +35,16 @@
     <x-modal />
     <x-notifications />
     <x-dialog />
-
+    {{-- @livewireScripts --}}
+    {{-- @wireUiScripts --}}
+    @livewireScriptConfig
+    <script>
+        window.addEventListener('livewire:exception', e => {
+            e.preventDefault(); // Suppress Livewire's default modal
+            console.error('Livewire error:', e.detail.message);
+            // Optionally, show your own modal here
+        });
+    </script>
 </body>
 
 </html>

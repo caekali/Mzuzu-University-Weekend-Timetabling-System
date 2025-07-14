@@ -24,6 +24,11 @@ class FullTimetable extends Component
 
     use WireUiActions;
 
+    protected $listeners = [
+        'select-version' => "setCurrentVersion",
+        'selected-version-deleted' => 'handleVersionDeleted',
+    ];
+
     public $entries = [];
 
     public $timeSlots = [];
@@ -48,12 +53,13 @@ class FullTimetable extends Component
 
     public $currentVersion;
 
-    public int|null $selectedVersionId = null;
+    public $currentVersionId;
 
     public bool $showFilters = false;
 
     public function mount()
     {
+
         $this->days = ScheduleDay::where('enabled', true)->pluck('name')->sort()->toArray();
         $loader = new GADataLoaderService();
         $slots = $loader->generateTimeslots();
@@ -95,21 +101,35 @@ class FullTimetable extends Component
             ];
         });
 
-        $this->currentVersion = ScheduleVersion::published()->first();
+        $this->currentVersion = ScheduleVersion::published()->first() ?? ScheduleVersion::first();
 
-        $this->selectedVersionId = $this->currentVersion ?   $this->currentVersion->id : ScheduleVersion::first()?->id;
+        if ($this->currentVersion) {
+            $this->currentVersionId = $this->currentVersion->id;
+        }
 
-
-        $this->entries = collect();
-        // $this->loadEntries();
-    }
-
-    #[On('version-selected')]
-    public function setSelectedVersion($id)
-    {
-        $this->selectedVersionId = $id;
         $this->loadEntries();
     }
+
+
+    #[On('select-version')]
+    public function setCurrentVersion($id)
+    {
+        $this->currentVersionId = $id;
+        $version = ScheduleVersion::find($id);
+        if ($version)
+            $this->currentVersion = $version;
+
+        $this->loadEntries();
+    }
+
+    #[On('current-deleted')]
+    public function handleVersionDeleted()
+    {
+        dd($this->currentVersionId);
+        $this->currentVersionId = null;
+    }
+
+
 
     #[On('refresh-list')]
     public function refresh()
@@ -123,34 +143,17 @@ class FullTimetable extends Component
         $this->currentVersion = ScheduleVersion::published()->first();
     }
 
-    // #[On('version-deleted')]
-    // public function resetTimetable($id)
-    // {
-    //     dd($id, $this->selectedVersionId);
-
-
-    //     if ($this->selectedVersionId == $id) {
-
-    //         $this->entries = collect();
-    //         $this->currentVersion = null;
-    //         $this->selectedVersionId = null;
-    //         // $this->currentVersion = ScheduleVersion::published()->first() ?? ScheduleVersion::first();
-    //         // $this->selectedVersionId = $this->currentVersion?->id;
-    //         // $this->loadEntries();
-    //     }
-    // }
-
     #[On('selected-version-deleted')]
     public function resetTimetable()
     {
         $fallback = ScheduleVersion::published()->first() ?? ScheduleVersion::first();
 
         if ($fallback) {
-            $this->selectedVersionId = $fallback->id;
+            $this->currentVersionId = $fallback->id;
             $this->currentVersion = $fallback;
             $this->loadEntries();
         } else {
-            $this->selectedVersionId = null;
+            $this->currentVersionId = null;
             $this->currentVersion = null;
             $this->entries = collect();
         }
@@ -158,8 +161,8 @@ class FullTimetable extends Component
 
     public function loadEntries()
     {
-        $version = $this->selectedVersionId
-            ? ScheduleVersion::find($this->selectedVersionId)
+        $version = $this->currentVersionId
+            ? ScheduleVersion::find($this->currentVersionId)
             : $this->currentVersion;
 
         if (!$version) {

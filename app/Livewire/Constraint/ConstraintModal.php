@@ -24,7 +24,7 @@ class ConstraintModal extends Component
         $this->days = ScheduleDay::where('enabled', true)->pluck('name')->sort()->toArray();
     }
 
-    public function openModal($type,$id = null)
+    public function openModal($type, $id = null)
     {
         // reset prev form
         $this->form->reset();

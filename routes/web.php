@@ -24,6 +24,7 @@ use App\Livewire\User\UserList;
 use App\Livewire\Venue\VenueList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Livewire;
 
 Route::get('/test', [TestController::class, 'generate']);
 
