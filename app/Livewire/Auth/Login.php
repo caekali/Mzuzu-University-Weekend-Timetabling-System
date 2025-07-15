@@ -26,9 +26,6 @@ class Login extends Component
         'password.required' => 'The Password cannot be empty.',
     ];
 
-
-
-
     public function login()
     {
         $this->validate();
@@ -40,14 +37,14 @@ class Login extends Component
             return;
         }
 
-        if (!$user || ! $user->is_active) {
-            session()->flash('status', 'Your account is not activated. Activate now.');
-            return;
-        }
-
         if (! Hash::check($this->password, $user->password)) {
             $this->addError('general', 'Invalid credentials.');
             return;
+        }
+
+        if (!$user->is_active) {
+            $user->is_active = true;
+            $user->save();
         }
 
         Auth::login($user, $this->remember);
@@ -58,12 +55,6 @@ class Login extends Component
         ]);
 
         session()->regenerate();
-
-        if ($user->hasRole('Student')) {
-            $student = $user->student;
-        } else if ($user->hasRole('Lecturer')) {
-            $lecturer = $user->lecturer;
-        }
 
         return redirect()->intended('/dashboard');
     }

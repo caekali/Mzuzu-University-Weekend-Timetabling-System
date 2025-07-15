@@ -7,6 +7,8 @@ use App\Models\Department;
 use App\Models\Programme;
 use App\Models\Role;
 use App\Models\User;
+use App\Notifications\SendDefaultPasswordNotification;
+use App\Notifications\UserPasswordResetNotification;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use WireUi\Traits\WireUiActions;
@@ -88,6 +90,22 @@ class UserModal extends Component
         );
         $this->modal()->close('user-modal');
         $this->dispatch('refresh-list');
+    }
+
+    public function regeneratePassword()
+    {
+        $user = User::findOrFail($this->form->userId);
+
+        $password = str()->random(10);
+        $user->password = bcrypt($password);
+        $user->save();
+
+        $user->notify(new UserPasswordResetNotification($password));
+
+        $this->notification()->info(
+            'Password Reset',
+            'New password was sent to the user.'
+        );
     }
 
     public function render()

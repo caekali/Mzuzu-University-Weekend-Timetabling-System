@@ -4,6 +4,8 @@ namespace App\Livewire\User;
 
 use App\Models\Department;
 use App\Models\Programme;
+use App\Models\User;
+use App\Notifications\SendDefaultPasswordNotification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
@@ -206,11 +208,17 @@ class ImportProgressModal extends Component
                 continue;
             }
 
+
+
+
+
             // Create user
-            $user = \App\Models\User::create([
+            $password = str()->random(10);
+            $user = User::create([
                 'first_name' => $data['first_name'],
-                'last_name'  => $data['last_name'],
-                'email'      => $data['email'],
+                'last_name' => $data['last_name'],
+                'email' => $data['email'],
+                'password' => bcrypt($password),
             ]);
 
             $roleMap = [
@@ -234,6 +242,8 @@ class ImportProgressModal extends Component
             $data['status'] = 'success';
             $success++;
 
+            // Send password via email
+            $user->notify(new SendDefaultPasswordNotification($password));
             $updatedUsers[] = $data;
 
             // Update progress

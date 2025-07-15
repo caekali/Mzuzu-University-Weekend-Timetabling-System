@@ -27,6 +27,12 @@
      <x-slot name="footer" class="flex justify-end gap-x-4">
          <div class="flex gap-x-4">
              <x-button flat label="Cancel" x-on:click="close" />
+
+             @if ($form->userId)
+                 <x-button flat label="Regenerate Password" wire:click="regeneratePassword" spinner="regeneratePassword"
+                     x-on:click="$dispatch('close')" />
+             @endif
+
              <x-button primary label="{{ $form->userId ? 'Update' : 'Save' }}" type='submit' form='userForm' />
          </div>
      </x-slot>

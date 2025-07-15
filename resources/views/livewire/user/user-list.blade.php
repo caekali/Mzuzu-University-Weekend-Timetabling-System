@@ -54,6 +54,9 @@
                             <div class="w-48">
                                 <x-select wire:model.live="userRoleFilter" placeholder="All Users" :options="$roles" />
                             </div>
+                            <div class="w-48">
+                                <x-select wire:model.live="userStatusFilter" placeholder="All Status" :options="$userStatus"/>
+                            </div>
                         </div>
                     </div>
                 </div>

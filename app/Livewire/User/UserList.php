@@ -19,14 +19,22 @@ class UserList extends Component
 
     public $userRoleFilter = '';
 
+    public $userStatusFilter = '';
+
+
     public $search = '';
 
     public $roles;
 
     public $statusCounts = [];
 
+    public $userStatus;
+
     public function mount()
     {
+
+        $this->userStatus =  collect(['Active', 'Not Active']);
+
         $this->roles = Role::all()->pluck('name');
 
         $this->statusCounts = [
@@ -140,6 +148,10 @@ class UserList extends Component
             } elseif ($slug === 'lecturer') {
                 $query->with('lecturer');
             }
+        }
+
+        if (!empty($this->userStatusFilter)) {
+            $query->where('is_active', $this->userStatusFilter == 'Active' ? 1 : 0);
         }
 
         $users = $query->paginate(8);
