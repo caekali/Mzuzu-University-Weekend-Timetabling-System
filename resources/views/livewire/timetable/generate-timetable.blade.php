@@ -12,9 +12,6 @@
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div class="space-y-4">
-                        {{-- <x-number label='Population Size' name='form.population_size'
-                            wire:model.live='form.population_size'/> --}}
-
                         <x-number name='form.population_size' wire:model.live='form.population_size'>
                             <x-slot:label>
                                 <div class="flex gap-2 items-center">
@@ -25,20 +22,59 @@
                             </x-slot:label>
                         </x-number>
 
-                      
-                        <x-number label='Number of Generations' name='form.number_of_generations'
-                            wire:model.live='form.number_of_generations' />
-                        <x-number label='Tournament Selection Size' name='form.tournament_size'
-                            wire:model.live='form.tournament_size' />
+                        <x-number name='form.number_of_generations' wire:model.live='form.number_of_generations'>
+                            <x-slot:label>
+                                <div class="flex gap-2 items-center">
+                                    <span>Number of Generations</span>
+                                    <x-icon name="information-circle" class="w-5 h-5 cursor-pointer" x-data
+                                        x-tooltip.placement.top-start="'How many generations the algorithm should run for.'" />
+                                </div>
+                            </x-slot:label>
+                        </x-number>
+
+                        <x-number name='form.tournament_size' wire:model.live='form.tournament_size'>
+                            <x-slot:label>
+                                <div class="flex gap-2 items-center">
+                                    <span>Tournament Selection Size</span>
+                                    <x-icon name="information-circle" class="w-5 h-5 cursor-pointer" x-data
+                                        x-tooltip.placement.top-start="'Number of candidates competing in each tournament selection step.'" />
+                                </div>
+                            </x-slot:label>
+                        </x-number>
                     </div>
+
                     <div class="space-y-4">
-                        <x-number label='Mutation Rate (%)' name='form.mutation_rate'
-                            wire:model.live='form.mutation_rate' />
-                        <x-number label='Crossover Rate (%)' name='form.crossover_rate'
-                            wire:model.live='form.crossover_rate' />
-                        <x-number label='Elite Schedules' name='form.elite_schedules'
-                            wire:model.live='form.elite_schedules' />
+                        <x-number name='form.mutation_rate' wire:model.live='form.mutation_rate'>
+                            <x-slot:label>
+                                <div class="flex gap-2 items-center">
+                                    <span>Mutation Rate (%)</span>
+                                    <x-icon name="information-circle" class="w-5 h-5 cursor-pointer" x-data
+                                        x-tooltip.placement.top-start="'Probability of mutation for each individual per generation.'" />
+                                </div>
+                            </x-slot:label>
+                        </x-number>
+
+                        <x-number name='form.crossover_rate' wire:model.live='form.crossover_rate'>
+                            <x-slot:label>
+                                <div class="flex gap-2 items-center">
+                                    <span>Crossover Rate (%)</span>
+                                    <x-icon name="information-circle" class="w-5 h-5 cursor-pointer" x-data
+                                        x-tooltip.placement.top-start="'Probability that crossover (recombination) occurs between two parents.'" />
+                                </div>
+                            </x-slot:label>
+                        </x-number>
+
+                        <x-number name='form.elite_schedules' wire:model.live='form.elite_schedules'>
+                            <x-slot:label>
+                                <div class="flex gap-2 items-center">
+                                    <span>Elite Schedules</span>
+                                    <x-icon name="information-circle" class="w-5 h-5 cursor-pointer" x-data
+                                        x-tooltip.placement.top-start="'Number of top-performing schedules preserved unchanged to the next generation.'" />
+                                </div>
+                            </x-slot:label>
+                        </x-number>
                     </div>
+
                 </div>
                 <x-button type="submit" label="Update" class="mt-4" :disabled="!$this->hasChanges" wire:target="updateGAParameter"
                     wire:loading.attr="disabled" />
