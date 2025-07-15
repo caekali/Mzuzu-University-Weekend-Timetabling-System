@@ -21,10 +21,4 @@
 
         <x-button primary label="Sign in" spinner='login' type="submit" class="w-full" />
     </form>
-    <div class="mt-4 text-center text-sm">
-        <p class="text-sm font-medium text-gray-700 dark:text-gray-400">
-            New here?
-            <x-link class="text-sm font-medium" label="Activate account" href="{{ route('activation.request') }}" />
-        </p>
-    </div>
 </div>

@@ -23,9 +23,17 @@ class UserList extends Component
 
     public $roles;
 
+    public $statusCounts = [];
+
     public function mount()
     {
         $this->roles = Role::all()->pluck('name');
+
+        $this->statusCounts = [
+            'total' => User::count(),
+            'active' => User::where('is_active', true)->count(),
+            'deactivated' => User::where('is_active', false)->count(),
+        ];
     }
 
     public function updatedSearch()
@@ -43,15 +51,15 @@ class UserList extends Component
         $this->dispatch('openModal', $id)->to('user.user-modal');
     }
 
-    public function confirmDelete($id)
+    public function confirmUserDeactivation($id)
     {
         $this->dialog()->confirm([
-            'title'       => 'Delete User?',
-            'description' => 'Are you sure you want to delete this user?',
+            'title'       => 'Deactivate User?',
+            'description' => 'Are you sure you want to deactivate this user?',
             'icon'        => 'warning',
             'accept'      => [
-                'label'  => 'Yes, Delete',
-                'method' => 'delete',
+                'label'  => 'Yes, Deactivate',
+                'method' => 'deactivate',
                 'params' => $id,
             ],
             'reject' => [
@@ -60,13 +68,44 @@ class UserList extends Component
         ]);
     }
 
-    public function delete($id)
+    public function deactivate($id)
     {
-        User::findOrFail($id)->delete();
-
+        $user = User::findOrFail($id);
+        $user->is_active = false;
+        $user->save();
         $this->notification()->success(
-            'Deleted',
-            'User deleted successfully.'
+            'User Deactivation',
+            'User deactivated successfully.'
+        );
+
+        $this->dispatch('refresh-list');
+    }
+
+    public function confirmUserActivation($id)
+    {
+        $this->dialog()->confirm([
+            'title'       => 'Activate User?',
+            'description' => 'Are you sure you want to activate this user?',
+            'icon'        => 'warning',
+            'accept'      => [
+                'label'  => 'Yes, Activate',
+                'method' => 'activate',
+                'params' => $id,
+            ],
+            'reject' => [
+                'label'  => 'Cancel',
+            ],
+        ]);
+    }
+
+    public function activate($id)
+    {
+        $user = User::findOrFail($id);
+        $user->is_active = true;
+        $user->save();
+        $this->notification()->success(
+            'User Activation',
+            'User activated successfully.'
         );
 
         $this->dispatch('refresh-list');
@@ -111,9 +150,10 @@ class UserList extends Component
                 'id'    => $user->id,
                 'name'  => $user->first_name . ' ' . $user->last_name,
                 'email' => $user->email,
+                'status' => $user->is_active ? 'Active' : 'Not Active'
             ];
 
-            $data['roles'] = $user->roles->pluck('name')->join(', ');
+            $data['roles'] = $user->roles->pluck('name');
 
             if ($this->userRoleFilter == 'Student') {
                 $data['level'] = $user->student->level ?? '-';
@@ -125,6 +165,9 @@ class UserList extends Component
             }
             return $data;
         });
+
+
+
         return view('livewire.user.user-list', compact('users'));
     }
 }

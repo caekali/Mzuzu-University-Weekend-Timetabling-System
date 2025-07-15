@@ -32,7 +32,7 @@ class TimetablePublished extends Notification implements ShouldQueue
             ->subject('New Schedule Published')
             ->greeting('Hello ' . $notifiable->first_name . ' ' . $notifiable->last_name . ',')
             ->line('A new timetable (version: "' . $this->versionLabel . '") has been published.')
-            ->action('View Timetable', route('my.timetable'))
+            ->action('View Timetable', route('dashboard'))
             ->line('Thank you for being part of our academic community!');
     }
 

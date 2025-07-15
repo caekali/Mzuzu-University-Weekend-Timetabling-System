@@ -4,6 +4,7 @@ namespace App\Livewire\Forms;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Notifications\SendDefaultPasswordNotification;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -27,19 +28,26 @@ class UserForm extends Form
         $validated = $this->validate($this->rules());
 
         $isNew = !$this->userId;
-
-        $user = $isNew
-            ? User::create([
+        $user = null;
+        if ($isNew) {
+            $password = str()->random(10);
+            $user = User::create([
                 'first_name' => $validated['first_name'],
                 'last_name' => $validated['last_name'],
                 'email' => $validated['email'],
-                'password' => null,
-            ])
-            : tap(User::findOrFail($this->userId))->update([
+                'password' => bcrypt($password),
+            ]);
+
+            // Send password via email
+            $user->notify(new SendDefaultPasswordNotification($password));
+        } else {
+            $user = tap(User::findOrFail($this->userId))->update([
                 'first_name' => $validated['first_name'],
                 'last_name' => $validated['last_name'],
                 'email' => $validated['email'],
             ]);
+        }
+
 
         // current roles
         $oldRoles = $user->roles->pluck('name')->map(fn($r) => strtolower($r))->toArray();

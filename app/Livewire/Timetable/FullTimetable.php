@@ -240,7 +240,7 @@ class FullTimetable extends Component
 
     public function openModal($id = null, $day = null, $startTime = null, $endTime = null)
     {
-        $this->dispatch('openModal', $this->selectedVersionId, $id, $day, $startTime, $endTime)->to('timetable.schedule-modal');
+        $this->dispatch('openModal', $this->currentVersionId, $id, $day, $startTime, $endTime)->to('timetable.schedule-modal');
     }
 
     public function export($format)

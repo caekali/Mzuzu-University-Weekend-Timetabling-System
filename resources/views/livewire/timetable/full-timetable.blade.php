@@ -40,7 +40,7 @@
                 </x-slot:prepend>
                 Filters
             </x-button>
-            <x-dropdown>
+            {{-- <x-dropdown>
                 <x-slot name="trigger">
                     <x-button secondary>
                         <x-slot:prepend>
@@ -51,7 +51,7 @@
 
                 <x-dropdown.item label="PDF" wire:click="export('pdf')" />
                 <x-dropdown.item label="Excel" wire:click="export('excel')" />
-            </x-dropdown>
+            </x-dropdown> --}}
             @if (session('current_role') === 'Admin')
                 <x-button secondary wire:click="$dispatch('openVersionSlider')">
                     <x-slot:prepend>
