@@ -10,7 +10,7 @@
                     <p><strong>Required headers:</strong> first_name, last_name, email, role</p>
                     <p><strong>Optional headers:</strong> level (for students), programme (for students), department (for lecturers)</p>
                     <p><strong>Valid roles:</strong> student, lecturer, admin</p>
-                    <p><strong>Student level:</strong> 1-5</p>
+                    <p><strong>Student level:</strong> 1-4</p>
                     <p><strong>Valid programmes names or code from the system</strong></p>
                     <p><strong>Valid departments names or code from the system</strong></p>
                 </div>

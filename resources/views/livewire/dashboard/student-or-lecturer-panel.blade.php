@@ -14,8 +14,6 @@
 @endphp
 
 <div class="flex flex-col h-full overflow-y-auto py-6 px-4">
-
-    {{-- Header --}}
     <div class="mb-2">
         <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
             {{ $greeting }}, {{ Auth::user()->first_name }}!
@@ -25,7 +23,7 @@
     </div>
 
     @if ($publishedVersion)
-        <div class="sticky top-0 z-20 bg-white dark:bg-gray-900 py-3 border-b border-gray-200 dark:border-gray-700">
+        <div class="sticky top-0 z-20">
             <div class="flex flex-wrap gap-2 sm:gap-4 px-2 sm:px-4">
                 @foreach ($days as $day)
                     <button wire:click="loadEntriesForDay('{{ $day }}')"
