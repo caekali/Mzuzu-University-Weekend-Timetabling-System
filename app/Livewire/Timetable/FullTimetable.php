@@ -125,7 +125,6 @@ class FullTimetable extends Component
     #[On('current-deleted')]
     public function handleVersionDeleted()
     {
-        dd($this->currentVersionId);
         $this->currentVersionId = null;
     }
 

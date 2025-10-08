@@ -20,7 +20,7 @@ class MzuniSeeder extends Seeder
         $commDept = Department::create(['code' => 'COMM', 'name' => 'Communication']);
 
         $commDeptCourses = [
-            ['code' => 'COMM1101', 'name' => 'Communication Studies I', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 1, 'semester' => 1],
+            ['code' => 'COMM1101', 'name' => 'Communication Studies I',  'lecture_hours' => 3, 'level' => 1, 'semester' => 1],
         ];
 
         foreach ($commDeptCourses as $commDeptCourse) {
@@ -28,12 +28,12 @@ class MzuniSeeder extends Seeder
         }
 
         $mathDeptCourses = [
-            ['code' => 'STAT2301', 'name' => 'Introduction to Statistical Analysis', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 2, 'semester' => 3],
-            ['code' => 'STAT4705', 'name' => 'Big Data Analytics', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 4, 'semester' => 7],
-            ['code' => 'MATH3505', 'name' => 'Optimization', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 3, 'semester' => 5],
-            ['code' => 'STAT3505', 'name' => 'Stocastic Modelling ', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 3, 'semester' => 5],
-            ['code' => 'MATH2306', 'name' => 'Linear Algebra', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 2, 'semester' => 3],
-            ['code' => 'MATH1101', 'name' => 'Pre-calculus', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 1, 'semester' => 1],
+            ['code' => 'STAT2301', 'name' => 'Introduction to Statistical Analysis',  'lecture_hours' => 3, 'level' => 2, 'semester' => 3],
+            ['code' => 'STAT4705', 'name' => 'Big Data Analytics',  'lecture_hours' => 3, 'level' => 4, 'semester' => 7],
+            ['code' => 'MATH3505', 'name' => 'Optimization',  'lecture_hours' => 3, 'level' => 3, 'semester' => 5],
+            ['code' => 'STAT3505', 'name' => 'Stocastic Modelling ',  'lecture_hours' => 3, 'level' => 3, 'semester' => 5],
+            ['code' => 'MATH2306', 'name' => 'Linear Algebra',  'lecture_hours' => 3, 'level' => 2, 'semester' => 3],
+            ['code' => 'MATH1101', 'name' => 'Pre-calculus',  'lecture_hours' => 3, 'level' => 1, 'semester' => 1],
         ];
 
         foreach ($mathDeptCourses as $mathDeptCourse) {
@@ -41,24 +41,24 @@ class MzuniSeeder extends Seeder
         }
 
         $ictDeptCourses = [
-            ['code' => 'BICT1101', 'name' => 'End User Computing', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 1, 'semester' => 1],
-            ['code' => 'BICT1102', 'name' => 'Introduction To Programming With C', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 1, 'semester' => 1],
-            ['code' => 'BICT3504', 'name' => 'Algorthms and Data Structures With Java', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 3, 'semester' => 5],
-            ['code' => 'BICT2302', 'name' => 'Programming In Java', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 2, 'semester' => 3],
-            ['code' => 'BICT2306', 'name' => 'Data Wrangling and Exploratory Data Analysis', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 2, 'semester' => 3],
-            ['code' => 'BICT2304', 'name' => 'Computer Networks I', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 2, 'semester' => 3],
-            ['code' => 'BICT2307', 'name' => 'Introduction to Cloud Computing', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 2, 'semester' => 3],
-            ['code' => 'BICT3505', 'name' => 'Web Programming', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 3, 'semester' => 5],
-            ['code' => 'BICT3502', 'name' => 'Research Methods', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 3, 'semester' => 5],
-            ['code' => 'BICT4702', 'name' => 'Modelling and Simulation', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 4, 'semester' => 7],
-            ['code' => 'BICT4703', 'name' => 'Network Administration and Information Security', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 4, 'semester' => 7],
-            ['code' => 'BICT4704', 'name' => 'Enterpreneurship', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 4, 'semester' => 7],
-            ['code' => 'BICT2401', 'name' => 'Operating System', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 2, 'semester' => 4],
-            ['code' => 'BICT2307', 'name' => 'Web Design', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 2, 'semester' => 3],
-            ['code' => 'BICT2403', 'name' => 'Computer networks II', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 2, 'semester' => 4],
-            ['code' => 'BICT3504', 'name' => 'Mobile Telecommunication', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 3, 'semester' => 5],
-            ['code' => 'BICT4701', 'name' => 'Software Engineering', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 4, 'semester' => 7],
-            ['code' => 'BICT1103', 'name' => 'Computer and Communication Technology', 'num_of_students' => 20, 'lecture_hours' => 3, 'level' => 1, 'semester' => 1],
+            ['code' => 'BICT1101', 'name' => 'End User Computing', 'lecture_hours' => 3, 'level' => 1, 'semester' => 1],
+            ['code' => 'BICT1102', 'name' => 'Introduction To Programming With C', 'lecture_hours' => 3, 'level' => 1, 'semester' => 1],
+            ['code' => 'BICT3504', 'name' => 'Algorthms and Data Structures With Java', 'lecture_hours' => 3, 'level' => 3, 'semester' => 5],
+            ['code' => 'BICT2302', 'name' => 'Programming In Java', 'lecture_hours' => 3, 'level' => 2, 'semester' => 3],
+            ['code' => 'BICT2306', 'name' => 'Data Wrangling and Exploratory Data Analysis', 'lecture_hours' => 3, 'level' => 2, 'semester' => 3],
+            ['code' => 'BICT2304', 'name' => 'Computer Networks I', 'lecture_hours' => 3, 'level' => 2, 'semester' => 3],
+            ['code' => 'BICT2307', 'name' => 'Introduction to Cloud Computing', 'lecture_hours' => 3, 'level' => 2, 'semester' => 3],
+            ['code' => 'BICT3505', 'name' => 'Web Programming', 'lecture_hours' => 3, 'level' => 3, 'semester' => 5],
+            ['code' => 'BICT3502', 'name' => 'Research Methods', 'lecture_hours' => 3, 'level' => 3, 'semester' => 5],
+            ['code' => 'BICT4702', 'name' => 'Modelling and Simulation', 'lecture_hours' => 3, 'level' => 4, 'semester' => 7],
+            ['code' => 'BICT4703', 'name' => 'Network Administration and Information Security', 'lecture_hours' => 3, 'level' => 4, 'semester' => 7],
+            ['code' => 'BICT4704', 'name' => 'Enterpreneurship', 'lecture_hours' => 3, 'level' => 4, 'semester' => 7],
+            ['code' => 'BICT2401', 'name' => 'Operating System', 'lecture_hours' => 3, 'level' => 2, 'semester' => 4],
+            ['code' => 'BICT2307', 'name' => 'Web Design', 'lecture_hours' => 3, 'level' => 2, 'semester' => 3],
+            ['code' => 'BICT2403', 'name' => 'Computer networks II', 'lecture_hours' => 3, 'level' => 2, 'semester' => 4],
+            ['code' => 'BICT3504', 'name' => 'Mobile Telecommunication', 'lecture_hours' => 3, 'level' => 3, 'semester' => 5],
+            ['code' => 'BICT4701', 'name' => 'Software Engineering', 'lecture_hours' => 3, 'level' => 4, 'semester' => 7],
+            ['code' => 'BICT1103', 'name' => 'Computer and Communication Technology', 'lecture_hours' => 3, 'level' => 1, 'semester' => 1],
         ];
 
         foreach ($ictDeptCourses as $ictDeptCourse) {

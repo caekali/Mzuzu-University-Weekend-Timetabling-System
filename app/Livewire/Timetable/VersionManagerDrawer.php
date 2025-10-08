@@ -279,9 +279,11 @@ class VersionManagerDrawer extends Component
             $this->currentVersion = null;
             $this->currentVersionId = null;
 
-            // Optional: clear editing state too
+            //clear editing state too
             $this->editingVersionId = null;
             $this->editingLabel = '';
+
+            $this->dispatch('selected-version-deleted');
         }
 
         ScheduleVersion::find($id)?->delete();
@@ -292,7 +294,7 @@ class VersionManagerDrawer extends Component
             'check'
         );
 
-        $this->dispatch('selected-version-deleted');
+        
         $this->loadVersions();
     }
 
