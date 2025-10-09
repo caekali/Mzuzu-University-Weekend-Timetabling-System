@@ -2,13 +2,20 @@
 
 namespace App\Services\GeneticAlgorithm;
 
+use Illuminate\Support\Facades\Log;
+
 class Schedule
 {
     protected array $scheduleEntries = [];
+
     private $numberOfHardConflicts = 0;
+
     private $numberOfSoftConflicts = 0;
+
     private $fitness = -1;
+
     private $isFitnessChanged = true;
+
     protected array $constraints = [];
 
     public function __construct(array $constraints = [])
@@ -18,7 +25,8 @@ class Schedule
 
     public static function generateRandomSchedule(array $data): Schedule
     {
-        $schedule = new Schedule();
+
+        $schedule = new Schedule($data['constraints']);
         $courses = $data['courses'];
         $venues = $data['venues'];
         $timeSlots = $data['timeslots'];
@@ -29,7 +37,7 @@ class Schedule
             foreach ($sessions as $i => $hours) {
                 $slotSet = self::findConsecutiveTimeSlots($timeSlots, $hours);
 
-                if (!empty($slotSet)) {
+                if (! empty($slotSet)) {
                     shuffle($venues);
                     $venue = $venues[0];
                     $key = "{$course->id}-$i-$course->level";
@@ -57,7 +65,7 @@ class Schedule
     private static function findConsecutiveTimeSlots(array $timeSlots, int $requiredHours): array
     {
         $sessionSlots = collect($timeSlots)
-            ->filter(fn($s) => ($s['type'] ?? 'session') === 'session')
+            ->filter(fn ($s) => ($s['type'] ?? 'session') === 'session')
             ->sortBy(['day', 'start'])
             ->values();
 
@@ -72,7 +80,7 @@ class Schedule
             for ($j = $i; $j < $n; $j++) {
                 $curr = $sessionSlots[$j];
 
-                if (!empty($set)) {
+                if (! empty($set)) {
                     $prev = end($set);
                     if (
                         $prev['day'] !== $curr['day'] ||
@@ -93,7 +101,7 @@ class Schedule
             }
         }
 
-        return !empty($validSets) ? $validSets[array_rand($validSets)] : [];
+        return ! empty($validSets) ? $validSets[array_rand($validSets)] : [];
     }
 
     public function getFitness()
@@ -102,6 +110,7 @@ class Schedule
             $this->fitness = $this->calculateFitness();
             $this->isFitnessChanged = false;
         }
+
         return $this->fitness;
     }
 
@@ -124,11 +133,13 @@ class Schedule
                 }
             }
         }
+
         return false;
     }
 
     private function calculateFitness(): float
     {
+
         $hardConflicts = 0;
         $softConflicts = 0;
 
@@ -140,22 +151,25 @@ class Schedule
             'same_day_sessions' => 1.0,
         ];
 
-        $courseDayMap = [];
 
         foreach ($this->scheduleEntries as $i => $entry1) {
             foreach ($entry1->timeSlots as $slot) {
                 $lecturerViolation = $this->getConstraintViolationType('lecturers', $entry1->lecturer, $slot);
                 $venueViolation = $this->getConstraintViolationType('venues', $entry1->venue->id, $slot);
 
-                if ($lecturerViolation === 'hard') $hardConflicts++;
-                if ($lecturerViolation === 'soft') $softConflicts += 0.5;
 
-                if ($venueViolation === 'hard') $hardConflicts++;
-                if ($venueViolation === 'soft') $softConflicts += 0.5;
+                if ($venueViolation === 'hard') {
+                    $hardConflicts++;
+                }
+                if ($venueViolation === 'soft') {
+                    $softConflicts++;
+                }
             }
 
             foreach ($this->scheduleEntries as $j => $entry2) {
-                if ($i >= $j) continue;
+                if ($i >= $j) {
+                    continue;
+                }
 
                 if ($this->overlaps($entry1->timeSlots, $entry2->timeSlots)) {
                     if ($entry1->course->lecturer_id === $entry2->course->lecturer_id) {
@@ -189,23 +203,72 @@ class Schedule
     {
         $constraints = $this->constraints[$type] ?? collect();
 
+        // Log::debug("Checking constraints for type={$type}, id={$id}, slot=" . json_encode($slot));
+
         foreach ($constraints as $constraint) {
+            // Log::debug('Evaluating constraint', [
+            //     'constraint_id' => $constraint->id ?? null,
+            //     'constraintable_id' => $constraint->constraintable_id,
+            //     'day' => $constraint->day,
+            //     'start_time' => $constraint->start_time,
+            //     'end_time' => $constraint->end_time,
+            //     'is_hard' => $constraint->is_hard,
+            // ]);
+
             if (
                 $constraint->constraintable_id == $id &&
                 $constraint->day === $slot['day'] &&
                 strtotime($slot['start']) >= strtotime($constraint->start_time) &&
                 strtotime($slot['end']) < strtotime($constraint->end_time)
             ) {
-                return $constraint->is_hard ? 'hard' : 'soft';
+                $type = $constraint->is_hard ? 'hard' : 'soft';
+
+                // Log::debug('Evaluating constraint', [
+                //     'constraint_id' => $constraint->id ?? null,
+                //     'constraintable_id' => $constraint->constraintable_id,
+                //     'day' => $constraint->day,
+                //     'start_time' => $constraint->start_time,
+                //     'end_time' => $constraint->end_time,
+                //     'is_hard' => $constraint->is_hard,
+                // ]);
+
+                // Log::info('Constraint violation detected', [
+                //     'constraint_type' => $type,
+                //     'slot' => $slot,
+                //     'constraint_id' => $constraint->id ?? null,
+                // ]);
+
+                return $type;
             }
         }
+
+        // Log::debug("No constraint violation for id={$id}, slot=" . json_encode($slot));
 
         return null;
     }
 
+    // private function getConstraintViolationType($type, $id, $slot): ?string
+    // {
+    //     $constraints = $this->constraints[$type] ?? collect();
+
+    //     foreach ($constraints as $constraint) {
+    //         if (
+    //             $constraint->constraintable_id == $id &&
+    //             $constraint->day === $slot['day'] &&
+    //             strtotime($slot['start']) >= strtotime($constraint->start_time) &&
+    //             strtotime($slot['end']) < strtotime($constraint->end_time)
+    //         ) {
+    //             return $constraint->is_hard ? 'hard' : 'soft';
+    //         }
+    //     }
+
+    //     return null;
+    // }
+
     public function getScheduleEntries()
     {
         $this->isFitnessChanged = true;
+
         return $this->scheduleEntries;
     }
 
@@ -219,6 +282,7 @@ class Schedule
     {
         $copy = new self($this->constraints);
         $copy->setScheduleEntries($this->scheduleEntries);
+
         return $copy;
     }
 }

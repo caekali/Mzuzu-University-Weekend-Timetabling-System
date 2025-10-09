@@ -2,12 +2,12 @@
 
 namespace App\Livewire\Timetable;
 
+use App\Models\LecturerCourseAllocation;
 use App\Models\ScheduleVersion;
 use App\Models\User;
 use App\Notifications\TimetablePublished;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use WireUi\Traits\WireUiActions;
 
 class VersionManagerDrawer extends Component
@@ -37,9 +37,10 @@ class VersionManagerDrawer extends Component
         $this->currentVersionId = $currentVersionId;
 
         $version = ScheduleVersion::find($currentVersionId);
-        if (!$version) {
+        if (! $version) {
             $this->currentVersion = null;
             $this->currentVersionId = null;
+
             return;
         }
 
@@ -57,25 +58,23 @@ class VersionManagerDrawer extends Component
         $this->isOpen = false;
     }
 
-
     public function selectVersion($id)
     {
         $this->currentVersionId = $id;
         $this->dispatch('select-version', $id);
     }
 
-
-
     public function loadVersions()
     {
         $this->versions = ScheduleVersion::latest('generated_at')->get();
     }
 
-
     public function startEditingLabel($versionId)
     {
         $version = $this->versions->firstWhere('id', $versionId);
-        if (!$version) return;
+        if (! $version) {
+            return;
+        }
 
         $this->editingVersionId = $versionId;
         $this->editingLabel = $version->label;
@@ -118,19 +117,19 @@ class VersionManagerDrawer extends Component
     public function createVersion()
     {
         $latestVersion = ScheduleVersion::where('label', 'like', 'New Version%')
-            ->orderByRaw("CAST(SUBSTRING(label, 13) AS UNSIGNED) DESC")
+            ->orderByRaw('CAST(SUBSTRING(label, 13) AS UNSIGNED) DESC')
             ->first();
 
         $nextNumber = 1;
         if ($latestVersion && preg_match('/New Version (\d+)/', $latestVersion->label, $matches)) {
-            $nextNumber = (int)$matches[1] + 1;
+            $nextNumber = (int) $matches[1] + 1;
         }
 
         ScheduleVersion::create([
             'label' => "New Version {$nextNumber}",
             'is_published' => false,
             'published_at' => null,
-            'generated_at' => now()
+            'generated_at' => now(),
         ]);
 
         $this->dispatch('refresh-list');
@@ -145,7 +144,7 @@ class VersionManagerDrawer extends Component
             $original = ScheduleVersion::with('entries')->findOrFail($versionId);
 
             $newVersion = ScheduleVersion::create([
-                'label' => 'Copy of ' . ($original->label ?? 'Version') . ' - ' . now()->format('Y-m-d H:i'),
+                'label' => 'Copy of '.($original->label ?? 'Version').' - '.now()->format('Y-m-d H:i'),
                 'is_published' => false,
                 'generated_at' => now(),
                 'published_at' => null,
@@ -180,7 +179,7 @@ class VersionManagerDrawer extends Component
                 description: 'An error occurred while duplicating the version.'
             );
 
-            logger()->error('Failed to duplicate version: ' . $e->getMessage());
+            logger()->error('Failed to duplicate version: '.$e->getMessage());
         }
     }
 
@@ -198,7 +197,21 @@ class VersionManagerDrawer extends Component
             $this->currentVersion = $version;
             $this->dispatch('update-current');
 
-            foreach (User::all() as $user) {
+            // send nofitication to only allocated lecturers
+            $users = User::whereIn('id', function ($query) {
+                $query->select('user_id')
+                    ->from('lecturers')
+                    ->whereIn('id', LecturerCourseAllocation::pluck('lecturer_id'));
+            })->get();
+
+            $users->each(fn ($user) => $user->notify(new TimetablePublished($version->label)));
+
+            // send notification to all students
+            $users = User::query()->with(['roles'])->whereHas('roles', function ($q) {
+                $q->where('name', 'Student');
+            })->get();
+
+            foreach ($users as $user) {
                 $user->notify(new TimetablePublished($version->label));
             }
         });
@@ -232,20 +245,22 @@ class VersionManagerDrawer extends Component
     public function deleteVersion($id)
     {
         $version = ScheduleVersion::find($id);
-        if (!$version) return;
+        if (! $version) {
+            return;
+        }
 
         if ($version->is_published) {
             $this->dialog()->confirm([
-                'title'       => 'Delete Schedule Version',
+                'title' => 'Delete Schedule Version',
                 'description' => 'Are you sure you want to delete this published version?',
-                'icon'        => 'warning',
-                'accept'      => [
-                    'label'  => 'Yes, Delete',
+                'icon' => 'warning',
+                'accept' => [
+                    'label' => 'Yes, Delete',
                     'method' => 'deleteScheduleVersion',
                     'params' => $id,
                 ],
                 'reject' => [
-                    'label'  => 'Cancel',
+                    'label' => 'Cancel',
                 ],
             ]);
         } else {
@@ -261,7 +276,6 @@ class VersionManagerDrawer extends Component
     //     $version_to_delete->delete();
 
     //     if ($this->currentVersion?->id == $id) {
-
 
     //         $this->currentVersion = null;
     //         $this->currentVersionId = null;
@@ -279,7 +293,7 @@ class VersionManagerDrawer extends Component
             $this->currentVersion = null;
             $this->currentVersionId = null;
 
-            //clear editing state too
+            // clear editing state too
             $this->editingVersionId = null;
             $this->editingLabel = '';
 
@@ -294,10 +308,8 @@ class VersionManagerDrawer extends Component
             'check'
         );
 
-        
         $this->loadVersions();
     }
-
 
     public function render()
     {

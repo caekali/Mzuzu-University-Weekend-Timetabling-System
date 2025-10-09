@@ -14,6 +14,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 use function App\Helpers\getSetting;
 
@@ -33,6 +34,8 @@ class RunScheduleGeneration implements ShouldQueue
         $data = app(GADataLoaderService::class)->loadGAData();
         // $parameters = GAParameterDTO::fromDb();
 
+        Log::debug(json_encode($data));
+
         $population_size       =  intval(getSetting('population_size', 100));
         $number_of_generations = intval(getSetting('number_of_generations', 500));
         $tournament_size       = intval(getSetting('tournament_size', 5));
@@ -49,14 +52,6 @@ class RunScheduleGeneration implements ShouldQueue
             data: $data
         );
 
-        // $ga = new GeneticAlgorithm(
-        //     populationSize: $parameters->populationSize,
-        //     eliteSchedules: $parameters->eliteSchedules,
-        //     crossoverRate: $parameters->crossoverRate,
-        //     mutationRate: $parameters->mutationRate,
-        //     tournamentSize: $parameters->tournamentSize,
-        //     data: $data
-        // );
 
         $population = $ga->initializePopulation();
         $bestSchedule = $population->getFittest();
