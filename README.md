@@ -1,61 +1,70 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Mzuzu University ICT Weekend Timetabling System (Genetic Algorithm)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A web-based timetabling system designed for the Mzuzu University ICT Weekend Programme, developed as a first-year group project.
+The system uses a Genetic Algorithm (GA) to automatically generate optimized, conflict-free class timetables based on course, lecturer, room, and student-group data.
 
-## About Laravel
+🚀 Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Manual timetable creation is time-consuming and error-prone. This system automates the process by applying Genetic Algorithm optimization, simulating natural selection to evolve the best possible timetable.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The web interface allows admins to manage data inputs and generate timetables with a single click. The system evaluates thousands of combinations and returns a timetable that satisfies constraints such as:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+No lecturer double-booking
 
-## Learning Laravel
+No room conflicts
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Matching room capacity with student group size
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+No overlapping classes for student groups
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Weekend-specific time slots
 
-## Laravel Sponsors
+🧬 How the Genetic Algorithm Works
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+The GA improves timetable quality through:
 
-### Premium Partners
+Initialization – Create a random population of timetable solutions
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Fitness Evaluation – Measure constraint satisfaction for each solution
 
-## Contributing
+Selection – Pick the best-performing timetables
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Crossover – Combine parents to create new offspring
 
-## Code of Conduct
+Mutation – Randomly alter schedules to introduce variation
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Evolution Loop – Repeat until a near-optimal timetable is produced
 
-## Security Vulnerabilities
+This approach ensures a balanced, efficient schedule with minimal conflicts.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+📌 Key Features
 
-## License
+Web-based interface (browser accessible)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Admin panel for managing:
+
+Courses
+
+Lecturers
+
+Rooms
+
+Time slots
+
+Student groups
+
+Automatic timetable generation using GA
+
+Conflict detection & resolution
+
+View timetable by:
+
+Lecturer
+
+Room
+
+Student group
+
+Export options (if implemented)
+
+Regenerate timetable anytime
